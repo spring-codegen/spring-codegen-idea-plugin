@@ -10,6 +10,7 @@ import com.intellij.ui.components.JBPanel
 import com.intellij.ui.content.ContentFactory
 import com.github.baboy.ideaplugincodegen.MyBundle
 import com.github.baboy.ideaplugincodegen.services.MyProjectService
+import com.github.baboy.ideaplugincodegen.ui.CodeGenPanel
 import javax.swing.JButton
 
 
@@ -20,8 +21,9 @@ class MyToolWindowFactory : ToolWindowFactory {
     }
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-        val myToolWindow = MyToolWindow(toolWindow)
-        val content = ContentFactory.getInstance().createContent(myToolWindow.getContent(), null, false)
+//        val myToolWindow = MyToolWindow(toolWindow)
+        val myToolWindow = CodeGenPanel()
+        val content = ContentFactory.getInstance().createContent(myToolWindow.content, null, false)
         toolWindow.contentManager.addContent(content)
     }
 
