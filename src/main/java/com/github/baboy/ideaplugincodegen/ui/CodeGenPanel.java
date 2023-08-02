@@ -1,9 +1,10 @@
 package com.github.baboy.ideaplugincodegen.ui;
 
-import com.github.baboy.ideaplugincodegen.model.CtrlConfig;
+import com.github.baboy.ideaplugincodegen.config.CtrlSetting;
 import com.github.baboy.ideaplugincodegen.model.DBTable;
 import com.github.baboy.ideaplugincodegen.model.DBTableField;
-import com.github.baboy.ideaplugincodegen.model.DataSourceConfig;
+import com.github.baboy.ideaplugincodegen.config.DataSourceSetting;
+import com.github.baboy.ideaplugincodegen.services.ResourceService;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -32,7 +33,7 @@ public class CodeGenPanel {
     private JTable ctrlTable;
 
     private String tableName;
-    private CtrlConfig ctrlConfig;
+    private CtrlSetting ctrlSetting;
     private DBTable dbTable;
 
     final String[] CTRL_TABLE_HEADERS = {"方法名", "Path", "Http Method", "请求类", "请求字段", "返回类", "返回字段"};
@@ -59,6 +60,7 @@ public class CodeGenPanel {
                     // 选择的下拉框选项
                     System.out.println(e.getItem());
                     tableUpdated();
+                    ResourceService.INSTANCE.readYaml("ctrl.yaml");
                 }
             }
         });
@@ -70,7 +72,7 @@ public class CodeGenPanel {
     private void init(){
         dbTable = new DBTable();
 
-        ctrlConfig = new CtrlConfig();
+        ctrlSetting = new CtrlSetting();
         List tables = new ArrayList();
         tables.add("t_table1");
         tables.add("t_tables2");
@@ -78,15 +80,15 @@ public class CodeGenPanel {
 
 
         String[] ctrlMethods = new String[]{"add", "remove", "update", "get", "search"};
-        List<CtrlConfig.CtrlMethod> methods = new ArrayList<>();
+        List<CtrlSetting.CtrlMethod> methods = new ArrayList<>();
         for (String m: ctrlMethods){
-            CtrlConfig.CtrlMethod method = new CtrlConfig.CtrlMethod();
+            CtrlSetting.CtrlMethod method = new CtrlSetting.CtrlMethod();
             method.setName(m);
             method.setPath(String.format("/%s", m));
             method.setRequestMethod("POST");
             methods.add(method);
         }
-        ctrlConfig.setMethods(methods);
+        ctrlSetting.setMethods(methods);
     }
     private void setDbTableItems(List<String> items){
         DefaultComboBoxModel comboBoxModel = new DefaultComboBoxModel();
@@ -97,8 +99,8 @@ public class CodeGenPanel {
         tableComboBox.setModel(comboBoxModel);
     }
     private void ctrlDirUpdated(){
-        ctrlConfig.setBaseURI(String.format("/api/v1/%s", ctrlConfig.getDir()));
-        baseUriTextField.setText(ctrlConfig.getBaseURI());
+        ctrlSetting.setBaseURI(String.format("/api/v1/%s", ctrlSetting.getDir()));
+        baseUriTextField.setText(ctrlSetting.getBaseURI());
     }
 
     /**
@@ -107,7 +109,7 @@ public class CodeGenPanel {
     private void tableUpdated(){
         String tableName = tableComboBox.getSelectedItem().toString();
         String tableSymbol = tableName;
-        ctrlConfig.setClsName(String.format("%sController", tableSymbol));
+        ctrlSetting.setClsName(String.format("%sController", tableSymbol));
 
         List<DBTableField> fields = new ArrayList<>();
         for (int i = 0; i< 5; i++ ){
@@ -134,9 +136,9 @@ public class CodeGenPanel {
     private void updateCtrlMethodTable(){
         DefaultTableModel tableModel = new DefaultTableModel();
         String[] headers = CTRL_TABLE_HEADERS;
-        String[][] data = new String[ctrlConfig.getMethods().size()][headers.length];
+        String[][] data = new String[ctrlSetting.getMethods().size()][headers.length];
         for (int i = 0; i < data.length; i++) {
-            CtrlConfig.CtrlMethod method = ctrlConfig.getMethods().get(i);
+            CtrlSetting.CtrlMethod method = ctrlSetting.getMethods().get(i);
             for (int j = 0; j < headers.length; j++) {
                 data[i][j] = i+","+j;
                 switch (j){
@@ -193,18 +195,18 @@ public class CodeGenPanel {
         }
 
     }
-    private DataSourceConfig getDataSourceConfig(){
-        DataSourceConfig dataSourceConfig = new DataSourceConfig();
-        dataSourceConfig.setUrl(dbUrlTextField.getText());
-        dataSourceConfig.setUsername(usernameTextField.getText());
-        dataSourceConfig.setPwd(pwdTextField.getText());
-        return dataSourceConfig;
+    private DataSourceSetting getDataSourceConfig(){
+        DataSourceSetting dataSourceSetting = new DataSourceSetting();
+        dataSourceSetting.setUrl(dbUrlTextField.getText());
+        dataSourceSetting.setUsername(usernameTextField.getText());
+        dataSourceSetting.setPwd(pwdTextField.getText());
+        return dataSourceSetting;
     }
     private void test(){
-        DataSourceConfig dataSourceConfig = getDataSourceConfig();
-        System.out.println("url:"+ dataSourceConfig.getUrl());
-        System.out.println("username:"+ dataSourceConfig.getUsername());
-        System.out.println("password:"+ dataSourceConfig.getPwd());
+        DataSourceSetting dataSourceSetting = getDataSourceConfig();
+        System.out.println("url:"+ dataSourceSetting.getUrl());
+        System.out.println("username:"+ dataSourceSetting.getUsername());
+        System.out.println("password:"+ dataSourceSetting.getPwd());
     }
 
     public JPanel getContent()  {

@@ -10,6 +10,7 @@ import com.intellij.ui.components.JBPanel
 import com.intellij.ui.content.ContentFactory
 import com.github.baboy.ideaplugincodegen.MyBundle
 import com.github.baboy.ideaplugincodegen.services.MyProjectService
+import com.github.baboy.ideaplugincodegen.services.ResourceService
 import com.github.baboy.ideaplugincodegen.ui.CodeGenPanel
 import javax.swing.JButton
 

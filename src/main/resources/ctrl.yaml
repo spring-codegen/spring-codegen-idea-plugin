@@ -1,0 +1,15 @@
+
+className: CTRL_CLS_PREFIXController
+methods:
+  - name: add
+    path: /add
+    httpMethod: POST
+    dtoClassName: CTRL_CLS_PREFIXAddArg
+    voClassName: IdResult
+
+  - name: remove
+    path: /remove
+    httpMethod: POST
+    dtoClassName: IdArg
+    voClassName: "-"
+

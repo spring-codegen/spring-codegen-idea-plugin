@@ -1,11 +1,11 @@
-package com.github.baboy.ideaplugincodegen.model
+package com.github.baboy.ideaplugincodegen.config
 
 /**
  *
  * @author zhangyinghui
  * @date 2023/8/1
  */
-class CtrlConfig {
+class CtrlSetting {
 
     var dir: String? = null
     var clsName: String? = null
