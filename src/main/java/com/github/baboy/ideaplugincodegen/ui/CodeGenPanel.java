@@ -1,10 +1,13 @@
 package com.github.baboy.ideaplugincodegen.ui;
 
+import com.github.baboy.ideaplugincodegen.config.CtrlConfig;
 import com.github.baboy.ideaplugincodegen.config.CtrlSetting;
+import com.github.baboy.ideaplugincodegen.db.DBContext;
 import com.github.baboy.ideaplugincodegen.model.DBTable;
-import com.github.baboy.ideaplugincodegen.model.DBTableField;
+import com.github.baboy.ideaplugincodegen.db.model.DBTableField;
 import com.github.baboy.ideaplugincodegen.config.DataSourceSetting;
 import com.github.baboy.ideaplugincodegen.services.ResourceService;
+import org.apache.commons.beanutils.BeanUtils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -13,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
@@ -75,9 +79,10 @@ public class CodeGenPanel {
         ctrlSetting = new CtrlSetting();
         List tables = new ArrayList();
         tables.add("t_table1");
-        tables.add("t_tables2");
+        tables.add("t_api");
         setDbTableItems(tables);
 
+        CtrlConfig
 
         String[] ctrlMethods = new String[]{"add", "remove", "update", "get", "search"};
         List<CtrlSetting.CtrlMethod> methods = new ArrayList<>();
@@ -111,14 +116,10 @@ public class CodeGenPanel {
         String tableSymbol = tableName;
         ctrlSetting.setClsName(String.format("%sController", tableSymbol));
 
-        List<DBTableField> fields = new ArrayList<>();
-        for (int i = 0; i< 5; i++ ){
-            DBTableField field = new DBTableField();
-            field.setName("field"+i);
-            field.setComment("comment"+i);
-            field.setType(new String[]{"int","string","boolean","long","string"}[i]);
-            fields.add(field);
-        }
+        var p = new HashMap <String, String>();
+        p.put("tableName", tableName);
+        DBContext.INSTANCE.refresh();
+        List<DBTableField> fields = DBContext.INSTANCE.queryFields( p);
         dbTable.setFields(fields);
         updateCtrlMethodTable();
     }
@@ -140,7 +141,7 @@ public class CodeGenPanel {
         for (int i = 0; i < data.length; i++) {
             CtrlSetting.CtrlMethod method = ctrlSetting.getMethods().get(i);
             for (int j = 0; j < headers.length; j++) {
-                data[i][j] = i+","+j;
+                data[i][j] = "id";
                 switch (j){
                     case CTRL_TABLE_INDEX_METHOD_NAME:{
                         data[i][j] = method.getName();
@@ -180,18 +181,18 @@ public class CodeGenPanel {
                 DBTableField field = dbTable.getFields().get(j);
                 vector.add(field.getName());
             }
-            final JComboBox<String> comboBox = new JComboBox<String>(vector);
+            final MultiComboBox multiComboBox = new MultiComboBox(vector, true);
             //下拉框监听
-            comboBox.addItemListener(new ItemListener() {
+            multiComboBox.setItemListener(new ItemListener() {
                 @Override
                 public void itemStateChanged(ItemEvent e) {
-                    if(e.getStateChange() == ItemEvent.SELECTED) {
-                        System.out.println(comboBox.getSelectedItem());
-                    }
+                    JCheckBox checkBox = (JCheckBox) e.getSource();
+                    int index = Integer.parseInt(checkBox.getName());
+                    System.out.println("index:" + index);
                 }
             });
             //表格编辑器
-            ctrlTable.getColumnModel().getColumn(CTRL_TABLE_INDEX_VO_FIELD).setCellEditor(new DefaultCellEditor(comboBox));
+            ctrlTable.getColumnModel().getColumn(CTRL_TABLE_INDEX_VO_FIELD).setCellEditor(new MultiComboBoxCellEditor(multiComboBox));
         }
 
     }

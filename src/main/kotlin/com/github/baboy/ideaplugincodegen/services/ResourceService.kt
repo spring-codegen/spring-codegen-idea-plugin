@@ -16,6 +16,13 @@ import java.nio.file.Paths
  * @date 2023/8/2
  */
 object ResourceService {
+    var ctrlConfig:CtrlConfig? = null
+    fun getCtrlConfig():CtrlConfig?{
+        if (ctrlConfig == null){
+            ctrlConfig = readYaml("/ctrl.yaml");
+        }
+        return ctrlConfig;
+    }
     fun readYaml( fn:String): CtrlConfig?{
         this.thisLogger().info("readYaml...")
 //        var s = CtrlConfig::class.java.getResourceAsStream("/ctrl.yaml")

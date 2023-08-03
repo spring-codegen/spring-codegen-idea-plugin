@@ -27,6 +27,10 @@ dependencies {
     implementation("com.alibaba.fastjson2:fastjson2:2.0.38")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.2")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.11.2")
+    implementation("org.mybatis:mybatis:3.5.13")
+    implementation("org.opengauss:opengauss-jdbc:3.1.1")
+    implementation("com.alibaba:druid:1.2.18")
+    implementation("commons-beanutils:commons-beanutils:1.9.4")
 }
 
 // Set the JVM language level used to build the project. Use Java 11 for 2020.3+, and Java 17 for 2022.2+.
