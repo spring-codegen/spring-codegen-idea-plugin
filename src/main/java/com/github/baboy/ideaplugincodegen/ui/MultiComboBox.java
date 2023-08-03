@@ -106,7 +106,7 @@ public class MultiComboBox extends JComponent implements ActionListener {
 
 
     @Override
-    public void actionPerformed(ActionEvent arg0) {
+    public void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub
         if (!popup.isVisible()) {
             popup.refresh();

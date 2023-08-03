@@ -1,4 +1,4 @@
-package com.github.baboy.ideaplugincodegen.config
+package com.github.baboy.ideaplugincodegen.setting
 
 class DataSourceSetting {
     var url: String? = null

@@ -1,10 +1,10 @@
 
-className: {CTRL_CLS_PREFIX}Controller
+className: "{CTRL_CLS_PREFIX}Controller"
 methods:
   - name: add
     path: /add
     httpMethod: POST
-    dtoClassName: {CTRL_CLS_PREFIX}AddArgs
+    dtoClassName: "{CTRL_CLS_PREFIX}AddArgs"
     voClassName: IdResult
 
   - name: remove
@@ -25,11 +25,11 @@ methods:
   - name: search
     path: /search
     httpMethod: GET
-    dtoClassName: {CTRL_CLS_PREFIX}SearchArgs
+    dtoClassName: "{CTRL_CLS_PREFIX}SearchArgs"
     voClassName: "-"
   - name: updateStatus
     path: /updateStatus
     httpMethod: POST
-    dtoClassName: {CTRL_CLS_PREFIX}UpdateStatusArgs
+    dtoClassName: "{CTRL_CLS_PREFIX}UpdateStatusArgs"
     voClassName: "-"
 

@@ -1,11 +1,11 @@
 package com.github.baboy.ideaplugincodegen.ui;
 
 import com.github.baboy.ideaplugincodegen.config.CtrlConfig;
-import com.github.baboy.ideaplugincodegen.config.CtrlSetting;
+import com.github.baboy.ideaplugincodegen.setting.CtrlSetting;
 import com.github.baboy.ideaplugincodegen.db.DBContext;
-import com.github.baboy.ideaplugincodegen.model.DBTable;
+import com.github.baboy.ideaplugincodegen.db.model.DBTable;
 import com.github.baboy.ideaplugincodegen.db.model.DBTableField;
-import com.github.baboy.ideaplugincodegen.config.DataSourceSetting;
+import com.github.baboy.ideaplugincodegen.setting.DataSourceSetting;
 import com.github.baboy.ideaplugincodegen.services.ResourceService;
 import org.apache.commons.beanutils.BeanUtils;
 
@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -82,16 +83,18 @@ public class CodeGenPanel {
         tables.add("t_api");
         setDbTableItems(tables);
 
-        CtrlConfig
-
-        String[] ctrlMethods = new String[]{"add", "remove", "update", "get", "search"};
         List<CtrlSetting.CtrlMethod> methods = new ArrayList<>();
-        for (String m: ctrlMethods){
+        CtrlConfig ctrlConfig = ResourceService.INSTANCE.getCtrlConfig();
+        for (int i = 0 ; i< ctrlConfig.getMethods().size(); i++){
             CtrlSetting.CtrlMethod method = new CtrlSetting.CtrlMethod();
-            method.setName(m);
-            method.setPath(String.format("/%s", m));
-            method.setRequestMethod("POST");
-            methods.add(method);
+            try {
+                BeanUtils.copyProperties(method, ctrlConfig.getMethods().get(i));
+                methods.add(method);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
         }
         ctrlSetting.setMethods(methods);
     }
@@ -124,16 +127,20 @@ public class CodeGenPanel {
         updateCtrlMethodTable();
     }
 
-    /**
-     *
-     var name: String? = null
-     var path: String? = null
-     var requestMethod: String? = null
-     var dtoClsName: String? = null
-     var dtoFields: List<String>? = null
-     var voClassName:String? = null
-     var voFields: List<String>? = null
-     */
+    private MultiComboBox createFieldComboBox(Vector<String> items){
+
+        final MultiComboBox multiComboBox = new MultiComboBox(items, true);
+        //下拉框监听
+        multiComboBox.setItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                JCheckBox checkBox = (JCheckBox) e.getSource();
+                int index = Integer.parseInt(checkBox.getName());
+                System.out.println("index:" + index);
+            }
+        });
+        return multiComboBox;
+    }
     private void updateCtrlMethodTable(){
         DefaultTableModel tableModel = new DefaultTableModel();
         String[] headers = CTRL_TABLE_HEADERS;
@@ -152,11 +159,11 @@ public class CodeGenPanel {
                         break;
                     }
                     case CTRL_TABLE_INDEX_HTTP_METHOD:{
-                        data[i][j] = method.getRequestMethod();
+                        data[i][j] = method.getHttpMethod();
                         break;
                     }
                     case CTRL_TABLE_INDEX_DTO_CLS:{
-                        data[i][j] = method.getDtoClsName();
+                        data[i][j] = method.getDtoClassName();
                         break;
                     }
                     case CTRL_TABLE_INDEX_DTO_FIELD:{
@@ -175,26 +182,18 @@ public class CodeGenPanel {
         tableModel.setDataVector(data, headers);
         ctrlTable.setModel(tableModel);
 
-        for (int i = 0; i < data.length; i++) {
-            Vector<String> vector = new Vector<String>();
-            for (int j = 0; j < dbTable.getFields().size(); j++){
-                DBTableField field = dbTable.getFields().get(j);
-                vector.add(field.getName());
-            }
-            final MultiComboBox multiComboBox = new MultiComboBox(vector, true);
-            //下拉框监听
-            multiComboBox.setItemListener(new ItemListener() {
-                @Override
-                public void itemStateChanged(ItemEvent e) {
-                    JCheckBox checkBox = (JCheckBox) e.getSource();
-                    int index = Integer.parseInt(checkBox.getName());
-                    System.out.println("index:" + index);
-                }
-            });
-            //表格编辑器
-            ctrlTable.getColumnModel().getColumn(CTRL_TABLE_INDEX_VO_FIELD).setCellEditor(new MultiComboBoxCellEditor(multiComboBox));
+        Vector<String> fieldItems = new Vector<String>();
+        for (int j = 0; j < dbTable.getFields().size(); j++){
+            DBTableField field = dbTable.getFields().get(j);
+            fieldItems.add(field.getName());
         }
+        final MultiComboBox dtoMultiComboBox = createFieldComboBox(fieldItems);
+        //表格编辑器
+        ctrlTable.getColumnModel().getColumn(CTRL_TABLE_INDEX_DTO_FIELD).setCellEditor(new MultiComboBoxCellEditor(dtoMultiComboBox));
 
+        final MultiComboBox voMultiComboBox = createFieldComboBox(fieldItems);
+        //表格编辑器
+        ctrlTable.getColumnModel().getColumn(CTRL_TABLE_INDEX_VO_FIELD).setCellEditor(new MultiComboBoxCellEditor(voMultiComboBox));
     }
     private DataSourceSetting getDataSourceConfig(){
         DataSourceSetting dataSourceSetting = new DataSourceSetting();

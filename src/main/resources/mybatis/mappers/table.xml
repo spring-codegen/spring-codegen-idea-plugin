@@ -5,12 +5,32 @@
 	<resultMap id="field" type="com.github.baboy.ideaplugincodegen.db.model.DBTableField">
 		<result column="table_name" property="tableName"/>
 		<result column="name" property="name"/>
-		<result column="description" property="description"/>
+		<result column="comment" property="comment"/>
 		<result column="schema" property="schema"/>
 		<result column="type" property="type"/>
 	</resultMap>
+	<resultMap id="table" type="com.github.baboy.ideaplugincodegen.db.model.DBTable">
+		<result column="name" property="name"/>
+		<result column="comment" property="comment"/>
+		<result column="schema" property="schema"/>
+	</resultMap>
 
 	<select id="queryFields" resultMap="field">
+		SELECT
+			col.table_name,
+			col.column_name as name,
+			col.ordinal_position as sort,
+			d.description as comment,
+			col.table_schema as schema,
+			col.udt_name as type
+		FROM information_schema.columns col
+			JOIN pg_class c ON c.relname = col.table_name
+			LEFT JOIN pg_description d ON d.objoid = c.oid AND d.objsubid = col.ordinal_position
+		WHERE col.table_name=#{tableName}
+		ORDER BY col.table_name, col.ordinal_position;
+	</select>
+
+	<select id="queryTables" resultMap="table">
 		SELECT
 			col.table_name,
 			col.column_name as name,

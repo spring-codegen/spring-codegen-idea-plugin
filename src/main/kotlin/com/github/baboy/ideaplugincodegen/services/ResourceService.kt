@@ -16,7 +16,7 @@ import java.nio.file.Paths
  * @date 2023/8/2
  */
 object ResourceService {
-    var ctrlConfig:CtrlConfig? = null
+    private var ctrlConfig:CtrlConfig? = null
     fun getCtrlConfig():CtrlConfig?{
         if (ctrlConfig == null){
             ctrlConfig = readYaml("/ctrl.yaml");

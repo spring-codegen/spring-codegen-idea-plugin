@@ -1,18 +1,18 @@
-package com.github.baboy.ideaplugincodegen.config
+package com.github.baboy.ideaplugincodegen.setting
 
 /**
  *
  * @author zhangyinghui
  * @date 2023/8/1
  */
-class CtrlSetting {
+class SvcSetting {
 
     var dir: String? = null
     var clsName: String? = null
     var baseURI: String? = null
-    var methods: List<CtrlMethod>? = null
+    var methods: List<SvcMethod>? = null
 
-    class CtrlMethod{
+    class SvcMethod{
         var name: String? = null
         var path: String? = null
         var requestMethod: String? = null

@@ -12,6 +12,7 @@ import com.github.baboy.ideaplugincodegen.MyBundle
 import com.github.baboy.ideaplugincodegen.services.MyProjectService
 import com.github.baboy.ideaplugincodegen.services.ResourceService
 import com.github.baboy.ideaplugincodegen.ui.CodeGenPanel
+import java.io.File
 import javax.swing.JButton
 
 
