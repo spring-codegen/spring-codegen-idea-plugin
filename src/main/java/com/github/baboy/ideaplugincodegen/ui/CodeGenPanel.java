@@ -1,16 +1,21 @@
 package com.github.baboy.ideaplugincodegen.ui;
 
-import com.github.baboy.ideaplugincodegen.config.CtrlConfig;
+import com.github.baboy.ideaplugincodegen.config.CodeCfg;
+import com.github.baboy.ideaplugincodegen.config.CodeCfgModel;
 import com.github.baboy.ideaplugincodegen.setting.CtrlSetting;
 import com.github.baboy.ideaplugincodegen.db.DBContext;
 import com.github.baboy.ideaplugincodegen.db.model.DBTable;
 import com.github.baboy.ideaplugincodegen.db.model.DBTableField;
 import com.github.baboy.ideaplugincodegen.setting.DataSourceSetting;
 import com.github.baboy.ideaplugincodegen.services.ResourceService;
+import com.github.baboy.ideaplugincodegen.util.ClassUtils;
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
 import org.apache.commons.beanutils.BeanUtils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -35,20 +40,15 @@ public class CodeGenPanel {
     private JTextField ctrlDirTextField;
     private JTextField ctrlClsNameTextField;
     private JTextField baseUriTextField;
+    private JScrollPane methodScrollPanel;
+    private JPanel codeCfgPanel;
     private JTable ctrlTable;
 
     private String tableName;
-    private CtrlSetting ctrlSetting;
     private DBTable dbTable;
 
-    final String[] CTRL_TABLE_HEADERS = {"方法名", "Path", "Http Method", "请求类", "请求字段", "返回类", "返回字段"};
-    final int CTRL_TABLE_INDEX_METHOD_NAME = 0;
-    final int CTRL_TABLE_INDEX_PATH = 1;
-    final int CTRL_TABLE_INDEX_HTTP_METHOD = 2;
-    final int CTRL_TABLE_INDEX_DTO_CLS = 3;
-    final int CTRL_TABLE_INDEX_DTO_FIELD = 4;
-    final int CTRL_TABLE_INDEX_VO_CLS = 5;
-    final int CTRL_TABLE_INDEX_VO_FIELD = 6;
+    private CodeCfg codeCfg;
+    private CodeCfg codeSetting = new CodeCfg();
     public CodeGenPanel() {
         testButton.addActionListener(new ActionListener() {
             @Override
@@ -65,7 +65,7 @@ public class CodeGenPanel {
                     // 选择的下拉框选项
                     System.out.println(e.getItem());
                     tableUpdated();
-                    ResourceService.INSTANCE.readYaml("ctrl.yaml");
+                    ResourceService.INSTANCE.readYaml("code-cfg.yaml");
                 }
             }
         });
@@ -77,38 +77,45 @@ public class CodeGenPanel {
     private void init(){
         dbTable = new DBTable();
 
-        ctrlSetting = new CtrlSetting();
         List tables = new ArrayList();
         tables.add("t_table1");
         tables.add("t_api");
         setDbTableItems(tables);
 
-        List<CtrlSetting.CtrlMethod> methods = new ArrayList<>();
-        CtrlConfig ctrlConfig = ResourceService.INSTANCE.getCtrlConfig();
-        for (int i = 0 ; i< ctrlConfig.getMethods().size(); i++){
-            CtrlSetting.CtrlMethod method = new CtrlSetting.CtrlMethod();
+        codeCfg = ResourceService.INSTANCE.getCodeCfg();
+        List<CodeCfg.Method> methods = new ArrayList<>();
+        for (int i = 0; i< codeCfg.getMethods().size(); i++){
+            CodeCfg.Method methodCfg = codeCfg.getMethods().get(i);
+            CodeCfg.Method method = new CodeCfg.Method();
+            method.setCtrl(new CodeCfgModel.CtrlModel());
+            method.setSvc(new CodeCfgModel.SvcModel());
+            method.setDao(new CodeCfgModel.DaoModel());
             try {
-                BeanUtils.copyProperties(method, ctrlConfig.getMethods().get(i));
+                BeanUtils.copyProperties(method, methodCfg);
                 methods.add(method);
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             } catch (InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
+            methods.add(method);
         }
-        ctrlSetting.setMethods(methods);
+        codeSetting.setCtrlClass(codeCfg.getCtrlClass());
+        codeSetting.setSvcClass(codeCfg.getSvcClass());
+        codeSetting.setDaoClass(codeCfg.getDaoClass());
+        codeSetting.setMethods(methods);
     }
     private void setDbTableItems(List<String> items){
         DefaultComboBoxModel comboBoxModel = new DefaultComboBoxModel();
-        // elements 下拉框中的选项
+
         for (String element : items) {
             comboBoxModel.addElement(element);
         }
         tableComboBox.setModel(comboBoxModel);
     }
     private void ctrlDirUpdated(){
-        ctrlSetting.setBaseURI(String.format("/api/v1/%s", ctrlSetting.getDir()));
-        baseUriTextField.setText(ctrlSetting.getBaseURI());
+        codeSetting.getCtrlClass().setBaseURI(String.format("/api/v1/%s", codeSetting.getCtrlClass().getDir()));
+        baseUriTextField.setText(codeSetting.getCtrlClass().getBaseURI());
     }
 
     /**
@@ -117,20 +124,19 @@ public class CodeGenPanel {
     private void tableUpdated(){
         String tableName = tableComboBox.getSelectedItem().toString();
         String tableSymbol = tableName;
-        ctrlSetting.setClsName(String.format("%sController", tableSymbol));
+//        codeSetting.setClsName(String.format("%sController", tableSymbol));
 
         var p = new HashMap <String, String>();
         p.put("tableName", tableName);
         DBContext.INSTANCE.refresh();
         List<DBTableField> fields = DBContext.INSTANCE.queryFields( p);
         dbTable.setFields(fields);
-        updateCtrlMethodTable();
+        updateMethodUI();
     }
 
     private MultiComboBox createFieldComboBox(Vector<String> items){
 
         final MultiComboBox multiComboBox = new MultiComboBox(items, true);
-        //下拉框监听
         multiComboBox.setItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -141,59 +147,63 @@ public class CodeGenPanel {
         });
         return multiComboBox;
     }
-    private void updateCtrlMethodTable(){
-        DefaultTableModel tableModel = new DefaultTableModel();
-        String[] headers = CTRL_TABLE_HEADERS;
-        String[][] data = new String[ctrlSetting.getMethods().size()][headers.length];
-        for (int i = 0; i < data.length; i++) {
-            CtrlSetting.CtrlMethod method = ctrlSetting.getMethods().get(i);
-            for (int j = 0; j < headers.length; j++) {
-                data[i][j] = "id";
-                switch (j){
-                    case CTRL_TABLE_INDEX_METHOD_NAME:{
-                        data[i][j] = method.getName();
-                        break;
-                    }
-                    case CTRL_TABLE_INDEX_PATH:{
-                        data[i][j] = method.getPath();
-                        break;
-                    }
-                    case CTRL_TABLE_INDEX_HTTP_METHOD:{
-                        data[i][j] = method.getHttpMethod();
-                        break;
-                    }
-                    case CTRL_TABLE_INDEX_DTO_CLS:{
-                        data[i][j] = method.getDtoClassName();
-                        break;
-                    }
-                    case CTRL_TABLE_INDEX_DTO_FIELD:{
-                        break;
-                    }
-                    case CTRL_TABLE_INDEX_VO_CLS:{
-                        data[i][j] = method.getVoClassName();
-                        break;
-                    }
-                    case CTRL_TABLE_INDEX_VO_FIELD:{
-                        break;
-                    }
-                }
+    private void updateMethodUI(){
+        GridLayout layout = new GridLayout(codeCfg.getMethods().size(), 1);
+        codeCfgPanel.setLayout(layout);
+        GridConstraints gridConstraints = new GridConstraints();
+        for (int i = 0; i< codeCfg.getMethods().size(); i++){
+            CodeCfg.Method method = codeCfg.getMethods().get(i);
+            CodeCfgModel model = new CodeCfgModel();
+            model.setCtrl(new CodeCfgModel.CtrlModel());
+            model.setSvc(new CodeCfgModel.SvcModel());
+            model.setDao(new CodeCfgModel.DaoModel());
+            gridConstraints.myPreferredSize.height = 500;
+            gridConstraints.setRow(i);
+
+            try {
+                BeanUtils.copyProperties(model.getCtrl(), method.getCtrl());
+                BeanUtils.copyProperties(model.getSvc(), method.getSvc());
+                BeanUtils.copyProperties(model.getDao(), method.getDao());
+                WorkflowItemCodePanel itemCodePanel = new WorkflowItemCodePanel();
+                itemCodePanel.setModel(model);
+                codeCfgPanel.add(itemCodePanel.getContent(), gridConstraints);
+
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException(e);
             }
         }
-        tableModel.setDataVector(data, headers);
-        ctrlTable.setModel(tableModel);
-
-        Vector<String> fieldItems = new Vector<String>();
-        for (int j = 0; j < dbTable.getFields().size(); j++){
-            DBTableField field = dbTable.getFields().get(j);
-            fieldItems.add(field.getName());
-        }
-        final MultiComboBox dtoMultiComboBox = createFieldComboBox(fieldItems);
-        //表格编辑器
-        ctrlTable.getColumnModel().getColumn(CTRL_TABLE_INDEX_DTO_FIELD).setCellEditor(new MultiComboBoxCellEditor(dtoMultiComboBox));
-
-        final MultiComboBox voMultiComboBox = createFieldComboBox(fieldItems);
-        //表格编辑器
-        ctrlTable.getColumnModel().getColumn(CTRL_TABLE_INDEX_VO_FIELD).setCellEditor(new MultiComboBoxCellEditor(voMultiComboBox));
+//
+//        DefaultTableModel tableModel = new DefaultTableModel();
+//        String[][] data = new String[ctrlSetting.getMethods().size()][codeConfig.getRenderItems().size()];
+//        String[] headers = new String[codeConfig.getRenderItems().size()];
+//        List<Integer> fieldIndexs = new ArrayList<>();
+//        for (int i = 0; i < data.length; i++) {
+//            CtrlSetting.CtrlMethod method = ctrlSetting.getMethods().get(i);
+//            for (int j = 0; j < codeConfig.getRenderItems().size(); j++) {
+//                CodeCfg.RenderItem renderItem = codeConfig.getRenderItems().get(j);
+//                data[i][j] = String.valueOf( ClassUtils.INSTANCE.fieldValue(method, renderItem.getField()) );
+//                if (i == 0){
+//                    headers[j] = renderItem.getTitle();
+//                    if (renderItem.getField().endsWith("Fields")){
+//                        fieldIndexs.add(j);
+//                    }
+//                }
+//            }
+//        }
+//        tableModel.setDataVector(data, headers);
+//        ctrlTable.setModel(tableModel);
+//
+//        Vector<String> fieldItems = new Vector<String>();
+//        for (int j = 0; j < dbTable.getFields().size(); j++){
+//            DBTableField field = dbTable.getFields().get(j);
+//            fieldItems.add(field.getName());
+//        }
+//        for(Integer i : fieldIndexs){
+//            final MultiComboBox dtoMultiComboBox = createFieldComboBox(fieldItems);
+//            ctrlTable.getColumnModel().getColumn(i).setCellEditor(new MultiComboBoxCellEditor(dtoMultiComboBox));
+//        }
     }
     private DataSourceSetting getDataSourceConfig(){
         DataSourceSetting dataSourceSetting = new DataSourceSetting();

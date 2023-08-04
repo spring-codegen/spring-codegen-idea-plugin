@@ -4,11 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
-import com.github.baboy.ideaplugincodegen.config.CtrlConfig
+import com.github.baboy.ideaplugincodegen.config.CodeCfg
 import com.intellij.openapi.diagnostic.thisLogger
-import org.yaml.snakeyaml.Yaml
-import java.nio.file.Files
-import java.nio.file.Paths
 
 /**
  *
@@ -16,31 +13,23 @@ import java.nio.file.Paths
  * @date 2023/8/2
  */
 object ResourceService {
-    private var ctrlConfig:CtrlConfig? = null
-    fun getCtrlConfig():CtrlConfig?{
-        if (ctrlConfig == null){
-            ctrlConfig = readYaml("/ctrl.yaml");
+    private var codeCfg:CodeCfg? = null
+    fun getCodeCfg():CodeCfg?{
+        if (codeCfg == null){
+            codeCfg = readYaml("/code-cfg.yaml");
         }
-        return ctrlConfig;
+        return codeCfg;
     }
-    fun readYaml( fn:String): CtrlConfig?{
+    fun readYaml( fn:String): CodeCfg?{
         this.thisLogger().info("readYaml...")
-//        var s = CtrlConfig::class.java.getResourceAsStream("/ctrl.yaml")
-//        var a = CtrlConfig()
-//        var x = Yaml().loadAs(s, a.javaClass) as CtrlConfig
-//        this.thisLogger().info("result:"+ x.toString())
-//        println(x)
-        var f = CtrlConfig::class.java.getResource("/ctrl.yaml").toURI()
-        println(f)
-//        val path = Paths.get( f)
         val mapper = ObjectMapper(YAMLFactory())
         mapper.registerModule(KotlinModule())
 
         try {
-            var ret:CtrlConfig? = null
-            var s = CtrlConfig::class.java.getResourceAsStream("/ctrl.yaml")
+            var ret:CodeCfg? = null
+            var s = CodeCfg::class.java.getResourceAsStream(fn)
             s.use {
-                ret = mapper.readValue(it, CtrlConfig::class.java)
+                ret = mapper.readValue(it, CodeCfg::class.java)
             }
             return ret
         } catch (exception: MissingKotlinParameterException) {

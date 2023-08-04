@@ -16,37 +16,37 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JTextField;
-import javax.swing.UIManager;
+import javax.accessibility.Accessible;
+import javax.swing.*;
 import javax.swing.plaf.basic.BasicArrowButton;
 /**
  * @author zhangyinghui
  * @date 2023/8/3
 
  */
-public class MultiComboBox extends JComponent implements ActionListener {
+public class MultiComboBox extends JComponent implements SwingConstants, Accessible, ActionListener {
     protected boolean isEditable  = false;
     private Vector<String> items;
     private MultiPopup popup;
     private JTextField editor;
     protected JButton arrowButton;
     private ItemListener itemListener;
-    private Boolean supportSelectAll;
+    private Boolean supportSelectAll = true;
+    public MultiComboBox(){
+        initComponent();
+    }
 
     public MultiComboBox(Vector<String> items,Boolean supportSelectAll) {
-        this.items = items;
-        this.supportSelectAll = supportSelectAll;
-        initComponent();
+        this();
+        this.setItems(items);
+        this.setSupportSelectAll(supportSelectAll);
     }
 
     private void initComponent() {
         this.setLayout(new BorderLayout());
-        popup = new MultiPopup(items, supportSelectAll);
+        popup = new MultiPopup();
+        popup.setItems(items);
+        popup.setSupportSelectAll(supportSelectAll);
         editor = new JTextField();
         editor.setBackground(Color.WHITE);
         editor.setEditable(false);
@@ -57,6 +57,28 @@ public class MultiComboBox extends JComponent implements ActionListener {
         add(editor, BorderLayout.WEST);
         add(arrowButton, BorderLayout.CENTER);
     }
+
+    public Vector<String> getItems() {
+        return items;
+    }
+
+    public void setItems(Vector<String> items) {
+        this.items = items;
+        popup.setItems(items);
+    }
+
+    public Boolean getSupportSelectAll() {
+        return supportSelectAll;
+    }
+
+    public void setSupportSelectAll(Boolean supportSelectAll) {
+        if (this.supportSelectAll == supportSelectAll){
+            return;
+        }
+        this.supportSelectAll = supportSelectAll;
+        popup.setSupportSelectAll(supportSelectAll);
+    }
+
     public void setEditable(boolean aFlag) {
         boolean oldFlag = isEditable;
         isEditable = aFlag;
@@ -81,12 +103,11 @@ public class MultiComboBox extends JComponent implements ActionListener {
         popup.setItemListener(itemListener);
     }
 
-    //获取选中的数据
     public String[] getSelectedValues() {
         return popup.getSelectedValues();
     }
 
-    //设置需要选中的值
+
     public void setSelectValues(String[] selectvalues) {
         popup.setSelectValues(selectvalues);
         setText(selectvalues);
@@ -133,14 +154,32 @@ public class MultiComboBox extends JComponent implements ActionListener {
         private JButton commitButton;
         private JButton cancelButton;
         private ItemListener itemListener;
-        private Boolean supportSelectAll;
+        private Boolean supportSelectAll = true;
+        private JPanel checkboxPane;
         private List<String> selectedValues = new ArrayList<>();
 
-        public MultiPopup(Vector<String> items,Boolean supportSelectAll) {
+        public MultiPopup() {
             super();
-            this.items = (Vector<String>) items.clone();
-            this.supportSelectAll = supportSelectAll;
             initComponent();
+            refreshItems();
+        }
+
+        public Vector<String> getItems() {
+            return items;
+        }
+
+        public void setItems(Vector<String> items) {
+            this.items = items == null ? null : (Vector<String>) items.clone();
+            refreshItems();
+        }
+
+        public Boolean getSupportSelectAll() {
+            return supportSelectAll;
+        }
+
+        public void setSupportSelectAll(Boolean supportSelectAll) {
+            this.supportSelectAll = supportSelectAll;
+            refreshItems();
         }
 
         public ItemListener getItemListener() {
@@ -151,16 +190,48 @@ public class MultiComboBox extends JComponent implements ActionListener {
         }
 
         private void initComponent() {
-            JPanel checkboxPane = new JPanel();
+            checkboxPane = new JPanel();
+            checkboxPane.setLayout(new GridLayout(checkBoxList.size(), 1, 3, 3));
+
             JPanel buttonPane = new JPanel();
             this.setLayout(new BorderLayout());
-            items.insertElementAt("Select All", 0);
+
+            commitButton = new JButton("Enter");
+            commitButton.addActionListener(this);
+
+            cancelButton = new JButton("Cancel");
+            cancelButton.addActionListener(this);
+
+            buttonPane.add(commitButton);
+            buttonPane.add(cancelButton);
+            this.add(checkboxPane, BorderLayout.CENTER);
+            this.add(buttonPane, BorderLayout.SOUTH);
+
+        }
+        private void refreshItems(){
+            for (JCheckBox box : checkBoxList){
+                box.getParent().remove(box);
+            }
+            checkBoxList.clear();
+            if (supportSelectAll){
+                JCheckBox box = new JCheckBox("Select All");
+                box.setName(String.valueOf(-1));
+                checkBoxList.add(box);
+                checkboxPane.add(box);
+            }
+            if (items == null){
+                return;
+            }
             for (int i = 0; i< items.size(); i++) {
                 String v = items.get(i);
-                JCheckBox temp = new JCheckBox(v.toString());
-                temp.setName(String.valueOf(i - (supportSelectAll ? 1 : 0)));
-                checkBoxList.add(temp);
-                temp.addItemListener(new ItemListener() {
+                JCheckBox box = new JCheckBox(v.toString());
+                box.setName(String.valueOf(i ));
+                checkBoxList.add(box);
+                checkboxPane.add(box);
+
+            }
+            for (JCheckBox box : checkBoxList){
+                box.addItemListener(new ItemListener() {
                     @Override
                     public void itemStateChanged(ItemEvent e) {
                         JCheckBox checkBox = (JCheckBox) e.getSource();
@@ -178,23 +249,6 @@ public class MultiComboBox extends JComponent implements ActionListener {
                     }
                 });
             }
-
-            checkboxPane.setLayout(new GridLayout(checkBoxList.size(), 1, 3, 3));
-            for (JCheckBox box : checkBoxList) {
-                checkboxPane.add(box);
-            }
-
-            commitButton = new JButton("Enter");
-            commitButton.addActionListener(this);
-
-            cancelButton = new JButton("Cancel");
-            cancelButton.addActionListener(this);
-
-            buttonPane.add(commitButton);
-            buttonPane.add(cancelButton);
-            this.add(checkboxPane, BorderLayout.CENTER);
-            this.add(buttonPane, BorderLayout.SOUTH);
-
         }
         public void selectAll(){
             for (int i = 1; i < checkBoxList.size(); i++) {

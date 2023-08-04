@@ -1,0 +1,67 @@
+
+ctrlClass:
+  dir: ""
+  className: "{CLS_PREFIX}Controller"
+  baseURI: "/api/v1"
+svcClass:
+  dir: ""
+  className: "{CLS_PREFIX}Service"
+
+daoClass:
+  dir: ""
+  className: "{CLS_PREFIX}Dao"
+methods:
+  - ctrl:
+      name: add
+      path: /add
+      httpMethod: POST
+      dtoClassName: "{CLS_PREFIX}AddArgs"
+      voClassName: IdResult
+
+  - ctrl:
+      name: remove
+      path: /remove
+      httpMethod: POST
+      dtoClassName: IdArg
+      voClassName: "-"
+  - ctrl:
+      name: update
+      path: /update
+      httpMethod: POST
+      dtoClassName: IdArgs
+      voClassName: "-"
+  - ctrl:
+      name: get
+      path: /get
+      httpMethod: GET
+      dtoClassName: Integer
+      voClassName: "-"
+  - ctrl:
+      name: search
+      path: /search
+      httpMethod: GET
+      dtoClassName: "{CLS_PREFIX}SearchArgs"
+      voClassName: "-"
+  - ctrl:
+      name: updateStatus
+      path: /updateStatus
+      httpMethod: POST
+      dtoClassName: "{CLS_PREFIX}UpdateStatusArgs"
+      voClassName: "-"
+renderItems:
+  - title: 方法名
+    field: name
+  - title: 路径
+    field: path
+  - title: Method
+    field: httpMethod
+  - title: 参数类名
+    field: dtoClassName
+  - title: 参数字段
+    field: dtoFields
+  - title: 输出类名
+    field: voClassName
+  - title: 输出字段
+    field: voFields
+
+
