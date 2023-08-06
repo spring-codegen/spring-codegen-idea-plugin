@@ -17,6 +17,12 @@ methods:
       httpMethod: POST
       dtoClassName: "{CLS_PREFIX}AddArgs"
       voClassName: IdResult
+      voListFlag: false
+    svc:
+      name: add
+      boClassName: "{CLS_PREFIX}AddArgs"
+      boResultClassName: Integer
+      boResultListFlag: false
 
   - ctrl:
       name: remove
@@ -24,30 +30,48 @@ methods:
       httpMethod: POST
       dtoClassName: IdArg
       voClassName: "-"
+      voListFlag: false
+    svc:
+      name: remove
+      boClassName: "{CLS_PREFIX}"
+      boResultClassName: Integer
+      boResultListFlag: false
   - ctrl:
       name: update
       path: /update
       httpMethod: POST
       dtoClassName: IdArgs
       voClassName: "-"
+      voListFlag: false
+    svc:
+      name: update
+      boClassName: "{CLS_PREFIX}"
+      boResultClassName: Boolean
+      boResultListFlag: false
   - ctrl:
       name: get
       path: /get
       httpMethod: GET
       dtoClassName: Integer
       voClassName: "-"
+      voListFlag: false
+    svc:
+      name: get
+      boClassName: "Integer"
+      boResultClassName: "{CLS_PREFIX}"
+      boResultListFlag: false
   - ctrl:
       name: search
       path: /search
       httpMethod: GET
       dtoClassName: "{CLS_PREFIX}SearchArgs"
       voClassName: "-"
-  - ctrl:
-      name: updateStatus
-      path: /updateStatus
-      httpMethod: POST
-      dtoClassName: "{CLS_PREFIX}UpdateStatusArgs"
-      voClassName: "-"
+      voListFlag: true
+    svc:
+      name: search
+      boClassName: "{CLS_PREFIX}SearchArgs"
+      boResultClassName: "{CLS_PREFIX}"
+      boResultListFlag: true
 renderItems:
   - title: 方法名
     field: name

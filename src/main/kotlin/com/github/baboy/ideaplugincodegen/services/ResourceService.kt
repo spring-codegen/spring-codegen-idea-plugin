@@ -29,7 +29,7 @@ object ResourceService {
             var ret:CodeCfg? = null
             var s = CodeCfg::class.java.getResourceAsStream(fn)
             s.use {
-                ret = mapper.readValue(it, CodeCfg::class.java)
+                ret = if (it != null) mapper.readValue(it, CodeCfg::class.java) else null
             }
             return ret
         } catch (exception: MissingKotlinParameterException) {

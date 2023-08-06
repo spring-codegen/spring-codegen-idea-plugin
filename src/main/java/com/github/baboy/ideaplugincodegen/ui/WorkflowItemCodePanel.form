@@ -217,7 +217,7 @@
           <gridbag weightx="0.0" weighty="0.0" ipady="5"/>
         </constraints>
         <properties>
-          <background color="-1"/>
+          <background color="-12828863"/>
         </properties>
       </component>
       <component id="b6dd9" class="javax.swing.JLabel">
@@ -246,7 +246,7 @@
           <gridbag weightx="0.0" weighty="0.0" ipady="5"/>
         </constraints>
         <properties>
-          <background color="-1312513"/>
+          <background color="-12828863"/>
         </properties>
       </component>
       <component id="5d472" class="javax.swing.JLabel">
@@ -341,7 +341,7 @@
           <gridbag weightx="0.0" weighty="0.0" ipady="5"/>
         </constraints>
         <properties>
-          <background color="-1115905"/>
+          <background color="-12828863"/>
         </properties>
       </component>
       <component id="493ae" class="com.github.baboy.ideaplugincodegen.ui.MultiComboBox" binding="boFieldMultiComboBox" custom-create="true">
@@ -350,17 +350,17 @@
           <gridbag weightx="0.0" weighty="0.0" ipady="5"/>
         </constraints>
         <properties>
-          <background color="-1050113"/>
+          <background color="-12828863"/>
         </properties>
       </component>
       <component id="b17da" class="javax.swing.JSeparator">
         <constraints>
           <grid row="10" column="0" row-span="1" col-span="16" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <gridbag top="10" left="0" bottom="5" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <background color="-5195585"/>
-          <foreground color="-3750202"/>
+          <background color="-12828863"/>
+          <foreground color="-11249317"/>
         </properties>
       </component>
     </children>

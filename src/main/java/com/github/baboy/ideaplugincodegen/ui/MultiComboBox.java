@@ -3,6 +3,8 @@ package com.github.baboy.ideaplugincodegen.ui;
 
 
 
+import org.apache.commons.collections.ListUtils;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -14,7 +16,7 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
+import java.util.List;
 
 import javax.accessibility.Accessible;
 import javax.swing.*;
@@ -26,7 +28,7 @@ import javax.swing.plaf.basic.BasicArrowButton;
  */
 public class MultiComboBox extends JComponent implements SwingConstants, Accessible, ActionListener {
     protected boolean isEditable  = false;
-    private Vector<String> items;
+    private List<String> items;
     private MultiPopup popup;
     private JTextField editor;
     protected JButton arrowButton;
@@ -36,7 +38,7 @@ public class MultiComboBox extends JComponent implements SwingConstants, Accessi
         initComponent();
     }
 
-    public MultiComboBox(Vector<String> items,Boolean supportSelectAll) {
+    public MultiComboBox(List<String> items,Boolean supportSelectAll) {
         this();
         this.setItems(items);
         this.setSupportSelectAll(supportSelectAll);
@@ -48,21 +50,24 @@ public class MultiComboBox extends JComponent implements SwingConstants, Accessi
         popup.setItems(items);
         popup.setSupportSelectAll(supportSelectAll);
         editor = new JTextField();
-        editor.setBackground(Color.WHITE);
+//        editor.setBackground(Color.WHITE);
         editor.setEditable(false);
-        editor.setPreferredSize(new Dimension(140, 22));
+//        editor.setPreferredSize(new Dimension(140, 22));
         editor.addActionListener(this);
         arrowButton = createArrowButton();
         arrowButton.addActionListener(this);
-        add(editor, BorderLayout.WEST);
-        add(arrowButton, BorderLayout.CENTER);
+        add(editor, BorderLayout.CENTER);
+        add(arrowButton, BorderLayout.EAST);
+
+        setBorder(editor.getBorder());
+        editor.setBorder(null);
     }
 
-    public Vector<String> getItems() {
+    public List<String> getItems() {
         return items;
     }
 
-    public void setItems(Vector<String> items) {
+    public void setItems(List<String> items) {
         this.items = items;
         popup.setItems(items);
     }
@@ -136,9 +141,10 @@ public class MultiComboBox extends JComponent implements SwingConstants, Accessi
     }
 
     protected JButton createArrowButton() {
-        JButton button = new BasicArrowButton(BasicArrowButton.SOUTH, UIManager.getColor("ComboBox.buttonBackground"),
-                UIManager.getColor("ComboBox.buttonShadow"), UIManager.getColor("ComboBox.buttonDarkShadow"),
-                UIManager.getColor("ComboBox.buttonHighlight"));
+//        JButton button = new BasicArrowButton(BasicArrowButton.SOUTH, UIManager.getColor("ComboBox.buttonBackground"),
+//                UIManager.getColor("ComboBox.buttonShadow"), UIManager.getColor("ComboBox.buttonDarkShadow"),
+//                UIManager.getColor("ComboBox.buttonHighlight"));
+        JButton button = new BasicArrowButton(BasicArrowButton.SOUTH);
         button.setName("ComboBox.arrowButton");
         return button;
     }
@@ -149,7 +155,7 @@ public class MultiComboBox extends JComponent implements SwingConstants, Accessi
 
     public class MultiPopup extends JPopupMenu implements ActionListener {
 
-        private Vector<String> items;
+        private List<String> items;
         private List<JCheckBox> checkBoxList = new ArrayList<JCheckBox>();
         private JButton commitButton;
         private JButton cancelButton;
@@ -164,12 +170,12 @@ public class MultiComboBox extends JComponent implements SwingConstants, Accessi
             refreshItems();
         }
 
-        public Vector<String> getItems() {
+        public List<String> getItems() {
             return items;
         }
 
-        public void setItems(Vector<String> items) {
-            this.items = items == null ? null : (Vector<String>) items.clone();
+        public void setItems(List<String> items) {
+            this.items = items;
             refreshItems();
         }
 
@@ -269,22 +275,15 @@ public class MultiComboBox extends JComponent implements SwingConstants, Accessi
         public void setSelectValues(String[] values) {
             this.selectedValues.clear();
             this.selectedValues.addAll(Arrays.asList(values));
+            refresh();
             if (values.length > 0) {
-                for (int i = 0; i < values.length; i++) {
-                    for (int j = 0; j < checkBoxList.size(); j++) {
-                        boolean selected = values[i].equals(checkBoxList.get(j).getText());
-                        checkBoxList.get(j).setSelected(selected);
-                    }
-                }
                 setText(getSelectedValues());
             }
         }
         public void refresh(){
-            for (int i = 0; i < this.selectedValues.size(); i++) {
-                for (int j = 0; j < checkBoxList.size(); j++) {
-                    boolean selected = selectedValues.get(i).equals(checkBoxList.get(j).getText());
-                    checkBoxList.get(j).setSelected(selected);
-                }
+            for (int i = 0; i < checkBoxList.size(); i++) {
+                boolean selected = selectedValues.contains(checkBoxList.get(i).getText());
+                checkBoxList.get(i).setSelected(selected);
             }
         }
 

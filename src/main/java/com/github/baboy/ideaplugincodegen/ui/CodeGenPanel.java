@@ -148,23 +148,35 @@ public class CodeGenPanel {
         return multiComboBox;
     }
     private void updateMethodUI(){
+        codeCfgPanel.removeAll();
         GridLayout layout = new GridLayout(codeCfg.getMethods().size(), 1);
         codeCfgPanel.setLayout(layout);
+
         GridConstraints gridConstraints = new GridConstraints();
+        List<String> tableFields = new ArrayList<>();
+        for (int i = 0; i< dbTable.getFields().size(); i++){
+            tableFields.add(dbTable.getFields().get(i).getName());
+        }
         for (int i = 0; i< codeCfg.getMethods().size(); i++){
             CodeCfg.Method method = codeCfg.getMethods().get(i);
             CodeCfgModel model = new CodeCfgModel();
             model.setCtrl(new CodeCfgModel.CtrlModel());
             model.setSvc(new CodeCfgModel.SvcModel());
             model.setDao(new CodeCfgModel.DaoModel());
+
+            model.getCtrl().setFields(tableFields);
+            model.getSvc().setFields(tableFields);
+            model.getDao().setFields(tableFields);
+
             gridConstraints.myPreferredSize.height = 500;
             gridConstraints.setRow(i);
 
             try {
-                BeanUtils.copyProperties(model.getCtrl(), method.getCtrl());
-                BeanUtils.copyProperties(model.getSvc(), method.getSvc());
-                BeanUtils.copyProperties(model.getDao(), method.getDao());
+                BeanUtils.copyProperties(model.getCtrl(), method.getCtrl() == null ? new CodeCfgModel.CtrlModel(): method.getCtrl());
+                BeanUtils.copyProperties(model.getSvc(), method.getSvc() == null ? new CodeCfgModel.SvcModel() : method.getSvc());
+                BeanUtils.copyProperties(model.getDao(), method.getDao() == null ? new CodeCfgModel.DaoModel() : method.getDao());
                 WorkflowItemCodePanel itemCodePanel = new WorkflowItemCodePanel();
+                itemCodePanel.init();
                 itemCodePanel.setModel(model);
                 codeCfgPanel.add(itemCodePanel.getContent(), gridConstraints);
 
