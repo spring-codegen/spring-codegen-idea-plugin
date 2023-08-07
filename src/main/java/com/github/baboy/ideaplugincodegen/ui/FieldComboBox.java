@@ -309,8 +309,8 @@ public class FieldComboBox extends JComponent implements SwingConstants, Accessi
                     continue;
                 }
                 checkBoxList.get(i).setSelected(true);
-                boolean allowNull = r.get().getNotNull();
-                nullChekBoxList.get(i).setSelected(allowNull);
+                Boolean allowNull = r.get().getNotNull();
+                nullChekBoxList.get(i).setSelected(allowNull == null ? false : allowNull );
             }
         }
 
@@ -370,7 +370,7 @@ public class FieldComboBox extends JComponent implements SwingConstants, Accessi
     public static class Model{
         private String title;
         private String value;
-        private Boolean isNotNull;
+        private Boolean isNotNull = false;
 
         public String getTitle() {
             return title;

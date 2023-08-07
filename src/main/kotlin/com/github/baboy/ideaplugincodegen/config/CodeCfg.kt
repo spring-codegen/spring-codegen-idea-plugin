@@ -33,6 +33,8 @@ open class CodeCfg{
         var dtoFieldIncludes: String? =  null
         var voClassName: String? = null
         var voFields: List<String>? = null
+        var voFieldExcludes: String? =  null
+        var voFieldIncludes: String? =  null
         var voListFlag: Boolean? = null
     }
 
@@ -44,6 +46,8 @@ open class CodeCfg{
         var boFieldExcludes: String? =  null
         var boFieldIncludes: String? =  null
         var boResultClassName: String? = null
+        var boResultFieldExcludes: String? =  null
+        var boResultFieldIncludes: String? =  null
         var boResultFields: List<String>? = null
         var boResultListFlag: Boolean? = null
     }
@@ -56,6 +60,8 @@ open class CodeCfg{
         var poFieldIncludes: String? =  null
         var poFields: List<String>? = null
         var poResultClassName: String? = null
+        var poResultFieldExcludes: String? =  null
+        var poResultFieldIncludes: String? =  null
         var poResultFields: List<String>? = null
         var poResultListFlag: Boolean? = null
     }

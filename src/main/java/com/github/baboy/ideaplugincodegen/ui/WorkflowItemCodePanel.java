@@ -25,14 +25,14 @@ public class WorkflowItemCodePanel {
     private JTextField boClassNameTextField;
     private JTextField boResultClassNameTextField;
     private JCheckBox boResultListFlagCheckbox;
-    private FieldComboBox boResultMultiComboBox;
+    private FieldComboBox boResultFieldMultiComboBox;
     private FieldComboBox boFieldMultiComboBox;
     private JPanel content;
     private CodeCfgModel model;
     public void createUIComponents(){
         dtoFieldMultiComboBox = new FieldComboBox();
         voFieldMultiComboBox = new FieldComboBox();
-        boResultMultiComboBox = new FieldComboBox();
+        boResultFieldMultiComboBox = new FieldComboBox();
         boFieldMultiComboBox = new FieldComboBox();
     }
     public WorkflowItemCodePanel(){
@@ -61,15 +61,33 @@ public class WorkflowItemCodePanel {
         
         this.dtoFieldMultiComboBox.setItems(ctrlFieldModel);
         this.dtoClassNameTextField.setText(model.getCtrl().getDtoClassName());
+
         this.voClassNameTextField.setText(model.getCtrl().getVoClassName());
         this.voFieldMultiComboBox.setItems(ctrlFieldModel);
         this.voListFlagCheckbox.setSelected(model.getCtrl().getVoListFlag());
         this.svcMethodNameTextField.setText(model.getSvc().getName());
         this.boClassNameTextField.setText(model.getSvc().getBoClassName());
         this.boFieldMultiComboBox.setItems(svcFieldModel);
-        this.boResultMultiComboBox.setItems(svcFieldModel);
+        this.boResultFieldMultiComboBox.setItems(svcFieldModel);
         this.boResultClassNameTextField.setText(model.getSvc().getBoResultClassName());
         this.boResultListFlagCheckbox.setSelected(model.getSvc().getBoResultListFlag());
+
+        if (model.getCtrl().getDtoFields() != null){
+            FieldComboBox.Model[] selectedDtoFields = model.getCtrl().getDtoFields().stream().map(e -> new FieldComboBox.Model().setValue(e)).toArray(FieldComboBox.Model[]::new);
+            this.dtoFieldMultiComboBox.setSelectValues(selectedDtoFields);
+        }
+        if (model.getCtrl().getVoFields() != null){
+            FieldComboBox.Model[] selectedDtoFields = model.getCtrl().getVoFields().stream().map(e -> new FieldComboBox.Model().setValue(e)).toArray(FieldComboBox.Model[]::new);
+            this.voFieldMultiComboBox.setSelectValues(selectedDtoFields);
+        }
+        if (model.getSvc().getBoFields() != null){
+            FieldComboBox.Model[] selectedDtoFields = model.getSvc().getBoFields().stream().map(e -> new FieldComboBox.Model().setValue(e)).toArray(FieldComboBox.Model[]::new);
+            this.boFieldMultiComboBox.setSelectValues(selectedDtoFields);
+        }
+        if (model.getSvc().getBoResultFields() != null){
+            FieldComboBox.Model[] selectedDtoFields = model.getSvc().getBoResultFields().stream().map(e -> new FieldComboBox.Model().setValue(e)).toArray(FieldComboBox.Model[]::new);
+            this.boResultFieldMultiComboBox.setSelectValues(selectedDtoFields);
+        }
     }
     public void getValue(){
         CodeCfgModel val = new CodeCfgModel();

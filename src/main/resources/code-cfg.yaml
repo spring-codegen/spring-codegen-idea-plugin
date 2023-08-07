@@ -16,23 +16,26 @@ methods:
       path: /add
       httpMethod: POST
       dtoClassName: "{CLS_PREFIX}AddArgs"
-      dtoFieldExcludes: "id,*time,*_uid"
+      dtoFieldExcludes: "id,.*time,.*_uid"
       voClassName: IdResult
       voFieldIncludes: "id"
       voListFlag: false
     svc:
       name: add
       boClassName: "{CLS_PREFIX}"
-      boFieldIncludes: "*"
-      boResultClassName: Integer
+      boFieldIncludes: ".*"
+      boResultClassName: int
+      boResultFieldIncludes: "id"
       boResultListFlag: false
 
   - ctrl:
       name: remove
       path: /remove
-      httpMethod:
+      httpMethod: POST
       dtoClassName: IdArg
-      voClassName: "-"
+      dtoFieldIncludes: "id"
+      voClassName: "bool"
+      voFieldIncludes: "-"
       voListFlag: false
     svc:
       name: remove
@@ -69,6 +72,7 @@ methods:
       httpMethod: GET
       dtoClassName: "{CLS_PREFIX}SearchArgs"
       voClassName: "-"
+      voFieldIncludes: ".*"
       voListFlag: true
     svc:
       name: search

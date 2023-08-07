@@ -139,33 +139,27 @@ public class CodeGenPanel {
         }
         return r;
     }
-    private void handleDefaultFields(CodeCfgModel model){
-        List<String> dtoFields = new ArrayList<>();
-        List<Pattern> dtoExcludePatterns = null;
-        List<Pattern> dtoIncludePatterns = null;
-        if (StringUtils.isNotEmpty(model.getCtrl().getDtoFieldExcludes())){
-            Arrays.stream(model.getCtrl().getDtoFieldExcludes().split(",")).map(e -> Pattern.compile(e)).toList();
-            Arrays.stream(model.getCtrl().getDtoFieldIncludes().split(",")).map(e -> Pattern.compile(e)).toList();
-        }
+    private List<String> handleDefaultFields(String excludes, String includes){
+        List<String> allowFields = new ArrayList<>();
         dbTable.getFields().forEach(field -> {
-            if (StringUtils.isNotEmpty(model.getCtrl().getDtoFieldExcludes())){
-                boolean isExclude = Arrays.stream(model.getCtrl().getDtoFieldExcludes().split(",")).filter(p -> Pattern.matches(p, field.getName())).findFirst().isPresent();
+            if (StringUtils.isNotEmpty(excludes)){
+                boolean isExclude = Arrays.stream(excludes.split(",")).filter(p -> Pattern.matches(p, field.getName())).findFirst().isPresent();
                 if (isExclude){
                     return;
                 }
             }
 
-            if (StringUtils.isNotEmpty(model.getCtrl().getDtoFieldIncludes())){
-                boolean isInclude = Arrays.stream(model.getCtrl().getDtoFieldIncludes().split(",")).filter(p -> Pattern.matches(p, field.getName())).findFirst().isPresent();
+            if (StringUtils.isNotEmpty(includes)){
+                boolean isInclude = Arrays.stream(includes.split(",")).filter(p -> Pattern.matches(p, field.getName())).findFirst().isPresent();
                 if (isInclude){
-                    dtoFields.add(field.getName());
+                    allowFields.add(field.getName());
                     return;
                 }
                 return;
             }
-            dtoFields.add(field.getName());
+            allowFields.add(field.getName());
         });
-        model.getCtrl().setDtoFields(dtoFields);
+        return allowFields;
     }
     private void updateMethodUI(){
         String tableName = (String)tableComboBox.getSelectedItem();
@@ -214,7 +208,12 @@ public class CodeGenPanel {
                 model.getSvc().setBoClassName(getHandledVar(model.getSvc().getBoClassName(), p));
                 model.getSvc().setBoResultClassName(getHandledVar(model.getSvc().getBoResultClassName(), p));
                 model.getDao().setPoClassName(getHandledVar(model.getDao().getPoClassName(), p));
-                handleDefaultFields(model);
+                model.getCtrl().setDtoFields(handleDefaultFields(model.getCtrl().getDtoFieldExcludes(), model.getCtrl().getDtoFieldIncludes()));
+                model.getCtrl().setVoFields(handleDefaultFields(model.getCtrl().getVoFieldExcludes(), model.getCtrl().getVoFieldIncludes()));
+
+                model.getSvc().setBoFields(handleDefaultFields(model.getSvc().getBoFieldExcludes(), model.getSvc().getBoFieldIncludes()));
+
+                model.getSvc().setBoResultFields(handleDefaultFields(model.getSvc().getBoResultFieldExcludes(), model.getSvc().getBoResultFieldIncludes()));
                 WorkflowItemCodePanel itemCodePanel = new WorkflowItemCodePanel();
                 itemCodePanel.init();
                 itemCodePanel.setModel(model);
