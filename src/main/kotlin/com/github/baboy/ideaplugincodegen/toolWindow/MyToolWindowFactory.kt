@@ -1,5 +1,10 @@
 package com.github.baboy.ideaplugincodegen.toolWindow
 
+import com.github.baboy.ideaplugincodegen.MyBundle
+import com.github.baboy.ideaplugincodegen.db.DBContext
+import com.github.baboy.ideaplugincodegen.db.DBContext.refresh
+import com.github.baboy.ideaplugincodegen.services.MyProjectService
+import com.github.baboy.ideaplugincodegen.ui.CodeGenPanel
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project
@@ -8,11 +13,6 @@ import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPanel
 import com.intellij.ui.content.ContentFactory
-import com.github.baboy.ideaplugincodegen.MyBundle
-import com.github.baboy.ideaplugincodegen.services.MyProjectService
-import com.github.baboy.ideaplugincodegen.services.ResourceService
-import com.github.baboy.ideaplugincodegen.ui.CodeGenPanel
-import java.io.File
 import javax.swing.JButton
 
 
@@ -23,6 +23,9 @@ class MyToolWindowFactory : ToolWindowFactory {
     }
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
+
+
+        DBContext.refresh();
 //        val myToolWindow = MyToolWindow(toolWindow)
         val myToolWindow = CodeGenPanel()
         val content = ContentFactory.getInstance().createContent(myToolWindow.content, null, false)

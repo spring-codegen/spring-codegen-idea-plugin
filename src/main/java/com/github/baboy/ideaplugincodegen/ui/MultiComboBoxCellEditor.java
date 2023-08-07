@@ -1,15 +1,17 @@
 package com.github.baboy.ideaplugincodegen.ui;
 
+import groovyjarjarpicocli.CommandLine;
+
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.TreeCellEditor;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.ConstructorProperties;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EventObject;
-import java.util.Vector;
 
 /**
  * @author zhangyinghui
@@ -41,20 +43,28 @@ public class MultiComboBoxCellEditor extends AbstractCellEditor
      *
      * @param multiComboBox  a <code>MultiComboBox</code> object
      */
-    public MultiComboBoxCellEditor(final MultiComboBox multiComboBox) {
+    public MultiComboBoxCellEditor(final FieldComboBox multiComboBox) {
         editorComponent = multiComboBox;
         multiComboBox.putClientProperty("MultiComboBox.isTableCellEditor", Boolean.TRUE);
         delegate = new EditorDelegate() {
             public void setValue(Object value) {
                 if (value != null){
                     String []  v = value.toString().split(",");
-                    multiComboBox.setSelectValues(v);
+                    FieldComboBox.Model[] models =
+                    Arrays.stream(v).map(e -> {
+
+                        FieldComboBox.Model m = new FieldComboBox.Model();
+                        m.setValue(e.endsWith("!") ? e.replace("!",""): e);
+                        m.setNotNull(e.endsWith("!"));
+                        return m;
+                    }).toArray(FieldComboBox.Model[]::new);
+                    multiComboBox.setSelectValues(models);
                 }
             }
 
             public Object getCellEditorValue() {
-                String[] v =(String[]) multiComboBox.getSelectedValues();
-                return String.join(",", v);
+                String[] ret = (String[])Arrays.stream(multiComboBox.getSelectedValues()).map(e -> e.getValue() +( e.getNotNull()? "!":"")).toArray();
+                return String.join(",", ret);
             }
 
             public boolean shouldSelectCell(EventObject anEvent) {

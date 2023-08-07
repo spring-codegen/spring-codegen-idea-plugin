@@ -29,6 +29,8 @@ open class CodeCfg{
         var httpMethod: String? = null
         var dtoClassName: String? = null
         var dtoFields: List<String>? = null
+        var dtoFieldExcludes: String? =  null
+        var dtoFieldIncludes: String? =  null
         var voClassName: String? = null
         var voFields: List<String>? = null
         var voListFlag: Boolean? = null
@@ -39,6 +41,8 @@ open class CodeCfg{
         var httpMethod: String? = null
         var boClassName: String? = null
         var boFields: List<String>? = null
+        var boFieldExcludes: String? =  null
+        var boFieldIncludes: String? =  null
         var boResultClassName: String? = null
         var boResultFields: List<String>? = null
         var boResultListFlag: Boolean? = null
@@ -48,6 +52,8 @@ open class CodeCfg{
         var name: String? = null
         var httpMethod: String? = null
         var poClassName: String? = null
+        var poFieldExcludes: String? =  null
+        var poFieldIncludes: String? =  null
         var poFields: List<String>? = null
         var poResultClassName: String? = null
         var poResultFields: List<String>? = null

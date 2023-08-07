@@ -2,6 +2,7 @@ package com.github.baboy.ideaplugincodegen.db
 
 import com.alibaba.druid.pool.DruidDataSource
 import com.alibaba.druid.util.JdbcUtils
+import com.github.baboy.ideaplugincodegen.db.model.DBTable
 import com.github.baboy.ideaplugincodegen.db.model.DBTableField
 import org.apache.ibatis.builder.xml.XMLConfigBuilder
 import org.apache.ibatis.mapping.Environment
@@ -55,6 +56,11 @@ object DBContext {
     fun queryFields(params: Any):List<DBTableField>{
         var sqlSession = sqlSessionFactory!!.openSession();
         var ret = sqlSession.selectList<DBTableField>("com.github.baboy.ideaplugincodegen.db.dao.TableDao.queryFields", params)
+        return ret
+    }
+    fun queryTables(params: Any):List<DBTable>{
+        var sqlSession = sqlSessionFactory!!.openSession();
+        var ret = sqlSession.selectList<DBTable>("com.github.baboy.ideaplugincodegen.db.dao.TableDao.queryTables", params)
         return ret
     }
 }

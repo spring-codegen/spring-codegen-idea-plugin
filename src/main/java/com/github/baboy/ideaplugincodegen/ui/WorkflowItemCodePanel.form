@@ -193,7 +193,7 @@
         </constraints>
         <properties/>
       </component>
-      <component id="7b400" class="javax.swing.JTextField" binding="textField3" default-binding="true">
+      <component id="7b400" class="javax.swing.JTextField" binding="voClassNameTextField">
         <constraints>
           <grid row="4" column="1" row-span="1" col-span="7" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -211,7 +211,7 @@
           <text value="是否列表"/>
         </properties>
       </component>
-      <component id="fc12a" class="com.github.baboy.ideaplugincodegen.ui.MultiComboBox" binding="dtoFieldMultiComboBox" custom-create="true">
+      <component id="fc12a" class="com.github.baboy.ideaplugincodegen.ui.FieldComboBox" binding="dtoFieldMultiComboBox" custom-create="true">
         <constraints>
           <grid row="3" column="1" row-span="1" col-span="15" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0" ipady="5"/>
@@ -240,7 +240,7 @@
           <text value="输出字段："/>
         </properties>
       </component>
-      <component id="497ba" class="com.github.baboy.ideaplugincodegen.ui.MultiComboBox" binding="voFieldMultiComboBox" custom-create="true">
+      <component id="497ba" class="com.github.baboy.ideaplugincodegen.ui.FieldComboBox" binding="voFieldMultiComboBox" custom-create="true">
         <constraints>
           <grid row="5" column="1" row-span="1" col-span="15" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0" ipady="5"/>
@@ -335,7 +335,7 @@
           <text value="输出字段："/>
         </properties>
       </component>
-      <component id="4879c" class="com.github.baboy.ideaplugincodegen.ui.MultiComboBox" binding="boResultMultiComboBox" custom-create="true">
+      <component id="4879c" class="com.github.baboy.ideaplugincodegen.ui.FieldComboBox" binding="boResultMultiComboBox" custom-create="true">
         <constraints>
           <grid row="9" column="1" row-span="1" col-span="15" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0" ipady="5"/>
@@ -344,7 +344,7 @@
           <background color="-12828863"/>
         </properties>
       </component>
-      <component id="493ae" class="com.github.baboy.ideaplugincodegen.ui.MultiComboBox" binding="boFieldMultiComboBox" custom-create="true">
+      <component id="493ae" class="com.github.baboy.ideaplugincodegen.ui.FieldComboBox" binding="boFieldMultiComboBox" custom-create="true">
         <constraints>
           <grid row="7" column="1" row-span="1" col-span="15" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0" ipady="5"/>

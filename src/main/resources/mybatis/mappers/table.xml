@@ -29,19 +29,11 @@
 		WHERE col.table_name=#{tableName}
 		ORDER BY col.table_name, col.ordinal_position;
 	</select>
-
 	<select id="queryTables" resultMap="table">
-		SELECT
-			col.table_name,
-			col.column_name as name,
-			col.ordinal_position as sort,
-			d.description as comment,
-			col.table_schema as schema,
-			col.udt_name as type
-		FROM information_schema.columns col
-			JOIN pg_class c ON c.relname = col.table_name
-			LEFT JOIN pg_description d ON d.objoid = c.oid AND d.objsubid = col.ordinal_position
-		WHERE col.table_name=#{tableName}
-		ORDER BY col.table_name, col.ordinal_position;
+		SELECT tb.table_name as name, d.description as comment, table_schema as schema
+		FROM information_schema.tables tb
+			JOIN pg_class c ON c.relname = tb.table_name
+			LEFT JOIN pg_description d ON d.objoid = c.oid AND d.objsubid = '0'
+		WHERE table_schema=#{schema}
 	</select>
 </mapper>

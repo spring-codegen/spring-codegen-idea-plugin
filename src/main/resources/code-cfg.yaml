@@ -16,18 +16,21 @@ methods:
       path: /add
       httpMethod: POST
       dtoClassName: "{CLS_PREFIX}AddArgs"
+      dtoFieldExcludes: "id,*time,*_uid"
       voClassName: IdResult
+      voFieldIncludes: "id"
       voListFlag: false
     svc:
       name: add
-      boClassName: "{CLS_PREFIX}AddArgs"
+      boClassName: "{CLS_PREFIX}"
+      boFieldIncludes: "*"
       boResultClassName: Integer
       boResultListFlag: false
 
   - ctrl:
       name: remove
       path: /remove
-      httpMethod: POST
+      httpMethod:
       dtoClassName: IdArg
       voClassName: "-"
       voListFlag: false

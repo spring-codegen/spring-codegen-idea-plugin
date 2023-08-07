@@ -2,29 +2,26 @@ package com.github.baboy.ideaplugincodegen.ui;
 
 import com.github.baboy.ideaplugincodegen.config.CodeCfg;
 import com.github.baboy.ideaplugincodegen.config.CodeCfgModel;
-import com.github.baboy.ideaplugincodegen.setting.CtrlSetting;
 import com.github.baboy.ideaplugincodegen.db.DBContext;
 import com.github.baboy.ideaplugincodegen.db.model.DBTable;
 import com.github.baboy.ideaplugincodegen.db.model.DBTableField;
+import com.github.baboy.ideaplugincodegen.gen.FieldUtils;
 import com.github.baboy.ideaplugincodegen.setting.DataSourceSetting;
 import com.github.baboy.ideaplugincodegen.services.ResourceService;
-import com.github.baboy.ideaplugincodegen.util.ClassUtils;
 import com.intellij.uiDesigner.core.GridConstraints;
-import com.intellij.uiDesigner.core.GridLayoutManager;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Vector;
+import java.util.regex.Pattern;
 
 public class CodeGenPanel {
     private JTabbedPane tabbedPanel;
@@ -42,10 +39,13 @@ public class CodeGenPanel {
     private JTextField baseUriTextField;
     private JScrollPane methodScrollPanel;
     private JPanel codeCfgPanel;
+    private JTextField svcClassNameTextField;
+    private JTextField daoClassNameTextField;
     private JTable ctrlTable;
 
     private String tableName;
     private DBTable dbTable;
+    private List<DBTable> dbTables;
 
     private CodeCfg codeCfg;
     private CodeCfg codeSetting = new CodeCfg();
@@ -76,12 +76,10 @@ public class CodeGenPanel {
      */
     private void init(){
         dbTable = new DBTable();
-
-        List tables = new ArrayList();
-        tables.add("t_table1");
-        tables.add("t_api");
-        setDbTableItems(tables);
-
+        Map p = new HashMap();
+        p.put("schema", "computility_gateway");
+        dbTables = DBContext.INSTANCE.queryTables(p);
+        setDbTableItems(dbTables.stream().map(e->e.getName()).toList());
         codeCfg = ResourceService.INSTANCE.getCodeCfg();
         List<CodeCfg.Method> methods = new ArrayList<>();
         for (int i = 0; i< codeCfg.getMethods().size(); i++){
@@ -112,6 +110,7 @@ public class CodeGenPanel {
             comboBoxModel.addElement(element);
         }
         tableComboBox.setModel(comboBoxModel);
+        tableComboBox.setSelectedItem(null);
     }
     private void ctrlDirUpdated(){
         codeSetting.getCtrlClass().setBaseURI(String.format("/api/v1/%s", codeSetting.getCtrlClass().getDir()));
@@ -123,31 +122,59 @@ public class CodeGenPanel {
      */
     private void tableUpdated(){
         String tableName = tableComboBox.getSelectedItem().toString();
-        String tableSymbol = tableName;
-//        codeSetting.setClsName(String.format("%sController", tableSymbol));
 
         var p = new HashMap <String, String>();
         p.put("tableName", tableName);
-        DBContext.INSTANCE.refresh();
         List<DBTableField> fields = DBContext.INSTANCE.queryFields( p);
         dbTable.setFields(fields);
         updateMethodUI();
     }
-
-    private MultiComboBox createFieldComboBox(Vector<String> items){
-
-        final MultiComboBox multiComboBox = new MultiComboBox(items, true);
-        multiComboBox.setItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                JCheckBox checkBox = (JCheckBox) e.getSource();
-                int index = Integer.parseInt(checkBox.getName());
-                System.out.println("index:" + index);
+    private String getHandledVar(String v, Map<String, String> p){
+        if (v == null){
+            return v;
+        }
+        String r = v;
+        for (String k : p.keySet()){
+            r = r.replaceAll("\\{\\s*"+k+"\\s*\\}",  p.get(k));
+        }
+        return r;
+    }
+    private void handleDefaultFields(CodeCfgModel model){
+        List<String> dtoFields = new ArrayList<>();
+        List<Pattern> dtoExcludePatterns = null;
+        List<Pattern> dtoIncludePatterns = null;
+        if (StringUtils.isNotEmpty(model.getCtrl().getDtoFieldExcludes())){
+            Arrays.stream(model.getCtrl().getDtoFieldExcludes().split(",")).map(e -> Pattern.compile(e)).toList();
+            Arrays.stream(model.getCtrl().getDtoFieldIncludes().split(",")).map(e -> Pattern.compile(e)).toList();
+        }
+        dbTable.getFields().forEach(field -> {
+            if (StringUtils.isNotEmpty(model.getCtrl().getDtoFieldExcludes())){
+                boolean isExclude = Arrays.stream(model.getCtrl().getDtoFieldExcludes().split(",")).filter(p -> Pattern.matches(p, field.getName())).findFirst().isPresent();
+                if (isExclude){
+                    return;
+                }
             }
+
+            if (StringUtils.isNotEmpty(model.getCtrl().getDtoFieldIncludes())){
+                boolean isInclude = Arrays.stream(model.getCtrl().getDtoFieldIncludes().split(",")).filter(p -> Pattern.matches(p, field.getName())).findFirst().isPresent();
+                if (isInclude){
+                    dtoFields.add(field.getName());
+                    return;
+                }
+                return;
+            }
+            dtoFields.add(field.getName());
         });
-        return multiComboBox;
+        model.getCtrl().setDtoFields(dtoFields);
     }
     private void updateMethodUI(){
+        String tableName = (String)tableComboBox.getSelectedItem();
+        String TAB_PREFIX = "t_";
+        String clsPrefix = tableName;
+        if (clsPrefix.startsWith(TAB_PREFIX)){
+            clsPrefix = FieldUtils.INSTANCE.className(clsPrefix.substring(TAB_PREFIX.length()));
+        }
+
         codeCfgPanel.removeAll();
         GridLayout layout = new GridLayout(codeCfg.getMethods().size(), 1);
         codeCfgPanel.setLayout(layout);
@@ -157,6 +184,12 @@ public class CodeGenPanel {
         for (int i = 0; i< dbTable.getFields().size(); i++){
             tableFields.add(dbTable.getFields().get(i).getName());
         }
+        Map p = new HashMap();
+        p.put("CLS_PREFIX", clsPrefix);
+        baseUriTextField.setText(codeCfg.getCtrlClass().getBaseURI());
+        ctrlClsNameTextField.setText(getHandledVar(codeCfg.getCtrlClass().getClassName(), p));
+        svcClassNameTextField.setText(getHandledVar(codeCfg.getSvcClass().getClassName(),  p));
+        daoClassNameTextField.setText(getHandledVar(codeCfg.getDaoClass().getClassName(), p));
         for (int i = 0; i< codeCfg.getMethods().size(); i++){
             CodeCfg.Method method = codeCfg.getMethods().get(i);
             CodeCfgModel model = new CodeCfgModel();
@@ -172,9 +205,16 @@ public class CodeGenPanel {
             gridConstraints.setRow(i);
 
             try {
+
                 BeanUtils.copyProperties(model.getCtrl(), method.getCtrl() == null ? new CodeCfgModel.CtrlModel(): method.getCtrl());
                 BeanUtils.copyProperties(model.getSvc(), method.getSvc() == null ? new CodeCfgModel.SvcModel() : method.getSvc());
                 BeanUtils.copyProperties(model.getDao(), method.getDao() == null ? new CodeCfgModel.DaoModel() : method.getDao());
+                model.getCtrl().setDtoClassName(getHandledVar(model.getCtrl().getDtoClassName(), p));
+                model.getCtrl().setVoClassName(getHandledVar(model.getCtrl().getVoClassName(), p));
+                model.getSvc().setBoClassName(getHandledVar(model.getSvc().getBoClassName(), p));
+                model.getSvc().setBoResultClassName(getHandledVar(model.getSvc().getBoResultClassName(), p));
+                model.getDao().setPoClassName(getHandledVar(model.getDao().getPoClassName(), p));
+                handleDefaultFields(model);
                 WorkflowItemCodePanel itemCodePanel = new WorkflowItemCodePanel();
                 itemCodePanel.init();
                 itemCodePanel.setModel(model);

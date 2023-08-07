@@ -5,6 +5,8 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author zhangyinghui
@@ -15,23 +17,23 @@ public class WorkflowItemCodePanel {
     private JComboBox httpMethodComboBox;
     private JTextField ctrlMethodNameTextField;
     private JTextField dtoClassNameTextField;
-    private JTextField textField3;
+    private JTextField voClassNameTextField;
     private JCheckBox voListFlagCheckbox;
-    private MultiComboBox dtoFieldMultiComboBox;
-    private MultiComboBox voFieldMultiComboBox;
+    private FieldComboBox dtoFieldMultiComboBox;
+    private FieldComboBox voFieldMultiComboBox;
     private JTextField svcMethodNameTextField;
     private JTextField boClassNameTextField;
     private JTextField boResultClassNameTextField;
     private JCheckBox boResultListFlagCheckbox;
-    private MultiComboBox boResultMultiComboBox;
-    private MultiComboBox boFieldMultiComboBox;
+    private FieldComboBox boResultMultiComboBox;
+    private FieldComboBox boFieldMultiComboBox;
     private JPanel content;
     private CodeCfgModel model;
     public void createUIComponents(){
-        dtoFieldMultiComboBox = new MultiComboBox();
-        voFieldMultiComboBox = new MultiComboBox();
-        boResultMultiComboBox = new MultiComboBox();
-        boFieldMultiComboBox = new MultiComboBox();
+        dtoFieldMultiComboBox = new FieldComboBox();
+        voFieldMultiComboBox = new FieldComboBox();
+        boResultMultiComboBox = new FieldComboBox();
+        boFieldMultiComboBox = new FieldComboBox();
     }
     public WorkflowItemCodePanel(){
     }
@@ -54,13 +56,18 @@ public class WorkflowItemCodePanel {
         this.pathTextField.setText(model.getCtrl().getPath());
         this.ctrlMethodNameTextField.setText(model.getCtrl().getName());
 
-        this.dtoFieldMultiComboBox.setItems(model.getCtrl().getFields());
-        this.voFieldMultiComboBox.setItems(model.getCtrl().getFields());
+        List<FieldComboBox.Model> ctrlFieldModel = model.getCtrl().getFields().stream().map(e -> new FieldComboBox.Model().setValue(e).setNotNull(false)).collect(Collectors.toList());
+        List<FieldComboBox.Model> svcFieldModel = model.getSvc().getFields().stream().map(e -> new FieldComboBox.Model().setValue(e).setNotNull(false)).collect(Collectors.toList());
+        
+        this.dtoFieldMultiComboBox.setItems(ctrlFieldModel);
+        this.dtoClassNameTextField.setText(model.getCtrl().getDtoClassName());
+        this.voClassNameTextField.setText(model.getCtrl().getVoClassName());
+        this.voFieldMultiComboBox.setItems(ctrlFieldModel);
         this.voListFlagCheckbox.setSelected(model.getCtrl().getVoListFlag());
         this.svcMethodNameTextField.setText(model.getSvc().getName());
         this.boClassNameTextField.setText(model.getSvc().getBoClassName());
-        this.boFieldMultiComboBox.setItems(model.getSvc().getFields());
-        this.boResultMultiComboBox.setItems(model.getSvc().getFields());
+        this.boFieldMultiComboBox.setItems(svcFieldModel);
+        this.boResultMultiComboBox.setItems(svcFieldModel);
         this.boResultClassNameTextField.setText(model.getSvc().getBoResultClassName());
         this.boResultListFlagCheckbox.setSelected(model.getSvc().getBoResultListFlag());
     }
