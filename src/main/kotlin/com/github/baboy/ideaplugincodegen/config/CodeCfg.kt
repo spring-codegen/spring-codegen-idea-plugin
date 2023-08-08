@@ -13,57 +13,34 @@ open class CodeCfg{
     var renderItems: List<RenderItem>? = null
 
     class ClassDefine{
+        var title: String? = null
         var className: String? = null
         var dir: String? = null
         var baseURI: String? = null
     }
     class Method{
-        var ctrl: CtrlMethodCfg? = null
-        var svc: SvcMethodCfg? = null
-        var dao: DaoMethodCfg? = null
+        var uri: UriCfg? = null
+        var ctrl: MethodCfg? = null
+        var svc: MethodCfg? = null
+        var dao: MethodCfg? = null
     }
-
-    open class CtrlMethodCfg {
-        var name: String? = null
+    open class UriCfg{
+        var httpMethod: String? = "GET"
         var path: String? = null
-        var httpMethod: String? = null
-        var dtoClassName: String? = null
-        var dtoFields: List<String>? = null
-        var dtoFieldExcludes: String? =  null
-        var dtoFieldIncludes: String? =  null
-        var voClassName: String? = null
-        var voFields: List<String>? = null
-        var voFieldExcludes: String? =  null
-        var voFieldIncludes: String? =  null
-        var voListFlag: Boolean? = null
-    }
 
-    open class SvcMethodCfg {
-        var name: String? = null
-        var httpMethod: String? = null
-        var boClassName: String? = null
-        var boFields: List<String>? = null
-        var boFieldExcludes: String? =  null
-        var boFieldIncludes: String? =  null
-        var boResultClassName: String? = null
-        var boResultFieldExcludes: String? =  null
-        var boResultFieldIncludes: String? =  null
-        var boResultFields: List<String>? = null
-        var boResultListFlag: Boolean? = null
     }
-
-    open class DaoMethodCfg {
+    open class MethodCfg{
         var name: String? = null
-        var httpMethod: String? = null
-        var poClassName: String? = null
-        var poFieldExcludes: String? =  null
-        var poFieldIncludes: String? =  null
-        var poFields: List<String>? = null
-        var poResultClassName: String? = null
-        var poResultFieldExcludes: String? =  null
-        var poResultFieldIncludes: String? =  null
-        var poResultFields: List<String>? = null
-        var poResultListFlag: Boolean? = null
+        var inputClassName: String? = null
+        var inputFields: List<String>? = null
+        var inputFieldExcludes: String? =  null
+        var inputFieldIncludes: String? =  null
+        var outputClassName: String? = null
+        var outputFields: List<String>? = null
+        var outputFieldExcludes: String? =  null
+        var outputFieldIncludes: String? =  null
+        var inputListTypeFlag: Boolean? = false
+        var outputListTypeFlag: Boolean? = false
     }
     class RenderItem{
         var title: String? = null

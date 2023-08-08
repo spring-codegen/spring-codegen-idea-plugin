@@ -6,20 +6,13 @@ package com.github.baboy.ideaplugincodegen.config
  * @date 2023/8/4
  */
 class CodeCfgModel {
+    var uri: CodeCfg.UriCfg? = null
+   var ctrl: MethodCfgModel? = null
+   var svc: MethodCfgModel? = null
+   var dao: MethodCfgModel? = null
 
-   var ctrl: CtrlModel? = null
-   var svc: SvcModel? = null
-   var dao: DaoModel? = null
-
-    class CtrlModel: CodeCfg.CtrlMethodCfg(){
+    class MethodCfgModel: CodeCfg.MethodCfg(){
         var fields: List<String>? = null
-    }
-
-    class SvcModel: CodeCfg.SvcMethodCfg() {
-        var fields: List<String>? = null
-    }
-
-    class DaoModel: CodeCfg.DaoMethodCfg() {
-        var fields: List<String>? = null
+        var className:String? = null
     }
 }

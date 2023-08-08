@@ -1,84 +1,86 @@
 
 ctrlClass:
+  title: "Ctrl类"
   dir: ""
   className: "{CLS_PREFIX}Controller"
   baseURI: "/api/v1"
 svcClass:
+  title: "Svc类"
   dir: ""
   className: "{CLS_PREFIX}Service"
 
 daoClass:
+  title: "Dao类"
   dir: ""
   className: "{CLS_PREFIX}Dao"
 methods:
-  - ctrl:
-      name: add
+  - uri:
       path: /add
       httpMethod: POST
-      dtoClassName: "{CLS_PREFIX}AddArgs"
-      dtoFieldExcludes: "id,.*time,.*_uid"
-      voClassName: IdResult
-      voFieldIncludes: "id"
-      voListFlag: false
+    ctrl:
+      name: add
+      inputClassName: "{CLS_PREFIX}AddArgs"
+      inputFieldExcludes: "id,.*time,.*_uid"
+      outputClassName: IdResult
+      outputFieldIncludes: "id"
     svc:
       name: add
-      boClassName: "{CLS_PREFIX}"
-      boFieldIncludes: ".*"
-      boResultClassName: int
-      boResultFieldIncludes: "id"
-      boResultListFlag: false
-
-  - ctrl:
-      name: remove
+      inputClassName: "{CLS_PREFIX}"
+      inputFieldIncludes: ".*"
+      outputClassName: int
+      outputFieldIncludes: "id"
+  - uri:
       path: /remove
       httpMethod: POST
-      dtoClassName: IdArg
-      dtoFieldIncludes: "id"
-      voClassName: "bool"
-      voFieldIncludes: "-"
-      voListFlag: false
+    ctrl:
+      name: remove
+      inputClassName: IdArg
+      inputFieldIncludes: "id"
+      outputClassName: "-"
+      outputFieldIncludes: "-"
     svc:
       name: remove
-      boClassName: "{CLS_PREFIX}"
-      boResultClassName: Integer
-      boResultListFlag: false
-  - ctrl:
-      name: update
+      inputClassName: "int"
+      outputFieldIncludes: "id"
+      outputClassName: bool
+  - uri:
       path: /update
       httpMethod: POST
-      dtoClassName: IdArgs
-      voClassName: "-"
-      voListFlag: false
+    ctrl:
+      name: update
+      inputClassName: "{CLS_PREFIX}UpdateArgs"
+      inputFieldExcludes: ".*time,.*_uid"
+      outputClassName: "-"
     svc:
       name: update
-      boClassName: "{CLS_PREFIX}"
-      boResultClassName: Boolean
-      boResultListFlag: false
-  - ctrl:
-      name: get
+      inputClassName: "{CLS_PREFIX}"
+      outputFieldIncludes: ".*"
+      outputClassName: bool
+  - uri:
       path: /get
       httpMethod: GET
-      dtoClassName: Integer
-      voClassName: "-"
-      voListFlag: false
+    ctrl:
+      name: get
+      inputClassName: Integer
+      outputClassName: "{CLS_PREFIX}"
     svc:
       name: get
-      boClassName: "Integer"
-      boResultClassName: "{CLS_PREFIX}"
-      boResultListFlag: false
-  - ctrl:
-      name: search
+      inputClassName: "Integer"
+      outputClassName: "{CLS_PREFIX}"
+  - uri:
       path: /search
       httpMethod: GET
-      dtoClassName: "{CLS_PREFIX}SearchArgs"
-      voClassName: "-"
-      voFieldIncludes: ".*"
-      voListFlag: true
+    ctrl:
+      name: search
+      inputClassName: "{CLS_PREFIX}SearchArgs"
+      outputClassName: "{CLS_PREFIX}"
+      outputFieldIncludes: ".*"
+      outputListTypeFlag: true
     svc:
       name: search
-      boClassName: "{CLS_PREFIX}SearchArgs"
-      boResultClassName: "{CLS_PREFIX}"
-      boResultListFlag: true
+      inputClassName: "{CLS_PREFIX}SearchArgs"
+      outputClassName: "{CLS_PREFIX}"
+      outputListTypeFlag: true
 renderItems:
   - title: 方法名
     field: name
@@ -87,12 +89,11 @@ renderItems:
   - title: Method
     field: httpMethod
   - title: 参数类名
-    field: dtoClassName
+    field: inputClassName
   - title: 参数字段
     field: dtoFields
   - title: 输出类名
-    field: voClassName
+    field: outputClassName
   - title: 输出字段
     field: voFields
-
 

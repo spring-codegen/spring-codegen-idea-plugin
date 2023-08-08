@@ -137,73 +137,8 @@
                 </constraints>
                 <properties>
                   <font name="SimSun" size="14" style="1"/>
-                  <text value="MVC配置"/>
+                  <text value="类配置"/>
                 </properties>
-              </component>
-              <component id="75542" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-                  <gridbag top="5" left="0" bottom="5" right="0" weightx="0.0" weighty="0.0"/>
-                </constraints>
-                <properties>
-                  <font name="SimSun" size="12" style="0"/>
-                  <foreground color="-6513508"/>
-                  <horizontalAlignment value="11"/>
-                  <text value="子目录："/>
-                </properties>
-              </component>
-              <component id="9693" class="javax.swing.JTextField" binding="ctrlDirTextField">
-                <constraints>
-                  <grid row="4" column="1" row-span="1" col-span="7" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                    <preferred-size width="150" height="-1"/>
-                  </grid>
-                  <gridbag weightx="0.0" weighty="0.0"/>
-                </constraints>
-                <properties>
-                  <text value=""/>
-                </properties>
-              </component>
-              <component id="a02e6" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="4" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-                  <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
-                </constraints>
-                <properties>
-                  <font name="SimSun" size="12" style="0"/>
-                  <foreground color="-6513508"/>
-                  <horizontalAlignment value="11"/>
-                  <text value="CTRL类名："/>
-                </properties>
-              </component>
-              <component id="109ab" class="javax.swing.JTextField" binding="ctrlClsNameTextField">
-                <constraints>
-                  <grid row="4" column="9" row-span="1" col-span="7" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                    <preferred-size width="150" height="-1"/>
-                  </grid>
-                  <gridbag weightx="0.0" weighty="0.0"/>
-                </constraints>
-                <properties/>
-              </component>
-              <component id="b360f" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-                  <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
-                </constraints>
-                <properties>
-                  <font name="SimSun" size="12" style="0"/>
-                  <foreground color="-6513508"/>
-                  <horizontalAlignment value="11"/>
-                  <text value="Base URI："/>
-                </properties>
-              </component>
-              <component id="9d9a5" class="javax.swing.JTextField" binding="baseUriTextField">
-                <constraints>
-                  <grid row="6" column="1" row-span="1" col-span="15" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                    <preferred-size width="150" height="-1"/>
-                  </grid>
-                  <gridbag weightx="0.0" weighty="0.0"/>
-                </constraints>
-                <properties/>
               </component>
               <component id="cea8a" class="javax.swing.JComboBox" binding="tableComboBox">
                 <constraints>
@@ -224,18 +159,6 @@
                   <text value="数据库表："/>
                 </properties>
               </component>
-              <component id="fe671" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-                  <gridbag top="5" left="0" bottom="5" right="0" weightx="0.0" weighty="0.0"/>
-                </constraints>
-                <properties>
-                  <font name="SimSun" size="12" style="0"/>
-                  <foreground color="-6513508"/>
-                  <horizontalAlignment value="11"/>
-                  <text value="方法："/>
-                </properties>
-              </component>
               <component id="a8eda" class="javax.swing.JSeparator">
                 <constraints>
                   <grid row="1" column="1" row-span="1" col-span="15" vsize-policy="6" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -254,55 +177,90 @@
                   <foreground color="-11184811"/>
                 </properties>
               </component>
-              <scrollpane id="311b9" binding="methodScrollPanel">
+              <component id="3e396" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="8" column="1" row-span="1" col-span="15" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                  <gridbag weightx="0.0" weighty="1.0"/>
-                </constraints>
-                <properties/>
-                <border type="none"/>
-                <children>
-                  <grid id="58abe" binding="codeCfgPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                    <margin top="0" left="0" bottom="0" right="0"/>
-                    <constraints/>
-                    <properties/>
-                    <border type="none"/>
-                    <children/>
-                  </grid>
-                </children>
-              </scrollpane>
-              <component id="785d6" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                  <gridbag weightx="0.0" weighty="0.0"/>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
                 </constraints>
                 <properties>
                   <horizontalAlignment value="4"/>
-                  <text value="SVC类名："/>
+                  <text value="模块："/>
                 </properties>
               </component>
-              <component id="c5b76" class="javax.swing.JLabel">
+              <component id="67cf" class="javax.swing.JTextField" binding="moduleTextField">
                 <constraints>
-                  <grid row="5" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                  <gridbag weightx="0.0" weighty="0.0"/>
-                </constraints>
-                <properties>
-                  <horizontalAlignment value="4"/>
-                  <text value="Dao类名："/>
-                </properties>
-              </component>
-              <component id="e5ddc" class="javax.swing.JTextField" binding="daoClassNameTextField">
-                <constraints>
-                  <grid row="5" column="9" row-span="1" col-span="7" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                  <grid row="4" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
                   </grid>
                   <gridbag weightx="0.0" weighty="0.0"/>
                 </constraints>
-                <properties/>
+                <properties>
+                  <text value=""/>
+                </properties>
               </component>
-              <component id="5a7e8" class="javax.swing.JTextField" binding="svcClassNameTextField">
+              <component id="1d53c" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="5" column="1" row-span="1" col-span="7" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipady="10"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="11"/>
+                  <text value="MVC类："/>
+                </properties>
+              </component>
+              <component id="f57cb" class="javax.swing.JTable" binding="clsCfgTable">
+                <constraints>
+                  <grid row="5" column="1" row-span="1" col-span="15" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="50"/>
+                  </grid>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <rowHeight value="30"/>
+                </properties>
+              </component>
+              <component id="41035" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
+                </constraints>
+                <properties>
+                  <font name="SimSun" size="14" style="1"/>
+                  <horizontalAlignment value="2"/>
+                  <text value="方法配置："/>
+                </properties>
+              </component>
+              <component id="787b1" class="javax.swing.JSeparator">
+                <constraints>
+                  <grid row="6" column="1" row-span="1" col-span="15" vsize-policy="6" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <foreground color="-11184811"/>
+                </properties>
+              </component>
+              <grid id="becbe" binding="methodCfgPanel" layout-manager="GridBagLayout">
+                <constraints>
+                  <grid row="7" column="0" row-span="1" col-span="16" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="1.0"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children/>
+              </grid>
+              <component id="6bb19" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="4" column="4" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="4"/>
+                  <text value="Base URI:"/>
+                </properties>
+              </component>
+              <component id="28f96" class="javax.swing.JTextField" binding="baseUriTextField">
+                <constraints>
+                  <grid row="4" column="6" row-span="1" col-span="10" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
                   </grid>
                   <gridbag weightx="0.0" weighty="0.0"/>
