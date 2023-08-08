@@ -159,6 +159,7 @@
           <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="1.0" ipady="20"/>
         </constraints>
         <properties>
+          <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
           <text value="类："/>
         </properties>
@@ -169,6 +170,7 @@
           <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="1.0" ipady="20"/>
         </constraints>
         <properties>
+          <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
           <text value="方法："/>
         </properties>
@@ -179,6 +181,7 @@
           <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="1.0" ipady="20"/>
         </constraints>
         <properties>
+          <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
           <text value="入参类："/>
         </properties>
@@ -189,6 +192,7 @@
           <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="1.0" ipady="20"/>
         </constraints>
         <properties>
+          <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
           <text value="出参类："/>
         </properties>
@@ -249,6 +253,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <foreground color="-7960954"/>
           <text value="列表"/>
         </properties>
       </component>
@@ -258,6 +263,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <foreground color="-7960954"/>
           <text value="列表"/>
         </properties>
       </component>

@@ -52,7 +52,7 @@ public class MvcMethodCfgPanel {
         }
         if (model.getOutputFields() != null){
             FieldSelectionButton.Model[] outputSelectedFields = model.getOutputFields().stream().map(e -> new FieldSelectionButton.Model().setValue(e)).toArray(FieldSelectionButton.Model[]::new);
-            this.inputFieldSelectionBtn.setSelectValues(outputSelectedFields);
+            this.outputFieldSelectionBtn.setSelectValues(outputSelectedFields);
         }
     }
 }

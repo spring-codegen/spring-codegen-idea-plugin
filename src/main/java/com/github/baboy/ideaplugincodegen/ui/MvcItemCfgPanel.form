@@ -157,6 +157,7 @@
           <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
         </constraints>
         <properties>
+          <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
           <text value="METHOD："/>
         </properties>
@@ -174,13 +175,14 @@
           <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
         </constraints>
         <properties>
+          <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
-          <text value="BaseURI:"/>
+          <text value="Path:"/>
         </properties>
       </component>
       <component id="6b461" class="javax.swing.JTextField" binding="baseURITextField">
         <constraints>
-          <grid row="1" column="4" row-span="1" col-span="20" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="1" column="4" row-span="1" col-span="6" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
           <gridbag weightx="0.0" weighty="0.0"/>
@@ -189,13 +191,13 @@
       </component>
       <nested-form id="af2a4" form-file="com/github/baboy/ideaplugincodegen/ui/MvcMethodCfgPanel.form" binding="ctrlMethodCfgPanel">
         <constraints>
-          <grid row="2" column="0" row-span="1" col-span="7" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="0" row-span="1" col-span="8" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="1.0"/>
         </constraints>
       </nested-form>
       <nested-form id="d94cd" form-file="com/github/baboy/ideaplugincodegen/ui/MvcMethodCfgPanel.form" binding="svcMethodCfgPanel">
         <constraints>
-          <grid row="2" column="8" row-span="1" col-span="7" vsize-policy="3" hsize-policy="3" anchor="1" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="8" row-span="1" col-span="8" vsize-policy="3" hsize-policy="3" anchor="1" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="1.0"/>
         </constraints>
       </nested-form>
@@ -208,7 +210,7 @@
       <component id="e86a" class="javax.swing.JSeparator">
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="24" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <gridbag top="5" left="0" bottom="5" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties/>
       </component>

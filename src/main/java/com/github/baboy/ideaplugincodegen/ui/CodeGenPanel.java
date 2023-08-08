@@ -100,6 +100,8 @@ public class CodeGenPanel {
         codeSetting.setSvcClass(codeCfg.getSvcClass());
         codeSetting.setDaoClass(codeCfg.getDaoClass());
         codeSetting.setMethods(methods);
+        clsCfgTable.setBorder(BorderFactory.createCompoundBorder());
+        clsCfgTable.setRowHeight(30);
     }
     private void setDbTableItems(List<String> items){
         DefaultComboBoxModel comboBoxModel = new DefaultComboBoxModel();
@@ -179,6 +181,7 @@ public class CodeGenPanel {
         String[] headers = new String[]{codeCfg.getCtrlClass().getTitle(),codeCfg.getSvcClass().getTitle(),codeCfg.getDaoClass().getTitle()};
         DefaultTableModel tableModel = new DefaultTableModel();
         tableModel.setDataVector(data, headers);
+        clsCfgTable.setModel(tableModel);
 
         methodCfgPanel.removeAll();
         GridLayout layout = new GridLayout(codeCfg.getMethods().size(), 1);
@@ -210,6 +213,12 @@ public class CodeGenPanel {
                 BeanUtils.copyProperties(model.getSvc(), method.getSvc() == null ? new CodeCfgModel.MethodCfgModel() : method.getSvc());
                 BeanUtils.copyProperties(model.getDao(), method.getDao() == null ? new CodeCfgModel.MethodCfgModel() : method.getDao());
 //
+                model.getCtrl().setInputFields(handleDefaultFields(model.getCtrl().getInputFieldExcludes(), model.getCtrl().getInputFieldIncludes()));
+                model.getCtrl().setOutputFields(handleDefaultFields(model.getCtrl().getOutputFieldExcludes(), model.getCtrl().getOutputFieldIncludes()));
+                model.getSvc().setInputFields(handleDefaultFields(model.getSvc().getInputFieldExcludes(), model.getSvc().getInputFieldIncludes()));
+                model.getSvc().setOutputFields(handleDefaultFields(model.getSvc().getOutputFieldExcludes(), model.getSvc().getOutputFieldIncludes()));
+                model.getDao().setInputFields(handleDefaultFields(model.getDao().getInputFieldExcludes(), model.getDao().getInputFieldIncludes()));
+                model.getDao().setOutputFields(handleDefaultFields(model.getDao().getOutputFieldExcludes(), model.getDao().getOutputFieldIncludes()));
                 MvcItemCfgPanel itemCfgPanel = new MvcItemCfgPanel();
                 itemCfgPanel.init();
                 itemCfgPanel.setModel(model);
