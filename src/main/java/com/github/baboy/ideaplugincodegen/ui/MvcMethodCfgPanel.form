@@ -156,7 +156,7 @@
       <component id="1b151" class="javax.swing.JLabel" binding="clsTagLabel">
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="1.0" ipady="20"/>
+          <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="1.0" ipady="20"/>
         </constraints>
         <properties>
           <horizontalAlignment value="4"/>
@@ -166,7 +166,7 @@
       <component id="d3ca3" class="javax.swing.JLabel">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="1.0" ipady="20"/>
+          <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="1.0" ipady="20"/>
         </constraints>
         <properties>
           <horizontalAlignment value="4"/>
@@ -176,7 +176,7 @@
       <component id="555c" class="javax.swing.JLabel">
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="1.0" ipady="20"/>
+          <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="1.0" ipady="20"/>
         </constraints>
         <properties>
           <horizontalAlignment value="4"/>
@@ -186,7 +186,7 @@
       <component id="6521a" class="javax.swing.JLabel">
         <constraints>
           <grid row="4" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="1.0" ipady="20"/>
+          <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="1.0" ipady="20"/>
         </constraints>
         <properties>
           <horizontalAlignment value="4"/>
