@@ -32,15 +32,18 @@ open class CodeCfg{
     open class MethodCfg{
         var name: String? = null
         var inputClassName: String? = null
-        var inputFields: List<String>? = null
+        var inputFields: List<FieldCfg>? = null
         var inputFieldExcludes: String? =  null
         var inputFieldIncludes: String? =  null
         var outputClassName: String? = null
-        var outputFields: List<String>? = null
+        var outputFields: List<FieldCfg>? = null
         var outputFieldExcludes: String? =  null
         var outputFieldIncludes: String? =  null
         var inputListTypeFlag: Boolean? = false
         var outputListTypeFlag: Boolean? = false
+    }
+    open class FieldCfg(var name:String, var notNull:Boolean){
+
     }
     class RenderItem{
         var title: String? = null

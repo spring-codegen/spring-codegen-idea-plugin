@@ -1,6 +1,7 @@
 package com.github.baboy.ideaplugincodegen.ui;
 
 
+import com.github.baboy.ideaplugincodegen.config.CodeCfg;
 import com.intellij.uiDesigner.core.GridConstraints;
 
 import javax.accessibility.Accessible;
@@ -23,16 +24,16 @@ import java.util.Optional;
  */
 public class FieldSelectionButton extends JPanel implements Accessible, ActionListener {
     protected boolean isEditable  = false;
-    private List<Model> items;
+    private List<CodeCfg.FieldCfg> items;
     private MultiPopup popup;
     protected JButton arrowButton;
-    private ItemListener itemListener;
+    private ValueChangedListener valueChangedListener;
     private Boolean supportSelectAll = true;
     public FieldSelectionButton(){
         initComponent();
     }
 
-    public FieldSelectionButton(List<Model> items, Boolean supportSelectAll) {
+    public FieldSelectionButton(List<CodeCfg.FieldCfg> items, Boolean supportSelectAll) {
         this();
         this.setItems(items);
         this.setSupportSelectAll(supportSelectAll);
@@ -51,11 +52,26 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
         setBorder(BorderFactory.createBevelBorder(1,c,c,c,c));
     }
 
-    public List<Model> getItems() {
+    public ValueChangedListener getValueChangedListener() {
+        return valueChangedListener;
+    }
+
+    public void setValueChangedListener(ValueChangedListener valueChangedListener) {
+        this.valueChangedListener = valueChangedListener;
+        FieldSelectionButton handler = this;
+        popup.setValueChangedListener(new ValueChangedListener() {
+            @Override
+            public void onValueChanged(FieldSelectionButton btn) {
+                valueChangedListener.onValueChanged(handler);
+            }
+        });
+    }
+
+    public List<CodeCfg.FieldCfg> getItems() {
         return items;
     }
 
-    public void setItems(List<Model> items) {
+    public void setItems(List<CodeCfg.FieldCfg> items) {
         this.items = items;
         popup.setItems(items);
     }
@@ -87,28 +103,21 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
     public boolean isEditable() {
         return isEditable;
     }
-    public ItemListener getItemListener() {
-        return itemListener;
-    }
 
-    public void setItemListener(ItemListener itemListener) {
-        this.itemListener = itemListener;
-        popup.setItemListener(itemListener);
-    }
 
-    public Model[] getSelectedValues() {
+    public CodeCfg.FieldCfg[] getSelectedValues() {
         return popup.getSelectedValues();
     }
 
 
-    public void setSelectValues(Model[] selectvalues) {
+    public void setSelectValues(CodeCfg.FieldCfg[] selectvalues) {
         popup.setSelectValues(selectvalues);
         setText(selectvalues);
     }
 
-    private void setText(Model[] values) {
+    private void setText(CodeCfg.FieldCfg[] values) {
         if (values.length > 0) {
-            String[] s = Arrays.stream(values).map(e -> e.isNotNull? (e.getValue()+"!") : e.getValue()).toArray(String[]::new);
+            String[] s = Arrays.stream(values).map(e -> e.getNotNull()? (e.getName()+"!") : e.getName()).toArray(String[]::new);
             arrowButton.setToolTipText(String.join(", ", s));
         } else {
             arrowButton.setToolTipText("");
@@ -140,16 +149,16 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
 
     public class MultiPopup extends JPopupMenu implements ActionListener {
 
-        private List<Model> items;
+        private List<CodeCfg.FieldCfg> items;
         private List<JCheckBox> checkBoxList = new ArrayList<JCheckBox>();
         private List<JCheckBox> nullChekBoxList = new ArrayList<JCheckBox>();
         private JButton commitButton;
         private JButton cancelButton;
-        private ItemListener itemListener;
+        private ValueChangedListener valueChangedListener;
         private Boolean supportSelectAll = true;
         private JPanel checkboxPane;
         private JCheckBox checkAllBox;
-        private List<Model> selectedValues = new ArrayList<>();
+        private List<CodeCfg.FieldCfg> selectedValues = new ArrayList<>();
 
         public MultiPopup() {
             super();
@@ -157,11 +166,11 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
             refreshItems();
         }
 
-        public List<Model> getItems() {
+        public List<CodeCfg.FieldCfg> getItems() {
             return items;
         }
 
-        public void setItems(List<Model> items) {
+        public void setItems(List<CodeCfg.FieldCfg> items) {
             this.items = items;
             refreshItems();
         }
@@ -175,11 +184,12 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
             refreshItems();
         }
 
-        public ItemListener getItemListener() {
-            return itemListener;
+        public ValueChangedListener getValueChangedListener() {
+            return valueChangedListener;
         }
-        public void setItemListener(ItemListener itemListener) {
-            this.itemListener = itemListener;
+
+        public void setValueChangedListener(ValueChangedListener valueChangedListener) {
+            this.valueChangedListener = valueChangedListener;
         }
 
         private void initComponent() {
@@ -228,14 +238,14 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
             GridLayout layout = (GridLayout)checkboxPane.getLayout();
             GridConstraints gridConstraints = new GridConstraints();
             for (int i = 0; i< items.size(); i++) {
-                Model v = items.get(i);
-                JCheckBox box = new JCheckBox(v.getValue());
-                box.setName(v.getValue());
+                CodeCfg.FieldCfg v = items.get(i);
+                JCheckBox box = new JCheckBox(v.getName());
+                box.setName(v.getName());
                 gridConstraints.setRow(i);
                 gridConstraints.setColumn(0);
                 checkBoxList.add(box);
                 JCheckBox nullCheckBox = new JCheckBox("Not Null");
-                nullCheckBox.setName(v.getValue());
+                nullCheckBox.setName(v.getName());
                 nullChekBoxList.add(nullCheckBox);
 
                 checkboxPane.add(box, gridConstraints);
@@ -247,9 +257,7 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
                 box.addItemListener(new ItemListener() {
                     @Override
                     public void itemStateChanged(ItemEvent e) {
-                        if (itemListener != null){
-                            itemListener.itemStateChanged(e);
-                        }
+
                     }
                 });
 
@@ -282,7 +290,7 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
             }
         }
 
-        public void setSelectValues(Model[] values) {
+        public void setSelectValues(CodeCfg.FieldCfg[] values) {
             this.selectedValues.clear();
             this.selectedValues.addAll(Arrays.asList(values));
             refresh();
@@ -293,7 +301,7 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
         public void refresh(){
             for (int i = 0; i < checkBoxList.size(); i++) {
                 final int j = i;
-                Optional<Model> r = selectedValues.stream().filter(e -> e.getValue().equals(checkBoxList.get(j).getName())).findFirst();
+                Optional<CodeCfg.FieldCfg> r = selectedValues.stream().filter(e -> e.getName().equals(checkBoxList.get(j).getName())).findFirst();
                 if (!r.isPresent()){
                     checkBoxList.get(i).setSelected(false);
                     continue;
@@ -305,12 +313,12 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
         }
 
 
-        public Model[] getSelectedValues() {
-            return selectedValues.toArray(FieldSelectionButton.Model[]::new);
+        public CodeCfg.FieldCfg[] getSelectedValues() {
+            return selectedValues.toArray(CodeCfg.FieldCfg[]::new);
         }
         public Integer getItemIndexByValue(String val){
             for(int i = 0; i< items.size(); i++){
-                if (items.get(i).getValue().equals(val)){
+                if (items.get(i).getName().equals(val)){
                     return i;
                 }
             }
@@ -336,7 +344,7 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
                 JButton button = (JButton) source;
                 if (button.equals(commitButton)) {
 
-                    List<Model> a = new ArrayList<Model>();
+                    List<CodeCfg.FieldCfg> a = new ArrayList<CodeCfg.FieldCfg>();
                     for (int i = 0; i< checkBoxList.size(); i++){
                         JCheckBox checkBox = checkBoxList.get(i);
                         Integer index = getItemIndexByValue(checkBox.getName());
@@ -349,6 +357,9 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
                     this.selectedValues.addAll(a);
                     setText(getSelectedValues());
                     popup.setVisible(false);
+                    if (valueChangedListener != null){
+                        valueChangedListener.onValueChanged(null);
+                    }
                 }
                 if (button.equals(cancelButton)) {
                     popup.setVisible(false);
@@ -357,36 +368,7 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
         }
 
     }
-    public static class Model{
-        private String title;
-        private String value;
-        private Boolean isNotNull = false;
-
-        public String getTitle() {
-            return title;
-        }
-
-        public Model setTitle(String title) {
-            this.title = title;
-            return this;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public Model setValue(String value) {
-            this.value = value;
-            return this;
-        }
-
-        public Boolean getNotNull() {
-            return isNotNull;
-        }
-
-        public Model setNotNull(Boolean notNull) {
-            isNotNull = notNull;
-            return this;
-        }
+    public interface ValueChangedListener{
+        public void onValueChanged(FieldSelectionButton btn);
     }
 }

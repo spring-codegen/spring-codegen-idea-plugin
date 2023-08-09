@@ -2,15 +2,22 @@ package com.github.baboy.ideaplugincodegen.ui;
 
 import com.github.baboy.ideaplugincodegen.config.CodeCfg;
 import com.github.baboy.ideaplugincodegen.config.CodeCfgModel;
+import com.github.baboy.ideaplugincodegen.constants.AppCtx;
+import com.github.baboy.ideaplugincodegen.constants.EnvKey;
 import com.github.baboy.ideaplugincodegen.db.DBContext;
 import com.github.baboy.ideaplugincodegen.db.model.DBTable;
 import com.github.baboy.ideaplugincodegen.db.model.DBTableField;
+import com.github.baboy.ideaplugincodegen.define.ClassAnalyzer;
+import com.github.baboy.ideaplugincodegen.define.model.ModelDefine;
 import com.github.baboy.ideaplugincodegen.gen.FieldUtils;
 import com.github.baboy.ideaplugincodegen.setting.DataSourceSetting;
 import com.github.baboy.ideaplugincodegen.services.ResourceService;
+import com.github.baboy.ideaplugincodegen.template.TempRender;
 import com.intellij.uiDesigner.core.GridConstraints;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.deft.Obj;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -39,15 +46,18 @@ public class CodeGenPanel {
     private JTextField moduleTextField;
     private JTable clsCfgTable;
     private JPanel methodCfgPanel;
+    private JTextField tablePrefixTextField;
+    private JButton genBtn;
     private JTable ctrlTable;
+    private List<MvcItemCfgPanel> mvcItemCfgPanels = new ArrayList<>();
 
-    private String tableName;
     private DBTable dbTable;
     private List<DBTable> dbTables;
 
     private CodeCfg codeCfg;
     private CodeCfg codeSetting = new CodeCfg();
     public CodeGenPanel() {
+        AppCtx.INSTANCE.getENV().put(EnvKey.BASE_PKG, "com.cmit.paas");
         testButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -65,6 +75,18 @@ public class CodeGenPanel {
                     tableUpdated();
                     ResourceService.INSTANCE.readYaml("code-cfg.yaml");
                 }
+            }
+        });
+        tablePrefixTextField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AppCtx.INSTANCE.getENV().put(EnvKey.TABLE_PREFIX, ((JTextField)e.getSource()).getText());
+            }
+        });
+        genBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                generate();
             }
         });
     }
@@ -122,25 +144,41 @@ public class CodeGenPanel {
      */
     private void tableUpdated(){
         String tableName = tableComboBox.getSelectedItem().toString();
-
+        for (DBTable e: dbTables){
+            if (tableName.equals(e.getName())){
+                dbTable = e;
+            }
+        }
         var p = new HashMap <String, String>();
         p.put("tableName", tableName);
         List<DBTableField> fields = DBContext.INSTANCE.queryFields( p);
         dbTable.setFields(fields);
-        updateMethodUI();
+
+
+        String clsPrefix = tableName;
+        String tablePrefix = (String)AppCtx.INSTANCE.getENV().get(EnvKey.TABLE_PREFIX);
+        tablePrefix = tablePrefix == null ? "t_":tablePrefix;
+        if (clsPrefix.startsWith(tablePrefix)){
+            clsPrefix = clsPrefix.substring(tablePrefix.length());
+        }
+        clsPrefix = FieldUtils.INSTANCE.className(clsPrefix);
+        AppCtx.INSTANCE.getENV().put(EnvKey.CLASS_PRERFIX, clsPrefix);
+
+        updateClasses();
+        updateMethods();
     }
-    private String getHandledVar(String v, Map<String, String> p){
+    private String getHandledVar(String v, Map<String, Object> p){
         if (v == null){
             return v;
         }
         String r = v;
         for (String k : p.keySet()){
-            r = r.replaceAll("\\{\\s*"+k+"\\s*\\}",  p.get(k));
+            r = r.replaceAll("\\{\\s*"+k+"\\s*\\}",  p.get(k).toString());
         }
         return r;
     }
-    private List<String> handleDefaultFields(String excludes, String includes){
-        List<String> allowFields = new ArrayList<>();
+    private List<CodeCfg.FieldCfg> getDefaultFields(String excludes, String includes){
+        List<CodeCfg.FieldCfg> allowFields = new ArrayList<>();
         dbTable.getFields().forEach(field -> {
             if (StringUtils.isNotEmpty(excludes)){
                 boolean isExclude = Arrays.stream(excludes.split(",")).filter(p -> Pattern.matches(p, field.getName())).findFirst().isPresent();
@@ -152,47 +190,56 @@ public class CodeGenPanel {
             if (StringUtils.isNotEmpty(includes)){
                 boolean isInclude = Arrays.stream(includes.split(",")).filter(p -> Pattern.matches(p, field.getName())).findFirst().isPresent();
                 if (isInclude){
-                    allowFields.add(field.getName());
+                    allowFields.add(new CodeCfg.FieldCfg(field.getName(), false));
                     return;
                 }
                 return;
             }
-            allowFields.add(field.getName());
+            allowFields.add(new CodeCfg.FieldCfg(field.getName(), false));
         });
         return allowFields;
     }
-    private void updateMethodUI(){
-
-        String tableName = (String)tableComboBox.getSelectedItem();
-        String TAB_PREFIX = "t_";
-        String clsPrefix = tableName;
-        if (clsPrefix.startsWith(TAB_PREFIX)){
-            clsPrefix = FieldUtils.INSTANCE.className(clsPrefix.substring(TAB_PREFIX.length()));
-        }
-        Map p = new HashMap();
-        p.put("CLS_PREFIX", clsPrefix);
+    private void handleFields(CodeCfgModel.MethodCfgModel methodCfgModel){
+        methodCfgModel.setInputFields(getDefaultFields(methodCfgModel.getInputFieldExcludes(), methodCfgModel.getInputFieldIncludes()));
+        methodCfgModel.setOutputFields(getDefaultFields(methodCfgModel.getOutputFieldExcludes(), methodCfgModel.getOutputFieldIncludes()));
+    }
+    private void handleClassName(CodeCfgModel.MethodCfgModel methodCfgModel, Map param){
+        methodCfgModel.setInputClassName(getHandledVar(methodCfgModel.getInputClassName(), param));
+        methodCfgModel.setOutputClassName(getHandledVar(methodCfgModel.getOutputClassName(), param));
+    }
+    private void updateClasses(){
         /**
          * 表格处理
          */
         String[][] data = new String[1][3];
-        data[0][0] = getHandledVar(codeCfg.getCtrlClass().getClassName(), p);
-        data[0][1] = getHandledVar(codeCfg.getSvcClass().getClassName(),  p);
-        data[0][2] = getHandledVar(codeCfg.getDaoClass().getClassName(), p);
+        data[0][0] = getHandledVar(codeCfg.getCtrlClass().getClassName(), AppCtx.INSTANCE.getENV());
+        data[0][1] = getHandledVar(codeCfg.getSvcClass().getClassName(),  AppCtx.INSTANCE.getENV());
+        data[0][2] = getHandledVar(codeCfg.getDaoClass().getClassName(), AppCtx.INSTANCE.getENV());
         String[] headers = new String[]{codeCfg.getCtrlClass().getTitle(),codeCfg.getSvcClass().getTitle(),codeCfg.getDaoClass().getTitle()};
         DefaultTableModel tableModel = new DefaultTableModel();
         tableModel.setDataVector(data, headers);
         clsCfgTable.setModel(tableModel);
+    }
+    private void updateMethods(){
+
 
         methodCfgPanel.removeAll();
+        mvcItemCfgPanels.clear();
         GridLayout layout = new GridLayout(codeCfg.getMethods().size(), 1);
         methodCfgPanel.setLayout(layout);
+
+        DefaultTableModel tableModel = (DefaultTableModel)clsCfgTable.getModel();
+        String ctrlClassName = (String)tableModel.getDataVector().get(0).get(0);
+        String svcClassName = (String)tableModel.getDataVector().get(0).get(1);
+        String daoClassName = (String)tableModel.getDataVector().get(0).get(2);
+
 
         GridConstraints gridConstraints = new GridConstraints();
         List<String> tableFields = new ArrayList<>();
         for (int i = 0; i< dbTable.getFields().size(); i++){
             tableFields.add(dbTable.getFields().get(i).getName());
         }
-        baseUriTextField.setText(getHandledVar(codeCfg.getCtrlClass().getBaseURI(), p));
+        baseUriTextField.setText(getHandledVar(codeCfg.getCtrlClass().getBaseURI(), AppCtx.INSTANCE.getENV()));
         for (int i = 0; i< codeCfg.getMethods().size(); i++){
             CodeCfg.Method method = codeCfg.getMethods().get(i);
             CodeCfgModel model = new CodeCfgModel();
@@ -200,9 +247,7 @@ public class CodeGenPanel {
             model.setSvc(new CodeCfgModel.MethodCfgModel());
             model.setDao(new CodeCfgModel.MethodCfgModel());
             model.setUri(new CodeCfg.UriCfg());
-            model.getCtrl().setFields(tableFields);
-            model.getSvc().setFields(tableFields);
-            model.getDao().setFields(tableFields);
+
 
             gridConstraints.myPreferredSize.height = 500;
             gridConstraints.setRow(i);
@@ -212,17 +257,31 @@ public class CodeGenPanel {
                 BeanUtils.copyProperties(model.getCtrl(), method.getCtrl() == null ? new CodeCfgModel.MethodCfgModel(): method.getCtrl());
                 BeanUtils.copyProperties(model.getSvc(), method.getSvc() == null ? new CodeCfgModel.MethodCfgModel() : method.getSvc());
                 BeanUtils.copyProperties(model.getDao(), method.getDao() == null ? new CodeCfgModel.MethodCfgModel() : method.getDao());
+                model.getCtrl().setFields(tableFields);
+                model.getSvc().setFields(tableFields);
+                model.getDao().setFields(tableFields);
+                model.getCtrl().setClassName(ctrlClassName);
+                model.getSvc().setClassName(svcClassName);
+                model.getDao().setClassName(daoClassName);
 //
-                model.getCtrl().setInputFields(handleDefaultFields(model.getCtrl().getInputFieldExcludes(), model.getCtrl().getInputFieldIncludes()));
-                model.getCtrl().setOutputFields(handleDefaultFields(model.getCtrl().getOutputFieldExcludes(), model.getCtrl().getOutputFieldIncludes()));
-                model.getSvc().setInputFields(handleDefaultFields(model.getSvc().getInputFieldExcludes(), model.getSvc().getInputFieldIncludes()));
-                model.getSvc().setOutputFields(handleDefaultFields(model.getSvc().getOutputFieldExcludes(), model.getSvc().getOutputFieldIncludes()));
-                model.getDao().setInputFields(handleDefaultFields(model.getDao().getInputFieldExcludes(), model.getDao().getInputFieldIncludes()));
-                model.getDao().setOutputFields(handleDefaultFields(model.getDao().getOutputFieldExcludes(), model.getDao().getOutputFieldIncludes()));
+                /**
+                 * 处理类名
+                 */
+
+                handleClassName(model.getCtrl(), AppCtx.INSTANCE.getENV());
+                handleClassName(model.getSvc(), AppCtx.INSTANCE.getENV());
+                handleClassName(model.getDao(), AppCtx.INSTANCE.getENV());
+                /**
+                 * 处理字段
+                 */
+                handleFields(model.getCtrl());
+                handleFields(model.getSvc());
+                handleFields(model.getDao());
                 MvcItemCfgPanel itemCfgPanel = new MvcItemCfgPanel();
                 itemCfgPanel.init();
                 itemCfgPanel.setModel(model);
                 methodCfgPanel.add(itemCfgPanel.getContent(), gridConstraints);
+                mvcItemCfgPanels.add(itemCfgPanel);
 
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
@@ -339,7 +398,17 @@ public class CodeGenPanel {
         System.out.println("username:"+ dataSourceSetting.getUsername());
         System.out.println("password:"+ dataSourceSetting.getPwd());
     }
+    public void generate(){
+        String module = "user";
+        MvcItemCfgPanel mvcItemCfgPanel = mvcItemCfgPanels.get(0);
+        CodeCfgModel cfgModel = mvcItemCfgPanel.getModel();
+        Map<String, Object> data = new HashMap();
+        data.put("author", "zhangyinghui");
 
+        ModelDefine modelDefine = ClassAnalyzer.INSTANCE.parseModel(cfgModel.getCtrl().getInputClassName(), AppCtx.INSTANCE.getENV().get(EnvKey.BASE_PKG) + ".model."+module , cfgModel.getCtrl().getInputFields(), dbTable);
+        data.put("model", modelDefine);
+        TempRender.INSTANCE.render("model.ftl", data);
+    }
     public JPanel getContent()  {
         return this.mainPanel;
     }

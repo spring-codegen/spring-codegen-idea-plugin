@@ -21,7 +21,7 @@ object ResourceService {
         return codeCfg;
     }
     fun readYaml( fn:String): CodeCfg?{
-        this.thisLogger().info("readYaml...")
+        this.thisLogger().info("readYaml:"+CodeCfg::class.java.getResource(fn))
         val mapper = ObjectMapper(YAMLFactory())
         mapper.registerModule(KotlinModule())
 

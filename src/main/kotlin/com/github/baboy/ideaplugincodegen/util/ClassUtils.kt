@@ -15,9 +15,9 @@ object ClassUtils {
         val v = field.get(obj)
         return v;
     }
-    fun call(obj:Any, methodName:String):Any?{
+    fun call(obj:Any, methodName:String, args:Array<Any>):Any?{
         val getMethod: Method = obj.javaClass.getMethod(methodName)
-        val v = getMethod.invoke(obj)
+        val v = getMethod.invoke(obj, args)
         return v;
     }
 }

@@ -32,4 +32,8 @@ public class MvcItemCfgPanel {
         svcMethodCfgPanel.setModel(model.getSvc());
         daoMethodCfgPanel.setModel(model.getDao());
     }
+
+    public CodeCfgModel getModel() {
+        return model;
+    }
 }

@@ -1,8 +1,12 @@
 package com.github.baboy.ideaplugincodegen.ui;
 
+import com.github.baboy.ideaplugincodegen.config.CodeCfg;
 import com.github.baboy.ideaplugincodegen.config.CodeCfgModel;
 
 import javax.swing.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +27,20 @@ public class MvcMethodCfgPanel {
     private JCheckBox inputListTypeCheckBox;
 
     private CodeCfgModel.MethodCfgModel model;
+    public MvcMethodCfgPanel(){
+        inputFieldSelectionBtn.setValueChangedListener(new FieldSelectionButton.ValueChangedListener() {
+            @Override
+            public void onValueChanged(FieldSelectionButton btn) {
+                model.setInputFields( Arrays.stream(inputFieldSelectionBtn.getSelectedValues()).toList());
+            }
+        });
+        outputFieldSelectionBtn.setValueChangedListener(new FieldSelectionButton.ValueChangedListener() {
+            @Override
+            public void onValueChanged(FieldSelectionButton btn) {
+                model.setInputFields( Arrays.stream(outputFieldSelectionBtn.getSelectedValues()).toList());
+            }
+        });
+    }
     public void createUIComponents(){
     }
     public JPanel getContent() {
@@ -38,21 +56,17 @@ public class MvcMethodCfgPanel {
         this.outputClsTextField.setText(model.getOutputClassName());
         this.outputListTypeCheckBox.setSelected(model.getOutputListTypeFlag() == null ? false: model.getOutputListTypeFlag());
 
-
-
         if (model.getFields() != null){
-            List<FieldSelectionButton.Model> fields = model.getFields().stream().map(e -> new FieldSelectionButton.Model().setValue(e).setNotNull(false)).collect(Collectors.toList());
+            List<CodeCfg.FieldCfg> fields = model.getFields().stream().map(e -> new CodeCfg.FieldCfg(e, false)).collect(Collectors.toList());
             this.inputFieldSelectionBtn.setItems(fields);
             this.outputFieldSelectionBtn.setItems(fields);
         }
 
         if (model.getInputFields() != null){
-            FieldSelectionButton.Model[] inputSelectedFields = model.getInputFields().stream().map(e -> new FieldSelectionButton.Model().setValue(e)).toArray(FieldSelectionButton.Model[]::new);
-            this.inputFieldSelectionBtn.setSelectValues(inputSelectedFields);
+            this.inputFieldSelectionBtn.setSelectValues(model.getInputFields().toArray(CodeCfg.FieldCfg[]::new));
         }
         if (model.getOutputFields() != null){
-            FieldSelectionButton.Model[] outputSelectedFields = model.getOutputFields().stream().map(e -> new FieldSelectionButton.Model().setValue(e)).toArray(FieldSelectionButton.Model[]::new);
-            this.outputFieldSelectionBtn.setSelectValues(outputSelectedFields);
+            this.outputFieldSelectionBtn.setSelectValues(model.getOutputFields().toArray(CodeCfg.FieldCfg[]::new));
         }
     }
 }
