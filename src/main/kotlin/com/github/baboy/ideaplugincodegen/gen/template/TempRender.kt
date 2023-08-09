@@ -1,4 +1,4 @@
-package com.github.baboy.ideaplugincodegen.template
+package com.github.baboy.ideaplugincodegen.gen.template
 
 import com.ibm.icu.impl.data.ResourceReader
 import freemarker.cache.ClassTemplateLoader

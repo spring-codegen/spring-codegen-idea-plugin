@@ -1,6 +1,6 @@
 package com.github.baboy.ideaplugincodegen.ui;
 
-import com.github.baboy.ideaplugincodegen.config.CodeCfgModel;
+import com.github.baboy.ideaplugincodegen.config.MethodGrpCfgModel;
 
 import javax.swing.*;
 
@@ -16,7 +16,7 @@ public class MvcItemCfgPanel {
     private MvcMethodCfgPanel svcMethodCfgPanel;
     private MvcMethodCfgPanel daoMethodCfgPanel;
 
-    private CodeCfgModel model;
+    private MethodGrpCfgModel model;
     public JPanel getContent() {
         return this.content;
     }
@@ -24,7 +24,7 @@ public class MvcItemCfgPanel {
     public void init(){
         httpMethodComboBox.setModel(new DefaultComboBoxModel(new String[]{"GET","POST","DELETE","PUT"}));
     }
-    public void setModel(CodeCfgModel model) {
+    public void setModel(MethodGrpCfgModel model) {
         this.model = model;
         this.httpMethodComboBox.setSelectedItem(model.getUri().getHttpMethod());
         this.baseURITextField.setText(model.getUri().getPath());
@@ -33,7 +33,7 @@ public class MvcItemCfgPanel {
         daoMethodCfgPanel.setModel(model.getDao());
     }
 
-    public CodeCfgModel getModel() {
+    public MethodGrpCfgModel getModel() {
         return model;
     }
 }

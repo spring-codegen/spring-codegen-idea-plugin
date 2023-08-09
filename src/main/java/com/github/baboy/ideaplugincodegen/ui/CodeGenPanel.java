@@ -1,23 +1,21 @@
 package com.github.baboy.ideaplugincodegen.ui;
 
 import com.github.baboy.ideaplugincodegen.config.CodeCfg;
-import com.github.baboy.ideaplugincodegen.config.CodeCfgModel;
+import com.github.baboy.ideaplugincodegen.config.MethodGrpCfgModel;
 import com.github.baboy.ideaplugincodegen.constants.AppCtx;
 import com.github.baboy.ideaplugincodegen.constants.EnvKey;
 import com.github.baboy.ideaplugincodegen.db.DBContext;
 import com.github.baboy.ideaplugincodegen.db.model.DBTable;
 import com.github.baboy.ideaplugincodegen.db.model.DBTableField;
-import com.github.baboy.ideaplugincodegen.define.ClassAnalyzer;
-import com.github.baboy.ideaplugincodegen.define.model.ModelDefine;
+import com.github.baboy.ideaplugincodegen.gen.ClassAnalyzer;
+import com.github.baboy.ideaplugincodegen.gen.define.model.ClassModel;
 import com.github.baboy.ideaplugincodegen.gen.FieldUtils;
 import com.github.baboy.ideaplugincodegen.setting.DataSourceSetting;
 import com.github.baboy.ideaplugincodegen.services.ResourceService;
-import com.github.baboy.ideaplugincodegen.template.TempRender;
+import com.github.baboy.ideaplugincodegen.gen.template.TempRender;
 import com.intellij.uiDesigner.core.GridConstraints;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.deft.Obj;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -199,11 +197,11 @@ public class CodeGenPanel {
         });
         return allowFields;
     }
-    private void handleFields(CodeCfgModel.MethodCfgModel methodCfgModel){
+    private void handleFields(MethodGrpCfgModel.MethodCfgModel methodCfgModel){
         methodCfgModel.setInputFields(getDefaultFields(methodCfgModel.getInputFieldExcludes(), methodCfgModel.getInputFieldIncludes()));
         methodCfgModel.setOutputFields(getDefaultFields(methodCfgModel.getOutputFieldExcludes(), methodCfgModel.getOutputFieldIncludes()));
     }
-    private void handleClassName(CodeCfgModel.MethodCfgModel methodCfgModel, Map param){
+    private void handleClassName(MethodGrpCfgModel.MethodCfgModel methodCfgModel, Map param){
         methodCfgModel.setInputClassName(getHandledVar(methodCfgModel.getInputClassName(), param));
         methodCfgModel.setOutputClassName(getHandledVar(methodCfgModel.getOutputClassName(), param));
     }
@@ -242,10 +240,10 @@ public class CodeGenPanel {
         baseUriTextField.setText(getHandledVar(codeCfg.getCtrlClass().getBaseURI(), AppCtx.INSTANCE.getENV()));
         for (int i = 0; i< codeCfg.getMethods().size(); i++){
             CodeCfg.Method method = codeCfg.getMethods().get(i);
-            CodeCfgModel model = new CodeCfgModel();
-            model.setCtrl(new CodeCfgModel.MethodCfgModel());
-            model.setSvc(new CodeCfgModel.MethodCfgModel());
-            model.setDao(new CodeCfgModel.MethodCfgModel());
+            MethodGrpCfgModel model = new MethodGrpCfgModel();
+            model.setCtrl(new MethodGrpCfgModel.MethodCfgModel());
+            model.setSvc(new MethodGrpCfgModel.MethodCfgModel());
+            model.setDao(new MethodGrpCfgModel.MethodCfgModel());
             model.setUri(new CodeCfg.UriCfg());
 
 
@@ -254,9 +252,9 @@ public class CodeGenPanel {
 
             try {
                 BeanUtils.copyProperties(model.getUri(), method.getUri() == null ? new CodeCfg.UriCfg(): method.getUri());
-                BeanUtils.copyProperties(model.getCtrl(), method.getCtrl() == null ? new CodeCfgModel.MethodCfgModel(): method.getCtrl());
-                BeanUtils.copyProperties(model.getSvc(), method.getSvc() == null ? new CodeCfgModel.MethodCfgModel() : method.getSvc());
-                BeanUtils.copyProperties(model.getDao(), method.getDao() == null ? new CodeCfgModel.MethodCfgModel() : method.getDao());
+                BeanUtils.copyProperties(model.getCtrl(), method.getCtrl() == null ? new MethodGrpCfgModel.MethodCfgModel(): method.getCtrl());
+                BeanUtils.copyProperties(model.getSvc(), method.getSvc() == null ? new MethodGrpCfgModel.MethodCfgModel() : method.getSvc());
+                BeanUtils.copyProperties(model.getDao(), method.getDao() == null ? new MethodGrpCfgModel.MethodCfgModel() : method.getDao());
                 model.getCtrl().setFields(tableFields);
                 model.getSvc().setFields(tableFields);
                 model.getDao().setFields(tableFields);
@@ -401,13 +399,29 @@ public class CodeGenPanel {
     public void generate(){
         String module = "user";
         MvcItemCfgPanel mvcItemCfgPanel = mvcItemCfgPanels.get(0);
-        CodeCfgModel cfgModel = mvcItemCfgPanel.getModel();
+        MethodGrpCfgModel cfgModel = mvcItemCfgPanel.getModel();
         Map<String, Object> data = new HashMap();
         data.put("author", "zhangyinghui");
 
-        ModelDefine modelDefine = ClassAnalyzer.INSTANCE.parseModel(cfgModel.getCtrl().getInputClassName(), AppCtx.INSTANCE.getENV().get(EnvKey.BASE_PKG) + ".model."+module , cfgModel.getCtrl().getInputFields(), dbTable);
-        data.put("model", modelDefine);
+        ClassModel dataModel = ClassAnalyzer.INSTANCE.parseModel(cfgModel.getCtrl().getInputClassName(), AppCtx.INSTANCE.getENV().get(EnvKey.BASE_PKG) + ".model."+module , cfgModel.getCtrl().getInputFields(), dbTable);
+        data.put("model", dataModel);
         TempRender.INSTANCE.render("model.ftl", data);
+        List<ClassModel.Method> daoMethods = new ArrayList<>();
+        mvcItemCfgPanels.forEach(e -> {
+            MethodGrpCfgModel methodGrp = e.getModel();
+            ClassModel daoMethodInputClass = ClassAnalyzer.INSTANCE.parseModel(methodGrp.getDao().getInputClassName(), AppCtx.INSTANCE.getENV().get(EnvKey.BASE_PKG) + ".model."+module , methodGrp.getDao().getInputFields(), dbTable);
+            ClassModel daoMethodOutputClass = ClassAnalyzer.INSTANCE.parseModel(methodGrp.getDao().getOutputClassName(), AppCtx.INSTANCE.getENV().get(EnvKey.BASE_PKG) + ".model."+module , methodGrp.getDao().getOutputFields(), dbTable);
+
+            ClassModel.Method method = new ClassModel.Method(methodGrp.getDao().getName(), daoMethodInputClass, daoMethodOutputClass,false);
+            daoMethods.add(method);
+        });
+
+        ClassModel daoClass = new ClassModel(cfgModel.getDao().getClassName(),AppCtx.INSTANCE.getENV().get(EnvKey.BASE_PKG) + ".dao."+module, null, null);
+        daoClass.setTableName(dbTable.getName());
+        daoClass.setMethods(daoMethods);
+        data.put("daoClass", daoClass);
+
+        TempRender.INSTANCE.render("mapper.ftl", data);
     }
     public JPanel getContent()  {
         return this.mainPanel;

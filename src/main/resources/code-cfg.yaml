@@ -27,7 +27,13 @@ methods:
       name: add
       inputClassName: "{CLS_PREFIX}"
       inputFieldIncludes: ".*"
-      outputClassName: int
+      outputClassName: Integer
+      outputFieldIncludes: "id"
+    dao:
+      name: add
+      inputClassName: "{CLS_PREFIX}"
+      inputFieldIncludes: ".*"
+      outputClassName: Integer
       outputFieldIncludes: "id"
   - uri:
       path: /remove
@@ -40,9 +46,14 @@ methods:
       outputFieldIncludes: "-"
     svc:
       name: remove
-      inputClassName: "int"
+      inputClassName: "Integer"
       outputFieldIncludes: "id"
-      outputClassName: bool
+      outputClassName: Boolean
+    dao:
+      name: remove
+      inputClassName: "Integer"
+      outputFieldIncludes: "id"
+      outputClassName: Boolean
   - uri:
       path: /update
       httpMethod: POST
@@ -55,7 +66,12 @@ methods:
       name: update
       inputClassName: "{CLS_PREFIX}"
       outputFieldIncludes: ".*"
-      outputClassName: bool
+      outputClassName: Boolean
+    dao:
+      name: update
+      inputClassName: "{CLS_PREFIX}"
+      outputFieldIncludes: ".*"
+      outputClassName: Boolean
   - uri:
       path: /get
       httpMethod: GET
@@ -67,6 +83,12 @@ methods:
       name: get
       inputClassName: "Integer"
       outputClassName: "{CLS_PREFIX}"
+    dao:
+      name: get
+      inputClassName: "Integer"
+      inputFieldIncludes: "id"
+      outputClassName: "{CLS_PREFIX}"
+      outputFieldIncludes: ".*"
   - uri:
       path: /search
       httpMethod: GET
@@ -77,6 +99,11 @@ methods:
       outputFieldIncludes: ".*"
       outputListTypeFlag: true
     svc:
+      name: search
+      inputClassName: "{CLS_PREFIX}SearchArgs"
+      outputClassName: "{CLS_PREFIX}"
+      outputListTypeFlag: true
+    dao:
       name: search
       inputClassName: "{CLS_PREFIX}SearchArgs"
       outputClassName: "{CLS_PREFIX}"

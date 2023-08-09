@@ -1,11 +1,9 @@
 package com.github.baboy.ideaplugincodegen.ui;
 
 import com.github.baboy.ideaplugincodegen.config.CodeCfg;
-import com.github.baboy.ideaplugincodegen.config.CodeCfgModel;
+import com.github.baboy.ideaplugincodegen.config.MethodGrpCfgModel;
 
 import javax.swing.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,7 +24,7 @@ public class MvcMethodCfgPanel {
     private JCheckBox outputListTypeCheckBox;
     private JCheckBox inputListTypeCheckBox;
 
-    private CodeCfgModel.MethodCfgModel model;
+    private MethodGrpCfgModel.MethodCfgModel model;
     public MvcMethodCfgPanel(){
         inputFieldSelectionBtn.setValueChangedListener(new FieldSelectionButton.ValueChangedListener() {
             @Override
@@ -47,7 +45,7 @@ public class MvcMethodCfgPanel {
         return content;
     }
 
-    public void setModel(CodeCfgModel.MethodCfgModel model) {
+    public void setModel(MethodGrpCfgModel.MethodCfgModel model) {
         this.model = model;
         this.clsTextField.setText(model.getClassName());
         this.methodTextField.setText(model.getName());
