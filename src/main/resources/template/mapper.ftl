@@ -50,16 +50,35 @@
             </update>
         </#if>
         <#if method.name?starts_with("search")>
+            <sql id="${method.name}Cond">
+                <where>
+                    <trim prefixOverrides="AND">
+                    <#list method.inputClass.fields as field>
+                        <#if field.javaType == "String">
+                            <if test="${field.name}!=null and !${field.name}.isEmpty()">
+                                AND ${field.column}=${r'#{'}${field.name}${r'}'}
+                            </if>
+                        <#else>
+                            <if test="${field.name}!=null">
+                                AND ${field.column}=${r'#{'}${field.name}${r'}'}
+                            </if>
+                        </#if>
+                    </#list>
+                </trim>
+
+                </where>
+            </sql>
             <#assign columns = method.outputClass.fields?map(field -> field.column)>
             <#assign conds = method.inputClass.fields?map(field -> field.name+"=#{"+field.name+"}")>
             <select id="${method.name}" <#if baseTypes?seq_contains(method.outputClass.className)>resultType="${method.outputClass.className}"<#else>resultMap="${method.outputClass.className}"</#if> >
                 SELECT ${columns?join(", ")}
                 FROM ${daoClass.tableName}
-                WHERE
-                <#if baseTypes?seq_contains(method.inputClass.className)>
-                    ${conds?join(" AND ")}
-                <#else>
-                </#if>
+                <include refid="${method.name}Cond"/>
+            </select>
+            <select id="get${method.name?capitalize}Count" <#if baseTypes?seq_contains(method.outputClass.className)>resultType="${method.outputClass.className}"<#else>resultMap="${method.outputClass.className}"</#if> >
+                SELECT count(1)
+                FROM ${daoClass.tableName}
+                <include refid="${method.name}Cond"/>
             </select>
         </#if>
     </#list>
