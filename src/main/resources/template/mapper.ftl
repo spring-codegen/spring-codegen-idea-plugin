@@ -6,9 +6,8 @@
     <#list daoClass.methods as method>
 
         <#if baseTypes?seq_contains(method.outputClass.className) >
-            ${method.name}:${method.outputClass.className}
+
         <#else>
-            ${method.name}:${method.outputClass.className}
             <resultMap id="${method.outputClass.className}" type="${method.outputClass.pkg}.${method.outputClass.className}">
                 <#list method.outputClass.fields as field>
                     <#if field.name=="id">
@@ -41,7 +40,15 @@
                    </#if>
             </select>
         </#if>
-
+        <#if method.name?starts_with("update")>
+            <#assign columns = method.inputClass.fields?filter(e -> e.name != "id")?map(field -> field.name+"=#{"+field.name+"}")>
+            <update id="${method.name}" <#if baseTypes?seq_contains(method.outputClass.className)>resultType="${method.outputClass.className}"<#else>resultMap="${method.outputClass.className}"</#if> >
+                UPDATE ${daoClass.tableName}
+                SET  ${columns?join(", ")}
+                WHERE
+                id=${r'#{id}'}
+            </update>
+        </#if>
         <#if method.name?starts_with("search")>
             <#assign columns = method.outputClass.fields?map(field -> field.column)>
             <#assign conds = method.inputClass.fields?map(field -> field.name+"=#{"+field.name+"}")>

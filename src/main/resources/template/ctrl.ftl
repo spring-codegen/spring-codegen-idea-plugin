@@ -8,13 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
-* API管理
+* ${ctrlClass.comment}
 * @author ${author}
 * @date ${.now?string["yyyy-MM-dd"]}
 */
 @RestController
-@RequestMapping("${ctrl.baseURI}")
-public class ApiController {
+@RequestMapping("${uri.baseURI}")
+public class ${ctrlClass.className} {
 private final ApiService apiService;
 
 public ApiController(ApiService apiService) {
@@ -23,7 +23,7 @@ this.apiService = apiService;
 
 /**
 * 注册接口
-* @param apiAddArgs 新增接口
+* @param
 * @return
 */
 @PostMapping("/add")
