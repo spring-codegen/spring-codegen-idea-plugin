@@ -12,7 +12,7 @@ open class CodeCfg{
     var methods: List<Method>? = null
     var renderItems: List<RenderItem>? = null
 
-    class ClassDefine{
+    open class ClassDefine{
         var title: String? = null
         var className: String? = null
         var dir: String? = null

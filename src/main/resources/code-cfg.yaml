@@ -47,7 +47,7 @@ methods:
     svc:
       name: remove
       inputClassName: "Integer"
-      outputFieldIncludes: "id"
+      inputFieldIncludes: "id"
       outputClassName: Boolean
     dao:
       name: remove

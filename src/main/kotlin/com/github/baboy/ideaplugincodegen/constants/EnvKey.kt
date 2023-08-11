@@ -10,5 +10,6 @@ class EnvKey {
         const val TABLE_PREFIX = "TAB_PREFIX"
         const val CLASS_PRERFIX = "CLS_PREFIX"
         const val BASE_PKG = "BASE_PKG"
+        const val TABLE_SCHEMA = "TABLE_SCHEMA"
     }
 }

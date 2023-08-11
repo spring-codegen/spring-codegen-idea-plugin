@@ -3,13 +3,12 @@
 <mapper namespace="${daoClass.pkg}.${daoClass.className}">
 
     <#assign baseTypes=["Integer","Long","Boolean", "String", "Date", "BigDecimal", "Decimal"] >
-    <#list daoClass.methods as method>
-
-        <#if baseTypes?seq_contains(method.outputClass.className) >
+    <#list resultMaps as k,resultMap>
+        <#if baseTypes?seqContains(resultMap.className) >
 
         <#else>
-            <resultMap id="${method.outputClass.className}" type="${method.outputClass.pkg}.${method.outputClass.className}">
-                <#list method.outputClass.fields as field>
+            <resultMap id="${resultMap.className}" type="${resultMap.pkg}.${resultMap.className}">
+                <#list resultMap.fields as field>
                     <#if field.name=="id">
                         <id column="${field.column}" property="${field.name}"/>
                     <#else>
@@ -20,7 +19,7 @@
         </#if>
     </#list>
     <#list daoClass.methods as method>
-        <#if method.name?starts_with("add")>
+        <#if method.name?startsWith("add")>
             <#assign columns = method.inputClass.fields?map(field -> field.column)>
             <#assign values = method.inputClass.fields?map(field -> "#{"+field.name+"}")>
             <insert id="${method.name}" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
@@ -28,28 +27,28 @@
                 values (${values?join(", ")})
             </insert>
         </#if>
-        <#if method.name?starts_with("get")>
+        <#if method.name?startsWith("get")>
             <#assign columns = method.outputClass.fields?map(field -> field.column)>
             <#assign conds = method.inputClass.fields?map(field -> field.name+"=#{"+field.name+"}")>
-            <select id="${method.name}" <#if baseTypes?seq_contains(method.outputClass.className)>resultType="${method.outputClass.className}"<#else>resultMap="${method.outputClass.className}"</#if> >
+            <select id="${method.name}" <#if baseTypes?seqContains(method.outputClass.className)>resultType="${method.outputClass.className}"<#else>resultMap="${method.outputClass.className}"</#if> >
                 SELECT ${columns?join(", ")}
                 FROM ${daoClass.tableName}
                 WHERE
-                   <#if baseTypes?seq_contains(method.inputClass.className)>
+                   <#if baseTypes?seqContains(method.inputClass.className)>
                        ${conds?join(" AND ")}
                    </#if>
             </select>
         </#if>
-        <#if method.name?starts_with("update")>
+        <#if method.name?startsWith("update")>
             <#assign columns = method.inputClass.fields?filter(e -> e.name != "id")?map(field -> field.name+"=#{"+field.name+"}")>
-            <update id="${method.name}" <#if baseTypes?seq_contains(method.outputClass.className)>resultType="${method.outputClass.className}"<#else>resultMap="${method.outputClass.className}"</#if> >
+            <update id="${method.name}" <#if baseTypes?seqContains(method.outputClass.className)>resultType="${method.outputClass.className}"<#else>resultMap="${method.outputClass.className}"</#if> >
                 UPDATE ${daoClass.tableName}
                 SET  ${columns?join(", ")}
                 WHERE
                 id=${r'#{id}'}
             </update>
         </#if>
-        <#if method.name?starts_with("search")>
+        <#if method.name?startsWith("search")>
             <sql id="${method.name}Cond">
                 <where>
                     <trim prefixOverrides="AND">
@@ -70,12 +69,12 @@
             </sql>
             <#assign columns = method.outputClass.fields?map(field -> field.column)>
             <#assign conds = method.inputClass.fields?map(field -> field.name+"=#{"+field.name+"}")>
-            <select id="${method.name}" <#if baseTypes?seq_contains(method.outputClass.className)>resultType="${method.outputClass.className}"<#else>resultMap="${method.outputClass.className}"</#if> >
+            <select id="${method.name}" <#if baseTypes?seqContains(method.outputClass.className)>resultType="${method.outputClass.className}"<#else>resultMap="${method.outputClass.className}"</#if> >
                 SELECT ${columns?join(", ")}
                 FROM ${daoClass.tableName}
                 <include refid="${method.name}Cond"/>
             </select>
-            <select id="get${method.name?capitalize}Count" <#if baseTypes?seq_contains(method.outputClass.className)>resultType="${method.outputClass.className}"<#else>resultMap="${method.outputClass.className}"</#if> >
+            <select id="get${method.name?capitalize}Count" <#if baseTypes?seqContains(method.outputClass.className)>resultType="${method.outputClass.className}"<#else>resultMap="${method.outputClass.className}"</#if> >
                 SELECT count(1)
                 FROM ${daoClass.tableName}
                 <include refid="${method.name}Cond"/>
