@@ -6,5 +6,5 @@ package com.github.baboy.ideaplugincodegen.constants
  * @date 2023/8/9
  */
 object AppCtx {
-    var ENV:Map<String, Object> = HashMap()
+    var ENV:Map<String, Any> = HashMap()
 }

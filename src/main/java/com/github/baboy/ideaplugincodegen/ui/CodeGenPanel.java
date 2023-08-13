@@ -9,11 +9,9 @@ import com.github.baboy.ideaplugincodegen.db.DBContext;
 import com.github.baboy.ideaplugincodegen.db.model.DBTable;
 import com.github.baboy.ideaplugincodegen.db.model.DBTableField;
 import com.github.baboy.ideaplugincodegen.gen.CodeGenerator;
-import com.github.baboy.ideaplugincodegen.gen.define.model.ClassModel;
 import com.github.baboy.ideaplugincodegen.gen.FieldUtils;
 import com.github.baboy.ideaplugincodegen.setting.DataSourceSetting;
 import com.github.baboy.ideaplugincodegen.services.ResourceService;
-import com.github.baboy.ideaplugincodegen.gen.template.TempRender;
 import com.intellij.uiDesigner.core.GridConstraints;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -52,7 +50,8 @@ public class CodeGenPanel {
     private JPanel codePanel;
     private JTextField tableSchemaTextField;
     private JTextField basePkgTextField;
-    private JButton 保存Button;
+    private JButton saveBtn;
+    private JTextField authorTextField;
     private List<MvcItemCfgPanel> mvcItemCfgPanels = new ArrayList<>();
 
     private DBTable dbTable;
@@ -96,7 +95,7 @@ public class CodeGenPanel {
                 generate();
             }
         });
-        保存Button.addActionListener(new ActionListener() {
+        saveBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 saveSettings();
@@ -107,6 +106,7 @@ public class CodeGenPanel {
     private void saveSettings(){
         AppCtx.INSTANCE.getENV().put(EnvKey.BASE_PKG, basePkgTextField.getText());
         AppCtx.INSTANCE.getENV().put(EnvKey.TABLE_SCHEMA, tableSchemaTextField.getText());
+        AppCtx.INSTANCE.getENV().put(EnvKey.AUTHOR, authorTextField.getText());
     }
 
     /**

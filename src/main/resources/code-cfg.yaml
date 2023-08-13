@@ -2,36 +2,36 @@
 ctrlClass:
   title: "Ctrl类"
   dir: ""
-  className: "{CLS_PREFIX}Controller"
+  className: "{clsPrefix}Controller"
   baseURI: "/api/v1"
 svcClass:
   title: "Svc类"
   dir: ""
-  className: "{CLS_PREFIX}Service"
+  className: "{clsPrefix}Service"
 
 daoClass:
   title: "Dao类"
   dir: ""
-  className: "{CLS_PREFIX}Dao"
+  className: "{clsPrefix}Dao"
 methods:
   - uri:
       path: /add
       httpMethod: POST
     ctrl:
       name: add
-      inputClassName: "{CLS_PREFIX}AddArgs"
+      inputClassName: "{clsPrefix}AddArgs"
       inputFieldExcludes: "id,.*time,.*_uid"
       outputClassName: IdResult
       outputFieldIncludes: "id"
     svc:
       name: add
-      inputClassName: "{CLS_PREFIX}"
+      inputClassName: "{clsPrefix}"
       inputFieldIncludes: ".*"
       outputClassName: Integer
       outputFieldIncludes: "id"
     dao:
       name: add
-      inputClassName: "{CLS_PREFIX}"
+      inputClassName: "{clsPrefix}"
       inputFieldIncludes: ".*"
       outputClassName: Integer
       outputFieldIncludes: "id"
@@ -59,17 +59,17 @@ methods:
       httpMethod: POST
     ctrl:
       name: update
-      inputClassName: "{CLS_PREFIX}UpdateArgs"
+      inputClassName: "{clsPrefix}UpdateArgs"
       inputFieldExcludes: ".*time,.*_uid"
       outputClassName: "-"
     svc:
       name: update
-      inputClassName: "{CLS_PREFIX}"
+      inputClassName: "{clsPrefix}"
       outputFieldIncludes: ".*"
       outputClassName: Boolean
     dao:
       name: update
-      inputClassName: "{CLS_PREFIX}"
+      inputClassName: "{clsPrefix}"
       outputFieldIncludes: ".*"
       outputClassName: Boolean
   - uri:
@@ -78,35 +78,35 @@ methods:
     ctrl:
       name: get
       inputClassName: Integer
-      outputClassName: "{CLS_PREFIX}"
+      outputClassName: "{clsPrefix}"
     svc:
       name: get
       inputClassName: "Integer"
-      outputClassName: "{CLS_PREFIX}"
+      outputClassName: "{clsPrefix}"
     dao:
       name: get
       inputClassName: "Integer"
       inputFieldIncludes: "id"
-      outputClassName: "{CLS_PREFIX}"
+      outputClassName: "{clsPrefix}"
       outputFieldIncludes: ".*"
   - uri:
       path: /search
       httpMethod: GET
     ctrl:
       name: search
-      inputClassName: "{CLS_PREFIX}SearchArgs"
-      outputClassName: "{CLS_PREFIX}"
+      inputClassName: "{clsPrefix}SearchArgs"
+      outputClassName: "{clsPrefix}"
       outputFieldIncludes: ".*"
       outputListTypeFlag: true
     svc:
       name: search
-      inputClassName: "{CLS_PREFIX}SearchArgs"
-      outputClassName: "{CLS_PREFIX}"
+      inputClassName: "{clsPrefix}SearchArgs"
+      outputClassName: "{clsPrefix}"
       outputListTypeFlag: true
     dao:
       name: search
-      inputClassName: "{CLS_PREFIX}SearchArgs"
-      outputClassName: "{CLS_PREFIX}"
+      inputClassName: "{clsPrefix}SearchArgs"
+      outputClassName: "{clsPrefix}"
       outputListTypeFlag: true
 renderItems:
   - title: 方法名

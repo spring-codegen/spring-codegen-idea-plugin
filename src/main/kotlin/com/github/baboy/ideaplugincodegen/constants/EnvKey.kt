@@ -7,9 +7,10 @@ package com.github.baboy.ideaplugincodegen.constants
  */
 class EnvKey {
     companion object {
-        const val TABLE_PREFIX = "TAB_PREFIX"
-        const val CLASS_PRERFIX = "CLS_PREFIX"
-        const val BASE_PKG = "BASE_PKG"
-        const val TABLE_SCHEMA = "TABLE_SCHEMA"
+        const val TABLE_PREFIX = "tablePrefix"
+        const val CLASS_PRERFIX = "clsPrefix"
+        const val BASE_PKG = "basePkg"
+        const val TABLE_SCHEMA = "tableSchema"
+        const val AUTHOR = "author"
     }
 }

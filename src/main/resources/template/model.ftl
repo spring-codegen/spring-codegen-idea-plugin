@@ -2,7 +2,9 @@ package ${model.pkg};
 
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+<#list model.imports as impt>
+import ${impt};
+</#list>
 
 /**
 * ${model.comment!}

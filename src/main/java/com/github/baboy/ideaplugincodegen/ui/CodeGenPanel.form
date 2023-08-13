@@ -200,7 +200,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
-                          <text value=""/>
+                          <text value="api"/>
                         </properties>
                       </component>
                       <component id="1d53c" class="javax.swing.JLabel">
@@ -678,24 +678,24 @@
               </hspacer>
               <component id="edc96" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                   <gridbag weightx="0.0" weighty="0.0" ipady="10"/>
                 </constraints>
                 <properties>
                   <foreground color="-7960954"/>
-                  <horizontalAlignment value="11"/>
+                  <horizontalAlignment value="4"/>
                   <text value="Schema："/>
                 </properties>
               </component>
               <vspacer id="dfe7">
                 <constraints>
-                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                   <gridbag weightx="0.0" weighty="1.0"/>
                 </constraints>
               </vspacer>
               <component id="4c45c" class="javax.swing.JTextField" binding="tableSchemaTextField">
                 <constraints>
-                  <grid row="1" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                  <grid row="2" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
                   </grid>
                   <gridbag weightx="0.0" weighty="0.0"/>
@@ -706,18 +706,18 @@
               </component>
               <component id="7c781" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                   <gridbag weightx="0.0" weighty="0.0" ipady="10"/>
                 </constraints>
                 <properties>
                   <foreground color="-7960954"/>
-                  <horizontalAlignment value="11"/>
+                  <horizontalAlignment value="4"/>
                   <text value="Package："/>
                 </properties>
               </component>
               <component id="a665e" class="javax.swing.JTextField" binding="basePkgTextField">
                 <constraints>
-                  <grid row="2" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                  <grid row="3" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
                   </grid>
                   <gridbag weightx="0.0" weighty="0.0"/>
@@ -726,9 +726,9 @@
                   <text value="com.cmit.paas.computility.gateway.console"/>
                 </properties>
               </component>
-              <component id="b73da" class="javax.swing.JButton" binding="保存Button" default-binding="true">
+              <component id="b73da" class="javax.swing.JButton" binding="saveBtn">
                 <constraints>
-                  <grid row="4" column="23" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="5" column="23" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                   <gridbag weightx="0.0" weighty="0.0"/>
                 </constraints>
                 <properties>
@@ -737,13 +737,35 @@
               </component>
               <component id="28081" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="1" column="13" row-span="1" col-span="12" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="2" column="13" row-span="1" col-span="12" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                   <gridbag weightx="0.0" weighty="0.0"/>
                 </constraints>
                 <properties>
                   <font name="SimSun" size="12" style="0"/>
                   <foreground color="-7960954"/>
                   <text value="数据库空间的Schema"/>
+                </properties>
+              </component>
+              <component id="beb20" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
+                </constraints>
+                <properties>
+                  <foreground color="-7960954"/>
+                  <horizontalAlignment value="4"/>
+                  <text value="作者："/>
+                </properties>
+              </component>
+              <component id="d0ca8" class="javax.swing.JTextField" binding="authorTextField">
+                <constraints>
+                  <grid row="1" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text value="zhangyinghui"/>
                 </properties>
               </component>
             </children>

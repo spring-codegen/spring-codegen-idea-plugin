@@ -23,7 +23,7 @@ object TempRender {
         }
         return configuration!!;
     }
-    fun render(rs:String, data:Map<String, Any>){
+    fun render(rs:String, data:Map<String, Any?>){
         var sw = StringWriter();
         var t:Template = getConfiguration().getTemplate(rs);
         t.process(data, sw)

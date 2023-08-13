@@ -1,7 +1,4 @@
 package ${svcClass.pkg};
-
-
-
 <#list svcClass.imports as item>
     import ${item};
 </#list>
