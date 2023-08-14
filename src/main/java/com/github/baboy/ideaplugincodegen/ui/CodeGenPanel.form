@@ -135,7 +135,7 @@
                       </hspacer>
                       <component id="45e82" class="javax.swing.JLabel">
                         <constraints>
-                          <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
                         </constraints>
                         <properties>
@@ -164,20 +164,20 @@
                       </component>
                       <component id="a8eda" class="javax.swing.JSeparator">
                         <constraints>
-                          <grid row="1" column="1" row-span="1" col-span="29" vsize-policy="6" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="1" row-span="1" col-span="28" vsize-policy="6" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag top="5" left="0" bottom="5" right="0" weightx="0.0" weighty="0.0" ipadx="5" ipady="5"/>
                         </constraints>
                         <properties>
-                          <foreground color="-9013642"/>
+                          <foreground color="-5723992"/>
                         </properties>
                       </component>
                       <component id="6a006" class="javax.swing.JSeparator">
                         <constraints>
-                          <grid row="3" column="2" row-span="1" col-span="20" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
+                          <grid row="3" column="1" row-span="1" col-span="28" vsize-policy="6" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0" ipadx="5" ipady="5"/>
                         </constraints>
                         <properties>
-                          <foreground color="-11184811"/>
+                          <foreground color="-5723992"/>
                         </properties>
                       </component>
                       <component id="3e396" class="javax.swing.JLabel">
@@ -217,11 +217,11 @@
                       </component>
                       <component id="787b1" class="javax.swing.JSeparator">
                         <constraints>
-                          <grid row="6" column="3" row-span="1" col-span="19" vsize-policy="6" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
+                          <grid row="6" column="2" row-span="1" col-span="27" vsize-policy="6" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0" ipadx="5" ipady="5"/>
                         </constraints>
                         <properties>
-                          <foreground color="-11184811"/>
+                          <foreground color="-5723992"/>
                         </properties>
                       </component>
                       <scrollpane id="943de">
@@ -322,7 +322,7 @@
                       </component>
                       <component id="41035" class="javax.swing.JLabel">
                         <constraints>
-                          <grid row="6" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="6" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
                         </constraints>
                         <properties>

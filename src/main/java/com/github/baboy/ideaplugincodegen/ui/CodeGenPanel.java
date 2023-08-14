@@ -289,14 +289,14 @@ public class CodeGenPanel {
             model.setCtrl(new MethodGrpCfgModel.MethodCfgModel());
             model.setSvc(new MethodGrpCfgModel.MethodCfgModel());
             model.setDao(new MethodGrpCfgModel.MethodCfgModel());
-            model.setUri(new CodeCfg.UriCfg());
+            model.setRequest(new CodeCfg.RequestCfg());
 
 
             gridConstraints.myPreferredSize.height = 500;
             gridConstraints.setRow(i);
 
             try {
-                BeanUtils.copyProperties(model.getUri(), method.getUri() == null ? new CodeCfg.UriCfg(): method.getUri());
+                BeanUtils.copyProperties(model.getRequest(), method.getRequest() == null ? new CodeCfg.RequestCfg(): method.getRequest());
                 BeanUtils.copyProperties(model.getCtrl(), method.getCtrl() == null ? new MethodGrpCfgModel.MethodCfgModel(): method.getCtrl());
                 BeanUtils.copyProperties(model.getSvc(), method.getSvc() == null ? new MethodGrpCfgModel.MethodCfgModel() : method.getSvc());
                 BeanUtils.copyProperties(model.getDao(), method.getDao() == null ? new MethodGrpCfgModel.MethodCfgModel() : method.getDao());
@@ -445,7 +445,8 @@ public class CodeGenPanel {
 
         String module = moduleTextField.getText();
         List<MethodGrpCfgModel> methodsGrps = mvcItemCfgPanels.stream().map(e -> e.getModel()).toList();
-        CodeGenerator.INSTANCE.gen(module, dbTable, classGrp, methodsGrps);
+        classGrp.getCtrl().setBaseURI(baseUriTextField.getText());
+        new CodeGenerator().gen(module, dbTable, classGrp, methodsGrps);
     }
     public JPanel getContent()  {
         return this.mainPanel;

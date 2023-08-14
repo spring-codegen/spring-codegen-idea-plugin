@@ -14,15 +14,17 @@ daoClass:
   dir: ""
   className: "{clsPrefix}Dao"
 methods:
-  - uri:
+  - request:
       path: /add
       httpMethod: POST
+      comment: "添加"
     ctrl:
       name: add
-      inputClassName: "{clsPrefix}AddArgs"
+      inputClassName: "{clsPrefix}AddArg"
       inputFieldExcludes: "id,.*time,.*_uid"
       outputClassName: IdResult
       outputFieldIncludes: "id"
+      outputPaged: true
     svc:
       name: add
       inputClassName: "{clsPrefix}"
@@ -35,9 +37,10 @@ methods:
       inputFieldIncludes: ".*"
       outputClassName: Integer
       outputFieldIncludes: "id"
-  - uri:
+  - request:
       path: /remove
       httpMethod: POST
+      comment: "删除"
     ctrl:
       name: remove
       inputClassName: IdArg
@@ -52,14 +55,15 @@ methods:
     dao:
       name: remove
       inputClassName: "Integer"
-      outputFieldIncludes: "id"
+      inputFieldIncludes: "id"
       outputClassName: Boolean
-  - uri:
+  - request:
       path: /update
       httpMethod: POST
+      comment: "更新"
     ctrl:
       name: update
-      inputClassName: "{clsPrefix}UpdateArgs"
+      inputClassName: "{clsPrefix}UpdateArg"
       inputFieldExcludes: ".*time,.*_uid"
       outputClassName: "-"
     svc:
@@ -72,16 +76,19 @@ methods:
       inputClassName: "{clsPrefix}"
       outputFieldIncludes: ".*"
       outputClassName: Boolean
-  - uri:
+  - request:
       path: /get
       httpMethod: GET
+      comment: "获取详情"
     ctrl:
       name: get
       inputClassName: Integer
+      inputFieldIncludes: "id"
       outputClassName: "{clsPrefix}"
     svc:
       name: get
       inputClassName: "Integer"
+      inputFieldIncludes: "id"
       outputClassName: "{clsPrefix}"
     dao:
       name: get
@@ -89,23 +96,27 @@ methods:
       inputFieldIncludes: "id"
       outputClassName: "{clsPrefix}"
       outputFieldIncludes: ".*"
-  - uri:
+  - request:
       path: /search
       httpMethod: GET
+      comment: "检索"
     ctrl:
       name: search
-      inputClassName: "{clsPrefix}SearchArgs"
+      inputClassName: "{clsPrefix}SearchArg"
+      inputFieldExcludes: ".*time,.*_uid"
       outputClassName: "{clsPrefix}"
       outputFieldIncludes: ".*"
       outputListTypeFlag: true
     svc:
       name: search
-      inputClassName: "{clsPrefix}SearchArgs"
+      inputClassName: "{clsPrefix}SearchArg"
+      inputFieldExcludes: ".*time,.*_uid"
       outputClassName: "{clsPrefix}"
       outputListTypeFlag: true
     dao:
       name: search
-      inputClassName: "{clsPrefix}SearchArgs"
+      inputClassName: "{clsPrefix}SearchArg"
+      inputFieldExcludes: ".*time,.*_uid"
       outputClassName: "{clsPrefix}"
       outputListTypeFlag: true
 renderItems:

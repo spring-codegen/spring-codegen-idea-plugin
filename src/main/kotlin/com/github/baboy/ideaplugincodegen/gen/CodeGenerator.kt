@@ -9,7 +9,6 @@ import com.github.baboy.ideaplugincodegen.db.model.DBTable
 import com.github.baboy.ideaplugincodegen.gen.define.model.ClassModel
 import com.github.baboy.ideaplugincodegen.gen.template.TempRender.render
 import com.intellij.util.containers.stream
-import org.apache.commons.lang.mutable.Mutable
 import java.util.function.Consumer
 
 /**
@@ -27,6 +26,9 @@ class CodeGenerator {
     }
     fun baseTypes():Array<String>{
         return arrayOf("Integer","Long","Boolean", "String", "Date", "BigDecimal", "List", "Map")
+    }
+    fun isBaseType(clsName:String):Boolean{
+        return baseTypes().stream().anyMatch{e -> e.equals(clsName)}
     }
     fun baseTypePkg(type:String):String?{
         if (type == "Integer" || type == "Long" || type == "Boolean" || type == "String"){
@@ -69,11 +71,25 @@ class CodeGenerator {
     }
     fun getMethod(methodCfgModel: MethodGrpCfgModel.MethodCfgModel, pkg: String, dbTable:DBTable): ClassModel.Method {
 
-        val daoMethodInputClass = getClass(methodCfgModel.inputClassName!!, pkg, methodCfgModel.inputFields!!, dbTable)
-        val daoMethodOutputClass = getClass(methodCfgModel.outputClassName!!, pkg, methodCfgModel.outputFields!!, dbTable)
-        return ClassModel.Method(methodCfgModel.name!!, daoMethodInputClass, daoMethodOutputClass, false)
+        val inputClass = getClass(methodCfgModel.inputClassName!!, pkg, methodCfgModel.inputFields!!, dbTable)
+        val outputClass = getClass(methodCfgModel.outputClassName!!, pkg, methodCfgModel.outputFields!!, dbTable)
+        inputClass.name = inputClass.className.substring(0,1).toLowerCase() + inputClass.className.substring(1)
+        outputClass.name = outputClass.className.substring(0,1).toLowerCase() + outputClass.className.substring(1)
+        if (isBaseType(inputClass.className) && inputClass.fields != null && inputClass.fields!!.size == 1){
+            inputClass.name = inputClass.fields!![0].name
+        }
+        if (isBaseType(outputClass.className) && outputClass.fields != null && outputClass.fields!!.size == 1){
+            outputClass.name = outputClass.fields!![0].name
+        }
+        var method = ClassModel.Method(methodCfgModel.name!!, inputClass, outputClass, if (methodCfgModel.outputListTypeFlag == null) false else methodCfgModel.outputListTypeFlag!!)
+        method.comment = methodCfgModel.comment
+        method.paged = methodCfgModel.outputPaged!!
+        return method
     }
     fun processModel(cls:ClassModel, models:HashMap<String, ClassModel>){
+        if (cls.className == "-"){
+            return
+        }
         if (baseTypes().stream().anyMatch{e -> e.equals(cls.className)}){
             cls.pkg = baseTypePkg(cls.className)!!
             cls.isBaseType = true
@@ -101,7 +117,23 @@ class CodeGenerator {
         }
         models[cls.className]!!.fields = fields
     }
-
+    fun processImports(cls:ClassModel){
+        var imports:MutableSet<String> = HashSet();
+        if (cls.fields != null){
+            cls!!.fields!!.forEach{f -> imports.add(f.pkg+"."+f.javaType)}
+        }
+        if (cls.methods != null){
+            cls.methods!!.forEach{ m ->
+                run {
+                    imports.add(m.inputClass.pkg+"." + m.inputClass.className)
+                    if (m.outputClass.className != "-"){
+                        imports.add(m.outputClass.pkg+"." + m.outputClass.className)
+                    }
+                }
+            }
+        }
+        cls.imports = imports
+    }
 
     fun gen(module:String, dbTable: DBTable, classGrp: ClassGrpCfgModel, methodsGrps:List<MethodGrpCfgModel>){
         var basePkg = ENV[EnvKey.BASE_PKG].toString();
@@ -120,6 +152,7 @@ class CodeGenerator {
             val ctrlMethod = getMethod(methodGrp.ctrl!!,  modelPkg, dbTable)
             val svcMethod = getMethod(methodGrp.svc!!, modelPkg, dbTable)
             val daoMethod = getMethod(methodGrp.dao!!, modelPkg, dbTable)
+            ctrlMethod.request = ClassModel.RequestURI(methodGrp.request!!.httpMethod, methodGrp.request!!.path)
             ctrlMethod.dependency = svcMethod;
             svcMethod.dependency = daoMethod;
             ctrlMethods.add(ctrlMethod)
@@ -140,25 +173,48 @@ class CodeGenerator {
         models.keys.forEach{
             var m = models[it]
             data["model"] = m
-            var imports:MutableSet<String> = HashSet();
-            m!!.fields!!.forEach{f -> imports.add(f.pkg+"."+f.javaType)}
-            m.imports = imports
+            processImports(m!!)
             render("model.ftl", data);
         }
-        return
-
         val daoClass = ClassModel(classGrp.dao!!.className!!, daoPkg, null, null)
         daoClass.tableName = dbTable.name
         daoClass.methods = daoMethods
+        daoClass.name = daoClass.className.substring(0,1).toLowerCase() + daoClass.className.substring(1)
+        processImports(daoClass)
 
         data.put("daoClass", daoClass)
         data.put("resultMaps", resultMaps)
+
+        val ctrlClass = ClassModel(classGrp.ctrl!!.className!!, ctrlPkg, null, null)
+        ctrlClass.comment = dbTable.comment
+        ctrlClass.tableName = dbTable.name
+        ctrlClass.methods = ctrlMethods
+        ctrlClass.request = ClassModel.RequestURI(null, classGrp.ctrl!!.baseURI)
+        ctrlClass.name = ctrlClass.className.substring(0,1).toLowerCase() + ctrlClass.className.substring(1)
+        processImports(ctrlClass)
+
+        val svcClass = ClassModel(classGrp.svc!!.className!!, svcPkg, null, null)
+        svcClass.tableName = dbTable.name
+        svcClass.methods = ctrlMethods
+        svcClass.name = svcClass.className.substring(0,1).toLowerCase() + svcClass.className.substring(1)
+
+        processImports(svcClass)
+
+        data.put("ctrlClass", ctrlClass)
+        data.put("svcClass", svcClass)
+        data.put("daoClass", daoClass)
+        data.put("resultMaps", resultMaps)
+
+
+
 
 //        render("mapper.ftl", data)
 //        render("dao.ftl", data)
 
 
 
-        render("svc.ftl", data)
+        render("ctrl.ftl", data)
+//        render("svc.ftl", data)
+//        render("dao.ftl", data)
     }
 }

@@ -19,15 +19,15 @@ open class CodeCfg{
         var baseURI: String? = null
     }
     class Method{
-        var uri: UriCfg? = null
+        var request: RequestCfg? = null
         var ctrl: MethodCfg? = null
         var svc: MethodCfg? = null
         var dao: MethodCfg? = null
     }
-    open class UriCfg{
+    open class RequestCfg{
         var httpMethod: String? = "GET"
         var path: String? = null
-
+        var comment:String? = null
     }
     open class MethodCfg{
         var name: String? = null
@@ -41,6 +41,7 @@ open class CodeCfg{
         var outputFieldIncludes: String? =  null
         var inputListTypeFlag: Boolean? = false
         var outputListTypeFlag: Boolean? = false
+        var outputPaged: Boolean? = false
     }
     open class FieldCfg(var name:String, var notNull:Boolean){
 

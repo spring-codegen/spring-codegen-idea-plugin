@@ -1,6 +1,8 @@
 package com.github.baboy.ideaplugincodegen.ui;
 
 import com.github.baboy.ideaplugincodegen.config.MethodGrpCfgModel;
+import com.github.baboy.ideaplugincodegen.swing.util.TextFieldUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
@@ -15,8 +17,23 @@ public class MvcItemCfgPanel {
     private MvcMethodCfgPanel ctrlMethodCfgPanel;
     private MvcMethodCfgPanel svcMethodCfgPanel;
     private MvcMethodCfgPanel daoMethodCfgPanel;
+    private JTextField methodCommentTextField;
+    private JButton removeBtn;
 
     private MethodGrpCfgModel model;
+    public MvcItemCfgPanel() {
+        removeBtn.setBorder(null);
+        removeBtn.setOpaque(false);
+        TextFieldUtils.INSTANCE.addTextChangedEvent(methodCommentTextField, new TextFieldUtils.TextChangedEvent() {
+            @Override
+            public void onTextChanged(@NotNull JTextField textField) {
+                getModel().getCtrl().setComment(textField.getText());
+                getModel().getSvc().setComment(textField.getText());
+                getModel().getDao().setComment(textField.getText());
+            }
+        });
+    }
+
     public JPanel getContent() {
         return this.content;
     }
@@ -26,8 +43,9 @@ public class MvcItemCfgPanel {
     }
     public void setModel(MethodGrpCfgModel model) {
         this.model = model;
-        this.httpMethodComboBox.setSelectedItem(model.getUri().getHttpMethod());
-        this.baseURITextField.setText(model.getUri().getPath());
+        this.httpMethodComboBox.setSelectedItem(model.getRequest().getHttpMethod());
+        this.baseURITextField.setText(model.getRequest().getPath());
+        this.methodCommentTextField.setText(model.getRequest().getComment());
         ctrlMethodCfgPanel.setModel(model.getCtrl());
         svcMethodCfgPanel.setModel(model.getSvc());
         daoMethodCfgPanel.setModel(model.getDao());
