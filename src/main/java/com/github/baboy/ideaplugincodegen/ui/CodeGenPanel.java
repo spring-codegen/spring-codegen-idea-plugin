@@ -52,7 +52,7 @@ public class CodeGenPanel {
     private JTextField basePkgTextField;
     private JButton saveBtn;
     private JTextField authorTextField;
-    private List<MvcItemCfgPanel> mvcItemCfgPanels = new ArrayList<>();
+    private List<MethodGrpCfgPanel> methodGrpCfgPanels = new ArrayList<>();
 
     private DBTable dbTable;
     private List<DBTable> dbTables;
@@ -267,7 +267,7 @@ public class CodeGenPanel {
 
 
         methodCfgPanel.removeAll();
-        mvcItemCfgPanels.clear();
+        methodGrpCfgPanels.clear();
         GridLayout layout = new GridLayout(codeCfg.getMethods().size(), 1);
         methodCfgPanel.setLayout(layout);
 
@@ -320,11 +320,18 @@ public class CodeGenPanel {
                 handleFields(model.getCtrl());
                 handleFields(model.getSvc());
                 handleFields(model.getDao());
-                MvcItemCfgPanel itemCfgPanel = new MvcItemCfgPanel();
+                MethodGrpCfgPanel itemCfgPanel = new MethodGrpCfgPanel();
                 itemCfgPanel.init();
                 itemCfgPanel.setModel(model);
                 methodCfgPanel.add(itemCfgPanel.getContent(), gridConstraints);
-                mvcItemCfgPanels.add(itemCfgPanel);
+                methodGrpCfgPanels.add(itemCfgPanel);
+                itemCfgPanel.setRemoveEvent(new MethodGrpCfgPanel.RemoveEvent() {
+                    @Override
+                    public void onRemove(MethodGrpCfgPanel grpCfgPanel) {
+                        grpCfgPanel.getContent().getParent().remove(grpCfgPanel.getContent());
+                        methodGrpCfgPanels.remove(grpCfgPanel);
+                    }
+                });
 
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
@@ -444,7 +451,7 @@ public class CodeGenPanel {
     public void generate(){
 
         String module = moduleTextField.getText();
-        List<MethodGrpCfgModel> methodsGrps = mvcItemCfgPanels.stream().map(e -> e.getModel()).toList();
+        List<MethodGrpCfgModel> methodsGrps = methodGrpCfgPanels.stream().map(e -> e.getModel()).toList();
         classGrp.getCtrl().setBaseURI(baseUriTextField.getText());
         new CodeGenerator().gen(module, dbTable, classGrp, methodsGrps);
     }

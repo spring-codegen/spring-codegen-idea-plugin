@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * @author zhangyinghui
  * @date 2023/8/8
  */
-public class MvcMethodCfgPanel {
+public class MethodCfgPanel {
     private JLabel clsTagLabel;
     private JTextField clsTextField;
     private JTextField methodTextField;
@@ -25,7 +25,7 @@ public class MvcMethodCfgPanel {
     private JCheckBox inputListTypeCheckBox;
 
     private MethodGrpCfgModel.MethodCfgModel model;
-    public MvcMethodCfgPanel(){
+    public MethodCfgPanel(){
         inputFieldSelectionBtn.setValueChangedListener(new FieldSelectionButton.ValueChangedListener() {
             @Override
             public void onValueChanged(FieldSelectionButton btn) {
