@@ -13,7 +13,7 @@ import ${impt};
 */
 public class ${model.className}{
 <#list model.fields as field>
-    /*
+    /**
     * ${field.comment!}
     */
     <#if field.notNull?? && field.notNull>

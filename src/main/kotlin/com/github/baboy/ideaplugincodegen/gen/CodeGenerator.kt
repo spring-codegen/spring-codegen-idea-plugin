@@ -9,6 +9,7 @@ import com.github.baboy.ideaplugincodegen.db.model.DBTable
 import com.github.baboy.ideaplugincodegen.gen.define.model.ClassModel
 import com.github.baboy.ideaplugincodegen.gen.template.TempRender.render
 import com.intellij.util.containers.stream
+import org.apache.commons.beanutils.BeanUtils
 import java.util.function.Consumer
 
 /**
@@ -195,13 +196,19 @@ class CodeGenerator {
 
         val svcClass = ClassModel(classGrp.svc!!.className!!, svcPkg, null, null)
         svcClass.tableName = dbTable.name
-        svcClass.methods = ctrlMethods
+        svcClass.methods = svcMethods
         svcClass.name = svcClass.className.substring(0,1).toLowerCase() + svcClass.className.substring(1)
+
 
         processImports(svcClass)
 
+        var svcClassImpl = svcClass.clone()
+        svcClassImpl.pkg = svcClassImpl.pkg + ".impl";
+        svcClassImpl.className = svcClassImpl.className +"Impl";
+
         data.put("ctrlClass", ctrlClass)
         data.put("svcClass", svcClass)
+        data.put("svcClassImpl", svcClassImpl)
         data.put("daoClass", daoClass)
         data.put("resultMaps", resultMaps)
 
@@ -213,8 +220,9 @@ class CodeGenerator {
 
 
 
-        render("ctrl.ftl", data)
-//        render("svc.ftl", data)
+//        render("ctrl.ftl", data)
+        render("svc.ftl", data)
+        render("svc-impl.ftl", data)
 //        render("dao.ftl", data)
     }
 }
