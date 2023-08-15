@@ -52,6 +52,9 @@ public class CodeGenPanel {
     private JTextField basePkgTextField;
     private JButton saveBtn;
     private JTextField authorTextField;
+    private JScrollPane rootScrollPanel;
+    private JScrollPane clsTableScrollView;
+    private JButton addMethodButton;
     private List<MethodGrpCfgPanel> methodGrpCfgPanels = new ArrayList<>();
 
     private DBTable dbTable;
@@ -60,10 +63,13 @@ public class CodeGenPanel {
     private CodeCfg codeCfg;
     private CodeCfg codeSetting = new CodeCfg();
     private ClassGrpCfgModel classGrp = new ClassGrpCfgModel();
+    private MethodSelectionPopupMenu methodSelectionPopupMenu;
     static {
     }
     public CodeGenPanel() {
         AppCtx.INSTANCE.getENV().put(EnvKey.BASE_PKG, "com.cmit.paas");
+        rootScrollPanel.setBorder(null);
+        clsTableScrollView.setBorder(null);
         testButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -102,6 +108,12 @@ public class CodeGenPanel {
             }
         });
         saveSettings();
+        addMethodButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showAddMethodPopupMenu();
+            }
+        });
     }
     private void saveSettings(){
         AppCtx.INSTANCE.getENV().put(EnvKey.BASE_PKG, basePkgTextField.getText());
@@ -113,12 +125,10 @@ public class CodeGenPanel {
      *
      */
     private void init(){
-
         classGrp.setCtrl(new ClassGrpCfgModel.ClassCfgModel());
         classGrp.setSvc(new ClassGrpCfgModel.ClassCfgModel());
         classGrp.setDao(new ClassGrpCfgModel.ClassCfgModel());
 
-        dbTable = new DBTable();
         Map p = new HashMap();
         p.put("schema", "computility_gateway");
         dbTables = DBContext.INSTANCE.queryTables(p);
@@ -145,8 +155,21 @@ public class CodeGenPanel {
         codeSetting.setSvcClass(codeCfg.getSvcClass());
         codeSetting.setDaoClass(codeCfg.getDaoClass());
         codeSetting.setMethods(methods);
-        clsCfgTable.setBorder(BorderFactory.createCompoundBorder());
+//        clsCfgTable.setBorder(BorderFactory.createCompoundBorder());
         clsCfgTable.setRowHeight(30);
+    }
+    private void showAddMethodPopupMenu(){
+        if (dbTable == null){
+           addMethodButton.setToolTipText("请选择表格");
+            return;
+        }
+        addMethodButton.setToolTipText(null);
+        if (methodSelectionPopupMenu == null){
+            methodSelectionPopupMenu = new MethodSelectionPopupMenu();
+            List<MethodSelectionPopupMenu.MenuItem> menuItems = codeCfg.getMethods().stream().map( e -> new MethodSelectionPopupMenu.MenuItem(e.getCtrl().getName(), e.getCtrl().getName())).toList();
+            methodSelectionPopupMenu.setItems(menuItems);
+        }
+        methodSelectionPopupMenu.show(addMethodButton,0, addMethodButton.getHeight());
     }
     private void setDbTableItems(List<String> items){
         DefaultComboBoxModel comboBoxModel = new DefaultComboBoxModel();
@@ -457,6 +480,60 @@ public class CodeGenPanel {
     }
     public JPanel getContent()  {
         return this.mainPanel;
+    }
+
+
+
+    public class MethodSelectionPopupMenu extends JPopupMenu{
+        private List<MenuItem> items;
+        public MethodSelectionPopupMenu(){
+            GridLayout gridLayout = new GridLayout();
+            this.setLayout(gridLayout);
+        }
+
+        public List<MenuItem> getItems() {
+            return items;
+        }
+
+        public void setItems(List<MenuItem> items) {
+            this.items = items;
+            this.removeAll();
+            GridLayout gridLayout = (GridLayout) this.getLayout();
+            gridLayout.setRows(items.size());
+            this.setLayout(gridLayout);
+            GridConstraints c = new GridConstraints();
+            for (int i = 0; i< items.size(); i++){
+                c.setRow(i);
+                JButton btn = new JButton(items.get(i).getTitle());
+                btn.setBackground(null);
+                btn.setBorder(null);
+                this.add(btn, c);
+            }
+        }
+        public static class MenuItem{
+            private String title;
+            private String value;
+            public MenuItem(String title, String value){
+                this.title = title;
+                this.value = value;
+            }
+
+            public String getTitle() {
+                return title;
+            }
+
+            public void setTitle(String title) {
+                this.title = title;
+            }
+
+            public String getValue() {
+                return value;
+            }
+
+            public void setValue(String value) {
+                this.value = value;
+            }
+        }
     }
 
 }

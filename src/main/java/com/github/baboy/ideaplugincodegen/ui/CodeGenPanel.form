@@ -24,7 +24,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <scrollpane id="3c654">
+              <scrollpane id="3c654" binding="rootScrollPanel">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                   <gridbag weightx="1.0" weighty="1.0"/>
@@ -133,16 +133,6 @@
                           <gridbag weightx="1.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
-                      <component id="45e82" class="javax.swing.JLabel">
-                        <constraints>
-                          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
-                        </constraints>
-                        <properties>
-                          <font name="SimSun" size="14" style="1"/>
-                          <text value="类配置"/>
-                        </properties>
-                      </component>
                       <component id="cea8a" class="javax.swing.JComboBox" binding="tableComboBox">
                         <constraints>
                           <grid row="2" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
@@ -160,26 +150,6 @@
                           <foreground color="-7960954"/>
                           <horizontalAlignment value="11"/>
                           <text value="表："/>
-                        </properties>
-                      </component>
-                      <component id="a8eda" class="javax.swing.JSeparator">
-                        <constraints>
-                          <grid row="1" column="1" row-span="1" col-span="28" vsize-policy="6" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag top="5" left="0" bottom="5" right="0" weightx="0.0" weighty="0.0" ipadx="5" ipady="5"/>
-                        </constraints>
-                        <properties>
-                          <focusable value="true"/>
-                          <foreground color="-11447983"/>
-                        </properties>
-                      </component>
-                      <component id="6a006" class="javax.swing.JSeparator">
-                        <constraints>
-                          <grid row="3" column="1" row-span="1" col-span="28" vsize-policy="6" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0" ipadx="5" ipady="5"/>
-                        </constraints>
-                        <properties>
-                          <focusable value="true"/>
-                          <foreground color="-11447983"/>
                         </properties>
                       </component>
                       <component id="3e396" class="javax.swing.JLabel">
@@ -217,20 +187,10 @@
                           <text value="类："/>
                         </properties>
                       </component>
-                      <component id="787b1" class="javax.swing.JSeparator">
-                        <constraints>
-                          <grid row="6" column="1" row-span="1" col-span="28" vsize-policy="6" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0" ipadx="5" ipady="5"/>
-                        </constraints>
-                        <properties>
-                          <focusable value="true"/>
-                          <foreground color="-11447983"/>
-                        </properties>
-                      </component>
-                      <scrollpane id="943de">
+                      <scrollpane id="943de" binding="clsTableScrollView">
                         <constraints>
                           <grid row="5" column="1" row-span="1" col-span="29" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
+                          <gridbag top="0" left="0" bottom="20" right="0" weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <minimumSize width="22" height="60"/>
@@ -292,43 +252,6 @@
                           <gridbag weightx="1.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
-                      <component id="faa3" class="javax.swing.JLabel">
-                        <constraints>
-                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
-                        </constraints>
-                        <properties>
-                          <font name="SimSun" size="14" style="1"/>
-                          <text value="表选择"/>
-                        </properties>
-                      </component>
-                      <component id="41035" class="javax.swing.JLabel">
-                        <constraints>
-                          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
-                        </constraints>
-                        <properties>
-                          <font name="SimSun" size="14" style="1"/>
-                          <horizontalAlignment value="2"/>
-                          <text value="方法配置"/>
-                        </properties>
-                      </component>
-                      <scrollpane id="f4d84">
-                        <constraints>
-                          <grid row="7" column="0" row-span="1" col-span="30" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="1.0"/>
-                        </constraints>
-                        <properties/>
-                        <border type="none"/>
-                        <children>
-                          <grid id="becbe" binding="methodCfgPanel" layout-manager="GridBagLayout">
-                            <constraints/>
-                            <properties/>
-                            <border type="none"/>
-                            <children/>
-                          </grid>
-                        </children>
-                      </scrollpane>
                       <component id="6bb19" class="javax.swing.JLabel">
                         <constraints>
                           <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -370,6 +293,112 @@
                         </constraints>
                         <properties/>
                       </component>
+                      <grid id="32525" layout-manager="GridBagLayout">
+                        <constraints>
+                          <grid row="1" column="0" row-span="1" col-span="30" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="b3ec" class="javax.swing.JLabel">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag top="0" left="10" bottom="0" right="10" weightx="0.0" weighty="1.0" ipady="20"/>
+                            </constraints>
+                            <properties>
+                              <font name="SimSun" size="14" style="1"/>
+                              <text value="数据库表"/>
+                            </properties>
+                          </component>
+                          <component id="49be4" class="javax.swing.JSeparator">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
+                            </constraints>
+                            <properties/>
+                          </component>
+                        </children>
+                      </grid>
+                      <grid id="78ffa" layout-manager="GridBagLayout">
+                        <constraints>
+                          <grid row="3" column="0" row-span="1" col-span="30" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="60855" class="javax.swing.JLabel">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag top="0" left="10" bottom="0" right="10" weightx="0.0" weighty="0.0" ipady="20"/>
+                            </constraints>
+                            <properties>
+                              <font name="SimSun" size="14" style="1"/>
+                              <text value="MVC"/>
+                            </properties>
+                          </component>
+                          <component id="39557" class="javax.swing.JSeparator">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="2" vsize-policy="6" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="0.0"/>
+                            </constraints>
+                            <properties/>
+                          </component>
+                        </children>
+                      </grid>
+                      <grid id="40414" layout-manager="GridBagLayout">
+                        <constraints>
+                          <grid row="6" column="0" row-span="1" col-span="30" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="41035" class="javax.swing.JLabel">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag top="0" left="10" bottom="0" right="10" weightx="0.0" weighty="0.0" ipady="20"/>
+                            </constraints>
+                            <properties>
+                              <font name="SimSun" size="14" style="1"/>
+                              <horizontalAlignment value="2"/>
+                              <text value="方法配置"/>
+                            </properties>
+                          </component>
+                          <component id="81aba" class="javax.swing.JSeparator">
+                            <constraints>
+                              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="0.0"/>
+                            </constraints>
+                            <properties/>
+                          </component>
+                          <component id="9d60" class="javax.swing.JButton" binding="addMethodButton">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <contentAreaFilled value="true"/>
+                              <label value="+"/>
+                              <minimumSize width="-1" height="-1"/>
+                              <preferredSize width="30" height="30"/>
+                              <text value="+"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <grid id="3762f" binding="methodCfgPanel" layout-manager="GridBagLayout">
+                        <constraints>
+                          <grid row="7" column="0" row-span="1" col-span="30" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <gridbag top="0" left="10" bottom="0" right="10" weightx="0.0" weighty="1.0"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none">
+                          <title-color color="-4473925"/>
+                        </border>
+                        <children/>
+                      </grid>
                     </children>
                   </grid>
                 </children>
