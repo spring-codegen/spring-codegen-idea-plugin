@@ -235,7 +235,6 @@ class CodeGenerator {
 
 //        render("mapper.ftl", data)
 //        renderToFile(projectCfg.sourceDir!!, svcClass.pkg, svcClass.className,"svc.ftl", data)
-        renderToFile(projectCfg.mybatisMapperDir!!+"/"+module+"/"+daoClass.className+"Mapper","dao.ftl", data)
 //        render("dao.ftl", data)
         renderToFile(projectCfg.sourceDir!!, daoClass.pkg, daoClass.className,"dao.ftl", data)
 

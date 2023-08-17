@@ -4,6 +4,7 @@ package ${ctrlClass.pkg};
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import com.cmit.paas.common.spring.http.HttpResponse;
 <#list ctrlClass.imports as item>
     <#if !item?starts_with("java.lang")>
 import ${item};
@@ -29,7 +30,7 @@ public class ${ctrlClass.className}<#if ctrlClass.superClass??> implements ${ctr
     * ${method.comment!}
     * @param ${method.inputClass.name}
     */
-    @RequestMapping(path="${ctrlClass.request.path}", method=RequestMapping.${method.request.httpMethod})
+    @RequestMapping(path="${ctrlClass.request.path}", method=RequestMethod.${method.request.httpMethod})
     <#if !method.resultListFlag>
     public HttpResponse<${method.outputClass.className}> ${method.name}(${method.inputClass.className} ${method.inputClass.name}){
         HttpResponse<${method.outputClass.className}> res = new HttpResponse();
