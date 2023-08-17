@@ -2,16 +2,18 @@ package ${model.pkg};
 
 
 import javax.validation.constraints.NotNull;
-<#list model.imports as impt>
-import ${impt};
+<#list model.imports as item>
+    <#if !item?starts_with("java.lang")>
+import ${item};
+    </#if>
 </#list>
 
 /**
 * ${model.comment!}
-* @author ${author}
+* @author ${project.author}
 * @date ${.now?string["yyyy-MM-dd"]}
 */
-public class ${model.className}{
+public class ${model.className}<#if model.superClass??> implements ${model.superClass}</#if>{
 <#list model.fields as field>
     /**
     * ${field.comment!}

@@ -1,6 +1,6 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.baboy.ideaplugincodegen</id>
+    <id>com.cmcc.paas.ideaplugin.codegen</id>
     <name>cmcc-codegen</name>
     <vendor>baboy</vendor>
 
@@ -9,10 +9,10 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.baboy.ideaplugincodegen.toolWindow.MyToolWindowFactory" id="CMCC Code Gen"/>
+        <toolWindow factoryClass="com.cmcc.paas.ideaplugin.codegen.toolWindow.MyToolWindowFactory" id="MVC代码生成器"/>
     </extensions>
 
     <applicationListeners>
-        <listener class="com.github.baboy.ideaplugincodegen.listeners.MyApplicationActivationListener" topic="com.intellij.openapi.application.ApplicationActivationListener"/>
+        <listener class="com.cmcc.paas.ideaplugin.codegen.listeners.MyApplicationActivationListener" topic="com.intellij.openapi.application.ApplicationActivationListener"/>
     </applicationListeners>
 </idea-plugin>

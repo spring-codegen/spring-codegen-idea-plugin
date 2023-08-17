@@ -1,28 +1,33 @@
 package ${svcClassImpl.pkg};
 
 
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Service;
 
-<#list svcClassImpl.imports as impt>
-    import ${impt};
+<#list svcClassImpl.imports as item>
+    <#if !item?starts_with("java.lang")>
+import ${item};
+    </#if>
 </#list>
 
 /**
 * ${svcClassImpl.comment!}
-* @author ${author}
+* @author ${project.author}
 * @date ${.now?string["yyyy-MM-dd"]}
 */
-public class ${svcClassImpl.className} {
-    private final ${daoClass.className} ${daoClass.name} ;
-    public ApiController(${daoClass.className} ${daoClass.name}) {
-        this.${daoClass.name} = ${daoClass.name};
+@Service
+public class ${svcClassImpl.className}<#if svcClassImpl.superClass??> implements ${svcClassImpl.superClass.className}</#if>{
+<#if svcClassImpl.dependency??>
+    private final ${svcClassImpl.dependency.className} ${svcClassImpl.dependency.name} ;
+    public ${svcClassImpl.className}(${svcClassImpl.dependency.className} ${svcClassImpl.dependency.name}) {
+    this.${svcClassImpl.dependency.name} = ${svcClassImpl.dependency.name};
     }
+</#if>
 <#list svcClassImpl.methods as method>
     /**
     * ${method.comment!}
     * @param ${method.inputClass.name}
     */
+    @Override
     <#if !method.resultListFlag>
     public ${method.outputClass.className} ${method.name}(${method.inputClass.className} ${method.inputClass.name}){
         <#if method.dependency??>

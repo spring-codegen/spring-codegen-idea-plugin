@@ -4,22 +4,26 @@ package ${ctrlClass.pkg};
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-<#list ctrlClass.imports as impt>
-import ${impt};
+<#list ctrlClass.imports as item>
+    <#if !item?starts_with("java.lang")>
+import ${item};
+    </#if>
 </#list>
 
 /**
 * ${ctrlClass.comment!}
-* @author ${author}
+* @author ${project.author}
 * @date ${.now?string["yyyy-MM-dd"]}
 */
 @RestController
 @RequestMapping("${ctrlClass.request.path}")
-public class ${ctrlClass.className} {
-private final ${svcClass.className} ${svcClass.name} ;
-    public ApiController(${svcClass.className} ${svcClass.name}) {
-        this.${svcClass.name} = ${svcClass.name};
+public class ${ctrlClass.className}<#if ctrlClass.superClass??> implements ${ctrlClass.superClass.className}</#if>{
+<#if ctrlClass.dependency??>
+    private final ${ctrlClass.dependency.className} ${ctrlClass.dependency.name} ;
+    public ${ctrlClass.className}(${ctrlClass.dependency.className} ${ctrlClass.dependency.name}) {
+        this.${ctrlClass.dependency.name} = ${ctrlClass.dependency.name};
     }
+</#if>
 <#list ctrlClass.methods as method>
     /**
     * ${method.comment!}
