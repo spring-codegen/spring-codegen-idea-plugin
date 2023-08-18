@@ -1,21 +1,13 @@
-package ${ctrlClass.pkg};
+<#include "./common.ftl">
+<@pkgDeclare cls=ctrlClass/>
 
 
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import com.cmit.paas.common.spring.http.HttpResponse;
-<#list ctrlClass.imports as item>
-    <#if !item?starts_with("java.lang")>
-import ${item};
-    </#if>
-</#list>
 
-/**
-* ${ctrlClass.comment!}
-* @author ${project.author}
-* @date ${.now?string["yyyy-MM-dd"]}
-*/
+<@clsComment proj=project comment=ctrlClass.comment/>
+
 @RestController
 @RequestMapping("${ctrlClass.request.path}")
 public class ${ctrlClass.className}<#if ctrlClass.superClass??> implements ${ctrlClass.superClass.className}</#if>{

@@ -23,6 +23,7 @@ public class MethodCfgPanel {
     private FieldSelectionButton outputFieldSelectionBtn;
     private JCheckBox outputListTypeCheckBox;
     private JCheckBox inputListTypeCheckBox;
+    private JCheckBox outputPagedCheckBox;
 
     private MethodGrpCfgModel.MethodCfgModel model;
     public MethodCfgPanel(){
@@ -45,6 +46,17 @@ public class MethodCfgPanel {
         return content;
     }
 
+    public MethodGrpCfgModel.MethodCfgModel getModel(){
+        model.setName(methodTextField.getText());
+        model.setInputClassName(inputClsTextField.getText());
+        model.setInputListTypeFlag(inputListTypeCheckBox.isSelected());
+        model.setOutputClassName(outputClsTextField.getText());
+        model.setOutputListTypeFlag(outputListTypeCheckBox.isSelected());
+        model.setOutputPaged(outputPagedCheckBox.isSelected());
+        model.setInputFields(Arrays.stream(inputFieldSelectionBtn.getSelectedValues()).toList());
+        model.setOutputFields(Arrays.stream(outputFieldSelectionBtn.getSelectedValues()).toList());
+        return model;
+    }
     public void setModel(MethodGrpCfgModel.MethodCfgModel model) {
         this.model = model;
         this.clsTextField.setText(model.getClassName());
@@ -53,7 +65,7 @@ public class MethodCfgPanel {
         this.inputListTypeCheckBox.setSelected(model.getInputListTypeFlag() == null ? false : model.getInputListTypeFlag());
         this.outputClsTextField.setText(model.getOutputClassName());
         this.outputListTypeCheckBox.setSelected(model.getOutputListTypeFlag() == null ? false: model.getOutputListTypeFlag());
-
+        this.outputPagedCheckBox.setSelected(model.getOutputPaged());
         if (model.getFields() != null){
             List<CodeCfg.FieldCfg> fields = model.getFields().stream().map(e -> new CodeCfg.FieldCfg(e, false)).collect(Collectors.toList());
             this.inputFieldSelectionBtn.setItems(fields);

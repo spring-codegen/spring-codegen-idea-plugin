@@ -217,7 +217,7 @@
       </component>
       <component id="842a" class="javax.swing.JTextField" binding="inputClsTextField">
         <constraints>
-          <grid row="3" column="2" row-span="1" col-span="19" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="3" column="2" row-span="1" col-span="18" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
           <gridbag weightx="0.0" weighty="0.0"/>
@@ -226,7 +226,7 @@
       </component>
       <component id="e5b5a" class="javax.swing.JTextField" binding="outputClsTextField">
         <constraints>
-          <grid row="4" column="2" row-span="1" col-span="19" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="4" column="2" row-span="1" col-span="18" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
           <gridbag weightx="0.0" weighty="0.0"/>
@@ -235,21 +235,21 @@
       </component>
       <component id="736d" class="com.cmcc.paas.ideaplugin.codegen.ui.FieldSelectionButton" binding="inputFieldSelectionBtn">
         <constraints>
-          <grid row="3" column="21" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="20" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties/>
       </component>
       <component id="60800" class="com.cmcc.paas.ideaplugin.codegen.ui.FieldSelectionButton" binding="outputFieldSelectionBtn">
         <constraints>
-          <grid row="4" column="21" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="20" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties/>
       </component>
       <component id="b19d7" class="javax.swing.JCheckBox" binding="outputListTypeCheckBox">
         <constraints>
-          <grid row="3" column="22" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="21" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
@@ -259,12 +259,21 @@
       </component>
       <component id="685b" class="javax.swing.JCheckBox" binding="inputListTypeCheckBox">
         <constraints>
-          <grid row="4" column="22" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="21" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <foreground color="-7960954"/>
           <text value="列表"/>
+        </properties>
+      </component>
+      <component id="fb8de" class="javax.swing.JCheckBox" binding="outputPagedCheckBox">
+        <constraints>
+          <grid row="4" column="23" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <text value="分页"/>
         </properties>
       </component>
     </children>

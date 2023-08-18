@@ -68,6 +68,9 @@ public class MethodGrpCfgPanel {
     }
 
     public MethodGrpCfgModel getModel() {
+        model.setCtrl(ctrlMethodCfgPanel.getModel());
+        model.setSvc(svcMethodCfgPanel.getModel());
+        model.setDao(daoMethodCfgPanel.getModel());
         return model;
     }
     public void setRemoveEvent(RemoveEvent evt){

@@ -1,20 +1,14 @@
-package ${daoClass.pkg};
+<#include "./common.ftl">
+<@pkgDeclare cls=daoClass/>
 
-<#list daoClass.imports as item>
-    <#if !item?starts_with("java.lang")>
-import ${item};
-    </#if>
-</#list>
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
-/**
-* @author ${project.author}
-* @date ${.now?string["yyyy-MM-dd"]}
-*/
+
+<@clsComment proj=project comment=""/>
 @Repository
 public interface ${daoClass.className} {
 <#list daoClass.methods as method>
-    public ${method.outputClass.className} ${method.name}(${method.inputClass.className} ${method.inputClass.className?uncap_first});
+    public <#if !method.resultListFlag>${method.outputClass.className}<#else>List<${method.outputClass.className}> </#if> ${method.name}(${method.inputClass.className} <#if method.inputClass.pkg?starts_with("java")>${method.inputClass.fields[0].name}<#else>${method.inputClass.className?uncap_first}</#if>);
 </#list>
 }

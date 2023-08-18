@@ -1,18 +1,10 @@
-package ${model.pkg};
+<#include "./common.ftl">
+<@pkgDeclare cls=model/>
 
 
 import javax.validation.constraints.NotNull;
-<#list model.imports as item>
-    <#if !item?starts_with("java.lang")>
-import ${item};
-    </#if>
-</#list>
 
-/**
-* ${model.comment!}
-* @author ${project.author}
-* @date ${.now?string["yyyy-MM-dd"]}
-*/
+<@clsComment proj=project comment=model.comment/>
 public class ${model.className}<#if model.superClass??> implements ${model.superClass}</#if>{
 <#list model.fields as field>
     /**

@@ -1,19 +1,8 @@
-package ${svcClassImpl.pkg};
-
-
+<#include "./common.ftl">
+<@pkgDeclare cls=svcClassImpl/>
 import org.springframework.stereotype.Service;
 
-<#list svcClassImpl.imports as item>
-    <#if !item?starts_with("java.lang")>
-import ${item};
-    </#if>
-</#list>
-
-/**
-* ${svcClassImpl.comment!}
-* @author ${project.author}
-* @date ${.now?string["yyyy-MM-dd"]}
-*/
+<@clsComment proj=project comment=svcClassImpl.comment/>
 @Service
 public class ${svcClassImpl.className}<#if svcClassImpl.superClass??> implements ${svcClassImpl.superClass.className}</#if>{
 <#if svcClassImpl.dependency??>

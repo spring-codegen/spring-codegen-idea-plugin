@@ -9,7 +9,11 @@ import com.cmcc.paas.ideaplugin.codegen.db.model.DBTable
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel
 import com.cmcc.paas.ideaplugin.codegen.gen.template.TempRender.renderToFile
 import com.intellij.util.containers.stream
+import java.util.*
 import java.util.function.Consumer
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+import kotlin.collections.HashSet
 
 /**
  *
@@ -144,6 +148,7 @@ class CodeGenerator {
         cls.imports = imports
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
     fun gen(module:String, dbTable: DBTable, classGrp: ClassGrpCfgModel, methodsGrps:List<MethodGrpCfgModel>, projectCfg:ProjectCfg){
 
         var modelPkg = projectCfg.basePkg + ".model."+module
@@ -161,12 +166,33 @@ class CodeGenerator {
             val ctrlMethod = getMethod(methodGrp.ctrl!!,  modelPkg, dbTable)
             val svcMethod = getMethod(methodGrp.svc!!, modelPkg, dbTable)
             val daoMethod = getMethod(methodGrp.dao!!, modelPkg, dbTable)
+
             ctrlMethod.request = ClassModel.RequestURI(methodGrp.request!!.httpMethod, methodGrp.request!!.path)
             ctrlMethod.dependency = svcMethod;
             svcMethod.dependency = daoMethod;
             ctrlMethods.add(ctrlMethod)
             svcMethods.add(svcMethod)
             daoMethods.add(daoMethod)
+
+            if (ctrlMethod.resultListFlag && ctrlMethod.paged){
+                var daoMethod2 = daoMethod.clone()
+                daoMethod2.outputClass.className = "Integer";
+                daoMethod2.outputClass.pkg = "java.lang";
+                daoMethod2.name = "get"+daoMethod2.name.capitalize(Locale.getDefault())
+                daoMethod2.resultListFlag = false
+                daoMethod2.paged = false
+
+                var svcMethod2 = svcMethod.clone()
+                svcMethod2.outputClass.className = "Integer";
+                svcMethod2.outputClass.pkg = "java.lang";
+                svcMethod2.name = "get"+daoMethod2.name.capitalize(Locale.getDefault())
+                svcMethod2.resultListFlag = false
+                svcMethod2.paged = false
+                svcMethod2.dependency = daoMethod2
+                svcMethods.add(svcMethod2)
+                daoMethods.add(daoMethod2)
+            }
+
             resultMaps[daoMethod.outputClass.className] = daoMethod.outputClass
             processModel(ctrlMethod.inputClass, models);
             processModel(ctrlMethod.outputClass, models);
@@ -203,6 +229,9 @@ class CodeGenerator {
         ctrlClass.dependency = svcClass
         ctrlClass.request = ClassModel.RequestURI(null, classGrp.ctrl!!.baseURI)
         ctrlClass.name = ctrlClass.className.substring(0,1).toLowerCase() + ctrlClass.className.substring(1)
+
+
+
         var i = projectCfg.ctrlBaseCls!!.lastIndexOf(".")
         ctrlClass.superClass = ClassModel(projectCfg.ctrlBaseCls!!.substring(i + 1), projectCfg.ctrlBaseCls!!.substring(0, i), null, null)
         processImports(ctrlClass)

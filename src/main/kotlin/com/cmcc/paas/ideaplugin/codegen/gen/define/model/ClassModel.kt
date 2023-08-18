@@ -41,7 +41,7 @@ class ClassModel(var className:String, var pkg:String, var comment:String?, var 
             return f
         }
     }
-    class Method(val name:String, val inputClass:ClassModel, val outputClass:ClassModel, val resultListFlag:Boolean){
+    class Method(var name:String, var inputClass:ClassModel, var outputClass:ClassModel, var resultListFlag:Boolean){
         var dependency:Method? = null
         var request:RequestURI? = null
         var paged:Boolean = false

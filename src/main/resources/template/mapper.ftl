@@ -74,7 +74,7 @@
                 FROM ${daoClass.tableName}
                 <include refid="${method.name}Cond"/>
             </select>
-            <select id="get${method.name?capitalize}Count" <#if baseTypes?seqContains(method.outputClass.className)>resultType="${method.outputClass.className}"<#else>resultMap="${method.outputClass.className}"</#if> >
+            <select id="get${method.name?capitalize}Count" <#if baseTypes?seqContains(method.outputClass.className)>resultType="${method.outputClass.className}"<#else>resultType="java.lang.Integer"</#if> >
                 SELECT count(1)
                 FROM ${daoClass.tableName}
                 <include refid="${method.name}Cond"/>
