@@ -312,7 +312,7 @@
         <properties>
           <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
-          <text value="Resource目录："/>
+          <text value="Mapper目录："/>
         </properties>
       </component>
       <component id="a7f50" class="javax.swing.JTextField" binding="mybatisMapperDirTextField">

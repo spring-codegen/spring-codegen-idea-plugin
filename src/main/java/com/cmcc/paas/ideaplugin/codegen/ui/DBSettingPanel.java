@@ -77,12 +77,24 @@ public class DBSettingPanel {
 
     public void setModel(DBCfg model) {
         this.model = model;
-        dbNameTextField.setText(model.getDbName());
-        hostTextField.setText(model.getHost());
-        portTextField.setText(model.getPort().toString());
-        tableSchemaTextField.setText(model.getSchema());
-        userTextField.setText(model.getUser());
-        pwdTextField.setText(model.getPwd());
+        if (model.getDbName() != null) {
+            dbNameTextField.setText(model.getDbName());
+        }
+        if (model.getHost() != null) {
+            hostTextField.setText(model.getHost());
+        }
+        if (model.getPort() != null) {
+            portTextField.setText(model.getPort().toString());
+        }
+        if (model.getSchema() != null) {
+            tableSchemaTextField.setText(model.getSchema());
+        }
+        if (model.getUser() != null) {
+            userTextField.setText(model.getUser());
+        }
+        if (model.getPwd() != null) {
+            pwdTextField.setText(model.getPwd());
+        }
 
     }
     public interface ValueChangedListener{

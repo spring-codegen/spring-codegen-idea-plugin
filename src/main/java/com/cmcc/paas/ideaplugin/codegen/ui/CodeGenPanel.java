@@ -33,13 +33,6 @@ import java.util.regex.Pattern;
 public class CodeGenPanel {
     private JTabbedPane tabbedPanel;
     private JPanel mainPanel;
-    private JPanel rootPanel;
-    private JPanel sourcePanel;
-    private JPanel settingPanel;
-    private JTextField usernameTextField;
-    private JTextField pwdTextField;
-    private JTextField dbUrlTextField;
-    private JButton testButton;
     private JComboBox tableComboBox;
     private JTextField baseUriTextField;
     private JTextField moduleTextField;
@@ -49,6 +42,8 @@ public class CodeGenPanel {
     private JButton genBtn;
     private JPanel codePanel;
     private JButton saveBtn;
+    private JPanel dataSourcePanel;
+    private JPanel settingsPanel;
     private JScrollPane rootScrollPanel;
     private JScrollPane clsTableScrollView;
     private JButton addMethodButton;
@@ -112,6 +107,7 @@ public class CodeGenPanel {
             }
         });
         init();
+        refreshDBCtx();
     }
     /**
      *
@@ -359,19 +355,6 @@ public class CodeGenPanel {
                 throw new RuntimeException(e);
             }
         }
-    }
-    private DataSourceSetting getDataSourceConfig(){
-        DataSourceSetting dataSourceSetting = new DataSourceSetting();
-        dataSourceSetting.setUrl(dbUrlTextField.getText());
-        dataSourceSetting.setUsername(usernameTextField.getText());
-        dataSourceSetting.setPwd(pwdTextField.getText());
-        return dataSourceSetting;
-    }
-    private void test(){
-        DataSourceSetting dataSourceSetting = getDataSourceConfig();
-        System.out.println("url:"+ dataSourceSetting.getUrl());
-        System.out.println("username:"+ dataSourceSetting.getUsername());
-        System.out.println("password:"+ dataSourceSetting.getPwd());
     }
     public void generate(){
 

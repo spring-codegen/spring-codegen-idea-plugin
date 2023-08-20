@@ -11,7 +11,7 @@ class ClassModel(var className:String, var pkg:String, var comment:String?, var 
     var tableName:String? = null
     var methods:MutableList<Method>? = ArrayList()
     var imports:MutableSet<String>? = HashSet()
-    var isBaseType:Boolean = false
+    var baseType:Boolean = false
     var name:String? = null
     var request:RequestURI? = null
     var superClass:ClassModel? = null
@@ -20,7 +20,7 @@ class ClassModel(var className:String, var pkg:String, var comment:String?, var 
         var cls = ClassModel(className, pkg,comment, if (fields!= null) fields!!.stream().map { e -> e.clone() }.toList() else null)
         cls.methods = if(methods != null)methods!!.stream().map { e -> e.clone() }.toList() else null
         cls.imports = if(imports != null)imports!!.stream().map { e -> e }.collect(Collectors.toSet()) else null
-        cls.isBaseType = isBaseType
+        cls.baseType = baseType
         cls.name = name
         cls.request = if(request != null)request!!.clone() else null
         cls.superClass = superClass
@@ -31,13 +31,13 @@ class ClassModel(var className:String, var pkg:String, var comment:String?, var 
         var pkg:String? = null
         var column:String? = null
         var classType:ClassModel? = null
-        var isBaseType:Boolean = false
+        var baseType:Boolean = false
 
         fun clone():Field{
             var f = Field(name, javaType, comment, notNull, setter, getter)
             f.column = column
             f.classType = if(classType != null) classType!!.clone() else null
-            f.isBaseType = isBaseType
+            f.baseType = baseType
             return f
         }
     }

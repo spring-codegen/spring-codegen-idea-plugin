@@ -2,8 +2,13 @@ package com.cmcc.paas.ideaplugin.codegen.ui;
 
 import com.cmcc.paas.ideaplugin.codegen.config.CodeCfg;
 import com.cmcc.paas.ideaplugin.codegen.config.MethodGrpCfgModel;
+import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,6 +44,40 @@ public class MethodCfgPanel {
                 model.setInputFields( Arrays.stream(outputFieldSelectionBtn.getSelectedValues()).toList());
             }
         });
+        for (Component component : content.getComponents()) {
+            if (component instanceof JTextField){
+                TextFieldUtils.INSTANCE.addTextChangedEvent((JTextField) component, new TextFieldUtils.TextChangedEvent() {
+                    @Override
+                    public void onTextChanged(@NotNull JTextField textField) {
+                        if (textField == methodTextField) {
+                            model.setName(methodTextField.getText());
+                        }
+                        if (textField == inputClsTextField) {
+                            model.setInputClassName(inputClsTextField.getText());
+                        }
+                        if (textField == outputClsTextField) {
+                            model.setOutputClassName(outputClsTextField.getText());
+                        }
+                    }
+                });
+            }
+            if (component instanceof JCheckBox){
+                ((JCheckBox)component).addItemListener(new ItemListener() {
+                    @Override
+                    public void itemStateChanged(ItemEvent itemEvent) {
+                        if (itemEvent.getSource() == inputListTypeCheckBox) {
+                            model.setInputListTypeFlag(inputListTypeCheckBox.isSelected());
+                        }
+                        if (itemEvent.getSource() == outputListTypeCheckBox) {
+                            model.setOutputListTypeFlag(outputListTypeCheckBox.isSelected());
+                        }
+                        if (itemEvent.getSource() == outputPagedCheckBox) {
+                            model.setOutputPaged(outputPagedCheckBox.isSelected());
+                        }
+                    }
+                });
+            }
+        }
     }
     public void createUIComponents(){
     }
@@ -47,14 +86,6 @@ public class MethodCfgPanel {
     }
 
     public MethodGrpCfgModel.MethodCfgModel getModel(){
-        model.setName(methodTextField.getText());
-        model.setInputClassName(inputClsTextField.getText());
-        model.setInputListTypeFlag(inputListTypeCheckBox.isSelected());
-        model.setOutputClassName(outputClsTextField.getText());
-        model.setOutputListTypeFlag(outputListTypeCheckBox.isSelected());
-        model.setOutputPaged(outputPagedCheckBox.isSelected());
-        model.setInputFields(Arrays.stream(inputFieldSelectionBtn.getSelectedValues()).toList());
-        model.setOutputFields(Arrays.stream(outputFieldSelectionBtn.getSelectedValues()).toList());
         return model;
     }
     public void setModel(MethodGrpCfgModel.MethodCfgModel model) {

@@ -30,9 +30,9 @@ public class MethodGrpCfgPanel {
         TextFieldUtils.INSTANCE.addTextChangedEvent(methodCommentTextField, new TextFieldUtils.TextChangedEvent() {
             @Override
             public void onTextChanged(@NotNull JTextField textField) {
-                getModel().getCtrl().setComment(textField.getText());
-                getModel().getSvc().setComment(textField.getText());
-                getModel().getDao().setComment(textField.getText());
+                model.getCtrl().setComment(textField.getText());
+                model.getSvc().setComment(textField.getText());
+                model.getDao().setComment(textField.getText());
             }
         });
         MethodGrpCfgPanel handler = this;
@@ -68,9 +68,6 @@ public class MethodGrpCfgPanel {
     }
 
     public MethodGrpCfgModel getModel() {
-        model.setCtrl(ctrlMethodCfgPanel.getModel());
-        model.setSvc(svcMethodCfgPanel.getModel());
-        model.setDao(daoMethodCfgPanel.getModel());
         return model;
     }
     public void setRemoveEvent(RemoveEvent evt){

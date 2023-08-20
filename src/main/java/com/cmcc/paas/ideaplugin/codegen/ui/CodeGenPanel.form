@@ -32,7 +32,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <grid id="20daa" binding="rootPanel" layout-manager="GridBagLayout">
+                  <grid id="20daa" layout-manager="GridBagLayout">
                     <constraints/>
                     <properties/>
                     <border type="none"/>
@@ -420,7 +420,7 @@
               </hspacer>
             </children>
           </grid>
-          <grid id="30ec1" binding="sourcePanel" layout-manager="GridBagLayout">
+          <grid id="30ec1" binding="dataSourcePanel" layout-manager="GridBagLayout">
             <constraints>
               <tabbedpane title="数据源"/>
             </constraints>
@@ -435,7 +435,7 @@
               </nested-form>
             </children>
           </grid>
-          <grid id="f258d" binding="settingPanel" layout-manager="GridBagLayout">
+          <grid id="f258d" binding="settingsPanel" layout-manager="GridBagLayout">
             <constraints>
               <tabbedpane title="设置"/>
             </constraints>

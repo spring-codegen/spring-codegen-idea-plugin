@@ -46,6 +46,12 @@ class CodeGenerator {
         }
         return null;
     }
+    fun defaultClassVarName(clsName:String):String{
+        if (isBaseType(clsName)){
+            return clsName.substring(0,1).toLowerCase(Locale.getDefault())
+        }
+        return clsName.substring(0,1).toLowerCase() + clsName.substring(1)
+    }
     fun javaType(dbType:String):String{
         if ("int2".equals(dbType)){
             return "Boolean"
@@ -77,8 +83,8 @@ class CodeGenerator {
 
         val inputClass = getClass(methodCfgModel.inputClassName!!, pkg, methodCfgModel.inputFields!!, dbTable)
         val outputClass = getClass(methodCfgModel.outputClassName!!, pkg, methodCfgModel.outputFields!!, dbTable)
-        inputClass.name = inputClass.className.substring(0,1).toLowerCase() + inputClass.className.substring(1)
-        outputClass.name = outputClass.className.substring(0,1).toLowerCase() + outputClass.className.substring(1)
+        inputClass.name = defaultClassVarName(inputClass.className)
+        outputClass.name = defaultClassVarName(outputClass.className)
         if (isBaseType(inputClass.className) && inputClass.fields != null && inputClass.fields!!.size == 1){
             inputClass.name = inputClass.fields!![0].name
         }
@@ -96,12 +102,12 @@ class CodeGenerator {
         }
         if (baseTypes().stream().anyMatch{e -> e.equals(cls.className)}){
             cls.pkg = baseTypePkg(cls.className)!!
-            cls.isBaseType = true
+            cls.baseType = true
             return
         }
         cls.fields!!.forEach{
-            it.isBaseType = baseTypes().stream().anyMatch{e -> e.equals(it.javaType)}
-            if (it.isBaseType){
+            it.baseType = baseTypes().stream().anyMatch{ e -> e.equals(it.javaType)}
+            if (it.baseType){
                 it.pkg = baseTypePkg(it.javaType)!!
             }
         }
@@ -178,14 +184,14 @@ class CodeGenerator {
                 var daoMethod2 = daoMethod.clone()
                 daoMethod2.outputClass.className = "Integer";
                 daoMethod2.outputClass.pkg = "java.lang";
-                daoMethod2.name = "get"+daoMethod2.name.capitalize(Locale.getDefault())
+                daoMethod2.name = String.format("get%sCount", daoMethod2.name.capitalize(Locale.getDefault()))
                 daoMethod2.resultListFlag = false
                 daoMethod2.paged = false
 
                 var svcMethod2 = svcMethod.clone()
                 svcMethod2.outputClass.className = "Integer";
                 svcMethod2.outputClass.pkg = "java.lang";
-                svcMethod2.name = "get"+daoMethod2.name.capitalize(Locale.getDefault())
+                svcMethod2.name = daoMethod2.name
                 svcMethod2.resultListFlag = false
                 svcMethod2.paged = false
                 svcMethod2.dependency = daoMethod2
@@ -208,7 +214,7 @@ class CodeGenerator {
         val daoClass = ClassModel(classGrp.dao!!.className!!, daoPkg, null, null)
         daoClass.tableName = dbTable.name
         daoClass.methods = daoMethods
-        daoClass.name = daoClass.className.substring(0,1).toLowerCase() + daoClass.className.substring(1)
+        daoClass.name = defaultClassVarName(daoClass.className)
         processImports(daoClass)
 
         data.put("project", projectCfg)
@@ -218,7 +224,7 @@ class CodeGenerator {
         val svcClass = ClassModel(classGrp.svc!!.className!!, svcPkg, null, null)
         svcClass.tableName = dbTable.name
         svcClass.methods = svcMethods
-        svcClass.name = svcClass.className.substring(0,1).toLowerCase() + svcClass.className.substring(1)
+        svcClass.name = defaultClassVarName(svcClass.className)
 
 
         processImports(svcClass)
@@ -228,7 +234,7 @@ class CodeGenerator {
         ctrlClass.methods = ctrlMethods
         ctrlClass.dependency = svcClass
         ctrlClass.request = ClassModel.RequestURI(null, classGrp.ctrl!!.baseURI)
-        ctrlClass.name = ctrlClass.className.substring(0,1).toLowerCase() + ctrlClass.className.substring(1)
+        ctrlClass.name = defaultClassVarName(ctrlClass.className)
 
 
 
@@ -259,24 +265,38 @@ class CodeGenerator {
         data.put("daoClass", daoClass)
         data.put("resultMaps", resultMaps)
 
-
-
-
-//        render("mapper.ftl", data)
-//        renderToFile(projectCfg.sourceDir!!, svcClass.pkg, svcClass.className,"svc.ftl", data)
-//        render("dao.ftl", data)
-        renderToFile(projectCfg.sourceDir!!, daoClass.pkg, daoClass.className,"dao.ftl", data)
-
-
-
-//        render("ctrl.ftl", data)
-        renderToFile(projectCfg.mybatisMapperDir!!+"/"+module+"/"+daoClass.className+"Mapper.xml","mapper.ftl", data)
-//        render("svc.ftl", data)
-
-        renderToFile(projectCfg.sourceDir!!, svcClass.pkg, svcClass.className,"svc.ftl", data)
-//        render("svc-impl.ftl", data)
-        renderToFile(projectCfg.sourceDir!!, svcClassImpl.pkg, svcClassImpl.className,"svc-impl.ftl", data)
-//        render("dao.ftl", data)
-        renderToFile(projectCfg.sourceDir!!, ctrlClass.pkg, ctrlClass.className,"ctrl.ftl", data)
+        renderToFile(
+            projectCfg.sourceDir!!,
+            daoClass.pkg,
+            daoClass.className,
+            "dao.ftl",
+            data
+        )
+        renderToFile(
+            projectCfg.mybatisMapperDir!!+"/"+module+"/"+daoClass.className+"Mapper.xml",
+            "mapper.ftl",
+            data
+        )
+        renderToFile(
+            projectCfg.sourceDir!!,
+            svcClass.pkg,
+            svcClass.className,
+            "svc.ftl",
+            data
+        )
+        renderToFile(
+            projectCfg.sourceDir!!,
+            svcClassImpl.pkg,
+            svcClassImpl.className,
+            "svc-impl.ftl",
+            data
+        )
+        renderToFile(
+            projectCfg.sourceDir!!,
+            ctrlClass.pkg,
+            ctrlClass.className,
+            "ctrl.ftl",
+            data
+        )
     }
 }
