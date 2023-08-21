@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 
 <@clsComment proj=project comment=svcClassImpl.comment/>
 @Service
-public class ${svcClassImpl.className}<#if svcClassImpl.superClass??> implements ${svcClassImpl.superClass.className}</#if>{
+public class ${svcClassImpl.className}<#if svcClassImpl.implement??> implements ${svcClassImpl.implement.className}</#if>{
 <#if svcClassImpl.dependency??>
     private final ${svcClassImpl.dependency.className} ${svcClassImpl.dependency.name} ;
     public ${svcClassImpl.className}(${svcClassImpl.dependency.className} ${svcClassImpl.dependency.name}) {
@@ -20,19 +20,7 @@ public class ${svcClassImpl.className}<#if svcClassImpl.superClass??> implements
     <#if !method.resultListFlag>
     public ${method.outputClass.className} ${method.name}(${method.inputClass.className} ${method.inputClass.name}){
         <#if method.dependency??>
-            <#assign daoArgs = method.inputClass.name>
-            <#if method.dependency.inputClass.className != method.inputClass.className>
-        ${method.dependency.inputClass.className} ${method.dependency.inputClass.name} = ${method.inputClass.name}.copyTo(${method.dependency.inputClass.className}.class);
-                <#assign daoArgs=method.dependency.inputClass.name>
-            </#if>
-            <#if method.dependency.outputClass.className != method.outputClass.className>
-        ${method.dependency.outputClass.className} ${method.dependency.outputClass.name} = ${daoClass.name}.${method.dependency.name}(${daoArgs});
-                <#if method.outputClass.className!="-">
-        ${method.outputClass.className} ${method.outputClass.name} = ${method.dependency.outputClass.name}.copyTo(${method.outputClass.className}.class);
-                </#if>
-            <#elseif method.outputClass.className!="-">
-        ${method.outputClass.className} ${method.outputClass.name} = ${daoClass.name}.${method.dependency.name}(${daoArgs});
-            </#if>
+            <@methodCall cls1=svcClassImpl method1=method cls2=daoClass method2=method.dependency/>
         </#if>
         return ${method.outputClass.name};
     }

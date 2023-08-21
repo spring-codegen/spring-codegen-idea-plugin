@@ -5,7 +5,7 @@
 import javax.validation.constraints.NotNull;
 
 <@clsComment proj=project comment=model.comment/>
-public class ${model.className}<#if model.superClass??> implements ${model.superClass}</#if>{
+public class ${model.className}<#if model.implement??> extends ${model.implement.className}</#if>{
 <#list model.fields as field>
     /**
     * ${field.comment!}

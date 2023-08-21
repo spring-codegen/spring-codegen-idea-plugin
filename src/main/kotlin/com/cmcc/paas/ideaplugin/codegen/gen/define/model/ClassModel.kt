@@ -14,7 +14,8 @@ class ClassModel(var className:String, var pkg:String, var comment:String?, var 
     var baseType:Boolean = false
     var name:String? = null
     var request:RequestURI? = null
-    var superClass:ClassModel? = null
+    var implement:ClassModel? = null
+    var extend:ClassModel? = null
     var dependency:ClassModel? = null
     fun clone():ClassModel{
         var cls = ClassModel(className, pkg,comment, if (fields!= null) fields!!.stream().map { e -> e.clone() }.toList() else null)
@@ -23,7 +24,8 @@ class ClassModel(var className:String, var pkg:String, var comment:String?, var 
         cls.baseType = baseType
         cls.name = name
         cls.request = if(request != null)request!!.clone() else null
-        cls.superClass = superClass
+        cls.implement = implement
+        cls.extend = extend
         cls.dependency = dependency
         return cls;
     }
@@ -46,6 +48,7 @@ class ClassModel(var className:String, var pkg:String, var comment:String?, var 
         var request:RequestURI? = null
         var paged:Boolean = false
         var comment:String? = null
+        var cls:ClassModel? = null
         fun clone():Method{
             var m = Method(name, inputClass, outputClass, resultListFlag)
             m.dependency = if(dependency != null) dependency!!.clone() else null

@@ -10,7 +10,7 @@ import com.cmit.paas.common.spring.http.HttpResponse;
 
 @RestController
 @RequestMapping("${ctrlClass.request.path}")
-public class ${ctrlClass.className}<#if ctrlClass.superClass??> implements ${ctrlClass.superClass.className}</#if>{
+public class ${ctrlClass.className}<#if ctrlClass.extends??> extends ${ctrlClass.superClass.className}</#if>{
 <#if ctrlClass.dependency??>
     private final ${ctrlClass.dependency.className} ${ctrlClass.dependency.name} ;
     public ${ctrlClass.className}(${ctrlClass.dependency.className} ${ctrlClass.dependency.name}) {
@@ -34,23 +34,24 @@ public class ${ctrlClass.className}<#if ctrlClass.superClass??> implements ${ctr
 <#--            </#if>-->
 <#--            cls1=${method.inputClass.baseType} cls2=${method.dependency.inputClass.baseType}-->
 
-            <@argsConvert cls1=method.inputClass cls2=method.dependency.inputClass/>
-            <#if method.dependency.outputClass.className != method.outputClass.className>
-        ${method.dependency.outputClass.className} ${method.dependency.outputClass.name} = ${svcClass.name}.${method.dependency.name}(${method.dependency.inputClass.name});
-                <#if method.outputClass.className!="-">
-        ${method.outputClass.className} data = ${method.dependency.outputClass.name}.copyTo(${method.outputClass.className}.class);
-                </#if>
-            <#elseif method.outputClass.className!="-">
-        ${method.outputClass.className} data = ${svcClass.name}.${method.dependency.name}(${method.dependency.inputClass.name});
-            </#if>
+<#--            <@argsConvert cls1=method.inputClass cls2=method.dependency.inputClass/>-->
+<#--            <#if method.dependency.outputClass.className != method.outputClass.className>-->
+<#--        ${method.dependency.outputClass.className} ${method.dependency.outputClass.name} = ${svcClass.name}.${method.dependency.name}(${method.dependency.inputClass.name});-->
+<#--                <#if method.outputClass.className!="-">-->
+<#--        ${method.outputClass.className} data = ${method.dependency.outputClass.name}.copyTo(${method.outputClass.className}.class);-->
+<#--                </#if>-->
+<#--            <#elseif method.outputClass.className!="-">-->
+<#--        ${method.outputClass.className} data = ${svcClass.name}.${method.dependency.name}(${method.dependency.inputClass.name});-->
+<#--            </#if>-->
+            <@methodCall cls1=ctrlClass method1=method cls2=svcClass method2=method.dependency/>
             <#if method.outputClass.className!="-">
-        res.setData(data);
+        res.setData(result);
             </#if>
         </#if>
         return res;
     }
     <#elseif method.paged>
-        public HttpResponse<ListResult<${method.outputClass.className}>> ${method.name}(${method.inputClass.className} ${method.inputClass.name}){
+    public HttpResponse<ListResult<${method.outputClass.className}>> ${method.name}(${method.inputClass.className} ${method.inputClass.name}){
         HttpResponse<ListResult<${method.outputClass.className}>> res = new HttpResponse();
         <#if method.dependency??>
             <@argsConvert cls1=method.inputClass cls2=method.dependency.inputClass/>
@@ -65,7 +66,7 @@ public class ${ctrlClass.className}<#if ctrlClass.superClass??> implements ${ctr
             </#if>
         }
         ListResult<${method.outputClass.className}> result = new ListResult<>(totalCount, ${method.inputClass.name}.getPageSize(), ${method.inputClass.name}.getOffset(), items);
-    <#if method.outputClass.className!="-">
+            <#if method.outputClass.className!="-">
         res.setData(result);
             </#if>
         </#if>

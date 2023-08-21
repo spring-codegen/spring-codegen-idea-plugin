@@ -145,8 +145,8 @@ class CodeGenerator {
                 }
             }
         }
-        if (cls.superClass != null){
-            imports.add(cls.superClass!!.pkg+"."+cls.superClass!!.className)
+        if (cls.implement != null){
+            imports.add(cls.implement!!.pkg+"."+cls.implement!!.className)
         }
         if (cls.dependency != null){
             imports.add(cls.dependency!!.pkg+"."+cls.dependency!!.className)
@@ -239,14 +239,14 @@ class CodeGenerator {
 
 
         var i = projectCfg.ctrlBaseCls!!.lastIndexOf(".")
-        ctrlClass.superClass = ClassModel(projectCfg.ctrlBaseCls!!.substring(i + 1), projectCfg.ctrlBaseCls!!.substring(0, i), null, null)
+        ctrlClass.extend = ClassModel(projectCfg.ctrlBaseCls!!.substring(i + 1), projectCfg.ctrlBaseCls!!.substring(0, i), null, null)
         processImports(ctrlClass)
 
 
         var svcClassImpl = svcClass.clone()
         svcClassImpl.pkg = svcClassImpl.pkg + ".impl";
         svcClassImpl.className = svcClassImpl.className +"Impl";
-        svcClassImpl.superClass = svcClass;
+        svcClassImpl.implement = svcClass;
         svcClassImpl.dependency = daoClass
         processImports(svcClassImpl)
 
@@ -254,7 +254,7 @@ class CodeGenerator {
         models.keys.forEach{
             var m = models[it]
             var i = projectCfg.modelBaseCls!!.lastIndexOf(".")
-            m!!.superClass = ClassModel(projectCfg.ctrlBaseCls!!.substring(i + 1), projectCfg.ctrlBaseCls!!.substring(0, i), null, null)
+            m!!.implement = ClassModel(projectCfg.modelBaseCls!!.substring(i + 1), projectCfg.modelBaseCls!!.substring(0, i), null, null)
             data["model"] = m
             processImports(m!!)
             renderToFile(projectCfg.sourceDir!!, m.pkg,m.className,"model.ftl", data)
