@@ -24,16 +24,18 @@
 			col.table_schema as schema,
 			col.udt_name as type
 		FROM information_schema.columns col
-			JOIN pg_class c ON c.relname = col.table_name
+			LEFT JOIN pg_namespace ns ON col."table_name"=ns.nspname
+			LEFT JOIN pg_class c ON ns.oid=c.relnamespace AND c.relname = col.table_name
 			LEFT JOIN pg_description d ON d.objoid = c.oid AND d.objsubid = col.ordinal_position
-		WHERE col.table_name=#{tableName}
+		WHERE col.table_schema=#{schema} AND col.table_name=#{tableName}
 		ORDER BY col.table_name, col.ordinal_position;
 	</select>
 	<select id="queryTables" resultMap="table">
-		SELECT tb.table_name as name, d.description as comment, table_schema as schema
+		SELECT tb.table_name as name, d.description as comment, tb.table_schema as schema
 		FROM information_schema.tables tb
-			JOIN pg_class c ON c.relname = tb.table_name
+			LEFT JOIN pg_namespace ns on ns.nspname=tb.table_schema
+			LEFT JOIN pg_class c ON c.relnamespace=ns.oid AND c.relname = tb.table_name
 			LEFT JOIN pg_description d ON d.objoid = c.oid AND d.objsubid = '0'
-		WHERE table_schema=#{schema}
+		WHERE tb.table_schema=#{schema}
 	</select>
 </mapper>

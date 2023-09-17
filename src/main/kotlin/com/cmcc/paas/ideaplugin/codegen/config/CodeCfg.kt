@@ -44,6 +44,8 @@ open class CodeCfg{
         var outputPaged: Boolean? = false
     }
     open class FieldCfg(var name:String, var notNull:Boolean){
+        var minLen: Int = -1
+        var maxLen: Int = -1
 
     }
     class RenderItem{

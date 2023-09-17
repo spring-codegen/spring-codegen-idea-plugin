@@ -72,9 +72,13 @@ object DBCtx {
         resetDataSource()
         resetSessionFactory()
     }
-    fun queryFields(params: Any):List<DBTableField>{
+    fun queryFields(params: Map<String, Any>):List<DBTableField>{
         var sqlSession = sqlSessionFactory!!.openSession();
-        var ret = sqlSession.selectList<DBTableField>("postgresql.TableDao.queryFields", params)
+        var p = HashMap<String, Any>()
+        p["schema"] = dbCfg!!.schema!!
+        p.putAll(params)
+
+        var ret = sqlSession.selectList<DBTableField>("postgresql.TableDao.queryFields", p)
         sqlSession.close()
         return ret
     }
