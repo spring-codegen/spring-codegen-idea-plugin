@@ -8,10 +8,7 @@ import org.apache.ibatis.reflection.ArrayUtil;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
@@ -142,5 +139,16 @@ public class BeanFieldSelectionDialog extends JDialog {
             JComponent component = (column == TableHeaderIndex.NOT_NULL.ordinal()) ? checkBox : label;
             return component;
         }
+    }
+    public static class TableCellFieldRender extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            if (column == TableHeaderIndex.NOT_NULL.ordinal()){
+                return new JCheckBox();
+            }
+            return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        }
+    }
+
     }
 }
