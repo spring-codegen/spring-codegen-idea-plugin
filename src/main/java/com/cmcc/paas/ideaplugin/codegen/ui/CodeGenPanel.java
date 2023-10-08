@@ -63,6 +63,7 @@ public class CodeGenPanel {
     public CodeGenPanel() {
         rootScrollPanel.setBorder(null);
         clsTableScrollView.setBorder(null);
+        clsTableScrollView.setViewportBorder(null);
 
         projectCfg.load();
         dbCfg.load();
@@ -147,6 +148,7 @@ public class CodeGenPanel {
         DBCtx.INSTANCE.setDbCfg(dbCfg);
         DBCtx.INSTANCE.refresh();
 
+        //表格下拉框
         dbTables = DBCtx.INSTANCE.queryTables();
         if (dbTables != null) {
             List<String> items = dbTables.stream().map(e -> e.getName()).toList();
@@ -205,6 +207,11 @@ public class CodeGenPanel {
 
         updateClasses();
         updateMethods();
+
+        List<CodeCfg.FieldCfg> fieldCfgs = fields.stream().map(f -> new CodeCfg.FieldCfg(f.getName(), false, f.getType(), f.getComment())).toList();
+        BeanFieldSelectionDialog dialog = BeanFieldSelectionDialog.create();
+        dialog.setFields(fieldCfgs);
+        dialog.setVisible(true);
     }
     private String getHandledVar(String v, Map<String, Object> p){
         if (v == null){
@@ -229,12 +236,12 @@ public class CodeGenPanel {
             if (StringUtils.isNotEmpty(includes)){
                 boolean isInclude = Arrays.stream(includes.split(",")).filter(p -> Pattern.matches(p, field.getName())).findFirst().isPresent();
                 if (isInclude){
-                    allowFields.add(new CodeCfg.FieldCfg(field.getName(), false));
+                    allowFields.add(new CodeCfg.FieldCfg(field.getName(), false, field.getType()));
                     return;
                 }
                 return;
             }
-            allowFields.add(new CodeCfg.FieldCfg(field.getName(), false));
+            allowFields.add(new CodeCfg.FieldCfg(field.getName(), false, field.getType()));
         });
         return allowFields;
     }

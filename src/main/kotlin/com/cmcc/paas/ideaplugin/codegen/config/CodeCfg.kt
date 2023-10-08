@@ -43,10 +43,11 @@ open class CodeCfg{
         var outputListTypeFlag: Boolean? = false
         var outputPaged: Boolean? = false
     }
-    open class FieldCfg(var name:String, var notNull:Boolean){
+    open class FieldCfg(var name:String, var notNull:Boolean, var type:String?, var comment:String?){
+        constructor(name:String, notNull:Boolean, type:String?) : this(name, notNull, type, null)
+
         var minLen: Int = -1
         var maxLen: Int = -1
-
     }
     class RenderItem{
         var title: String? = null

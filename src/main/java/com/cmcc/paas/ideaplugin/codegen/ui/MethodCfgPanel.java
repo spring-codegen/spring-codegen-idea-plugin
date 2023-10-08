@@ -98,7 +98,7 @@ public class MethodCfgPanel {
         this.outputListTypeCheckBox.setSelected(model.getOutputListTypeFlag() == null ? false: model.getOutputListTypeFlag());
         this.outputPagedCheckBox.setSelected(model.getOutputPaged());
         if (model.getFields() != null){
-            List<CodeCfg.FieldCfg> fields = model.getFields().stream().map(e -> new CodeCfg.FieldCfg(e, false)).collect(Collectors.toList());
+            List<CodeCfg.FieldCfg> fields = model.getFields().stream().map(e -> new CodeCfg.FieldCfg(e, false, null)).collect(Collectors.toList());
             this.inputFieldSelectionBtn.setItems(fields);
             this.outputFieldSelectionBtn.setItems(fields);
         }
