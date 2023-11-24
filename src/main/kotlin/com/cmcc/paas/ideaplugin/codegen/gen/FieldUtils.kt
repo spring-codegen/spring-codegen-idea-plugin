@@ -14,6 +14,21 @@ object FieldUtils {
         }
         return s.toString()
     }
+    fun javaType(dbType:String):String{
+        if ("int2".equals(dbType)){
+            return "Boolean"
+        }
+        if ("int4".equals(dbType)){
+            return "Integer"
+        }
+        if ("int8".equals(dbType)){
+            return "Long"
+        }
+        if (dbType.indexOf("time") >= 0 || dbType.indexOf("date") >= 0){
+            return "Date"
+        }
+        return "String";
+    }
     fun className(columnName:String): String{
         return propertyName(columnName).capitalize();
     }

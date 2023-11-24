@@ -67,7 +67,7 @@ class CodeGenerator {
         }
         return "String";
     }
-    fun getClass(className:String, pkg: String, fields:List<CodeCfg.FieldCfg>, dbTable:DBTable): ClassModel {
+    fun getClass(className:String, pkg: String, fields:List<CodeCfg.FieldDefine>, dbTable:DBTable): ClassModel {
         var modelFields = ArrayList<ClassModel.Field>()
         for (i in 0 until fields.size){
             var e = fields.get(i);

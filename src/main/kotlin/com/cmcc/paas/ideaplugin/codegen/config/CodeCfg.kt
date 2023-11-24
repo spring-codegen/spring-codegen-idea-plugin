@@ -18,6 +18,34 @@ open class CodeCfg{
         var dir: String? = null
         var baseURI: String? = null
     }
+    open class FieldDefine(var name:String, var notNull:Boolean, var type:String?, var comment:String?){
+        constructor(name:String, notNull:Boolean, type:String?) : this(name, notNull, type, null)
+        var minLen: Int? = -1
+        var maxLen: Int? = -1
+    }
+    open class BeanDefine{
+        var className:String? = null
+        var comment:String? = null
+        var fields: List<FieldDefine>? = null
+    }
+    open class MethodDefine{
+        var name: String? = null
+        var comment:String? = null
+        var inputClass:BeanDefine? = null
+        var outputClass:BeanDefine? = null
+
+        var input: String? = null
+        var inputFields: List<FieldDefine>? = null
+        var inputFieldExcludes: String? =  null
+        var inputFieldIncludes: String? =  null
+        var outputClassName: String? = null
+        var outputFields: List<FieldDefine>? = null
+        var outputFieldExcludes: String? =  null
+        var outputFieldIncludes: String? =  null
+        var inputListTypeFlag: Boolean? = false
+        var outputListTypeFlag: Boolean? = false
+        var outputPaged: Boolean? = false
+    }
     class Method{
         var request: RequestCfg? = null
         var ctrl: MethodCfg? = null
@@ -32,22 +60,16 @@ open class CodeCfg{
     open class MethodCfg{
         var name: String? = null
         var inputClassName: String? = null
-        var inputFields: List<FieldCfg>? = null
+        var inputFields: List<FieldDefine>? = null
         var inputFieldExcludes: String? =  null
         var inputFieldIncludes: String? =  null
         var outputClassName: String? = null
-        var outputFields: List<FieldCfg>? = null
+        var outputFields: List<FieldDefine>? = null
         var outputFieldExcludes: String? =  null
         var outputFieldIncludes: String? =  null
         var inputListTypeFlag: Boolean? = false
         var outputListTypeFlag: Boolean? = false
         var outputPaged: Boolean? = false
-    }
-    open class FieldCfg(var name:String, var notNull:Boolean, var type:String?, var comment:String?){
-        constructor(name:String, notNull:Boolean, type:String?) : this(name, notNull, type, null)
-
-        var minLen: Int = -1
-        var maxLen: Int = -1
     }
     class RenderItem{
         var title: String? = null

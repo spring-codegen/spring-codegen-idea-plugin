@@ -34,7 +34,8 @@ class ClassModel(var className:String, var pkg:String, var comment:String?, var 
         var column:String? = null
         var classType:ClassModel? = null
         var baseType:Boolean = false
-
+        var minLen:Int = -1
+        var maxLen:Int = -1
         fun clone():Field{
             var f = Field(name, javaType, comment, notNull, setter, getter)
             f.column = column

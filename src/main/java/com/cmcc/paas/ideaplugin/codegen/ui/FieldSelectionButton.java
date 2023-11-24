@@ -2,7 +2,6 @@ package com.cmcc.paas.ideaplugin.codegen.ui;
 
 
 import com.cmcc.paas.ideaplugin.codegen.config.CodeCfg;
-import com.cmcc.paas.ideaplugin.codegen.config.CodeCfg;
 import com.intellij.uiDesigner.core.GridConstraints;
 
 import javax.accessibility.Accessible;
@@ -23,7 +22,7 @@ import java.util.List;
  */
 public class FieldSelectionButton extends JPanel implements Accessible, ActionListener {
     protected boolean isEditable  = false;
-    private List<CodeCfg.FieldCfg> items;
+    private List<CodeCfg.FieldDefine> items;
     private MultiPopup popup;
     protected JButton arrowButton;
     private ValueChangedListener valueChangedListener;
@@ -32,7 +31,7 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
         initComponent();
     }
 
-    public FieldSelectionButton(List<CodeCfg.FieldCfg> items, Boolean supportSelectAll) {
+    public FieldSelectionButton(List<CodeCfg.FieldDefine> items, Boolean supportSelectAll) {
         this();
         this.setItems(items);
         this.setSupportSelectAll(supportSelectAll);
@@ -66,11 +65,11 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
         });
     }
 
-    public List<CodeCfg.FieldCfg> getItems() {
+    public List<CodeCfg.FieldDefine> getItems() {
         return items;
     }
 
-    public void setItems(List<CodeCfg.FieldCfg> items) {
+    public void setItems(List<CodeCfg.FieldDefine> items) {
         this.items = items;
         popup.setItems(items);
     }
@@ -104,17 +103,17 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
     }
 
 
-    public CodeCfg.FieldCfg[] getSelectedValues() {
+    public CodeCfg.FieldDefine[] getSelectedValues() {
         return popup.getSelectedValues();
     }
 
 
-    public void setSelectValues(CodeCfg.FieldCfg[] selectvalues) {
+    public void setSelectValues(CodeCfg.FieldDefine[] selectvalues) {
         popup.setSelectValues(selectvalues);
         setText(selectvalues);
     }
 
-    private void setText(CodeCfg.FieldCfg[] values) {
+    private void setText(CodeCfg.FieldDefine[] values) {
         if (values.length > 0) {
             String[] s = Arrays.stream(values).map(e -> e.getNotNull()? (e.getName()+"!") : e.getName()).toArray(String[]::new);
             arrowButton.setToolTipText(String.join(", ", s));
@@ -148,7 +147,7 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
 
     public class MultiPopup extends JPopupMenu implements ActionListener {
 
-        private List<CodeCfg.FieldCfg> items;
+        private List<CodeCfg.FieldDefine> items;
         private List<JCheckBox> checkBoxList = new ArrayList<JCheckBox>();
         private List<JCheckBox> nullChekBoxList = new ArrayList<JCheckBox>();
         private JButton commitButton;
@@ -157,7 +156,7 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
         private Boolean supportSelectAll = true;
         private JPanel checkboxPane;
         private JCheckBox checkAllBox;
-        private List<CodeCfg.FieldCfg> selectedValues = new ArrayList<>();
+        private List<CodeCfg.FieldDefine> selectedValues = new ArrayList<>();
 
         public MultiPopup() {
             super();
@@ -165,11 +164,11 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
             refreshItems();
         }
 
-        public List<CodeCfg.FieldCfg> getItems() {
+        public List<CodeCfg.FieldDefine> getItems() {
             return items;
         }
 
-        public void setItems(List<CodeCfg.FieldCfg> items) {
+        public void setItems(List<CodeCfg.FieldDefine> items) {
             this.items = items;
             refreshItems();
         }
@@ -237,7 +236,7 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
             GridLayout layout = (GridLayout)checkboxPane.getLayout();
             GridConstraints gridConstraints = new GridConstraints();
             for (int i = 0; i< items.size(); i++) {
-                CodeCfg.FieldCfg v = items.get(i);
+                CodeCfg.FieldDefine v = items.get(i);
                 JCheckBox box = new JCheckBox(v.getName());
                 box.setName(v.getName());
                 gridConstraints.setRow(i);
@@ -289,7 +288,7 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
             }
         }
 
-        public void setSelectValues(CodeCfg.FieldCfg[] values) {
+        public void setSelectValues(CodeCfg.FieldDefine[] values) {
             this.selectedValues.clear();
             this.selectedValues.addAll(Arrays.asList(values));
             refresh();
@@ -300,7 +299,7 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
         public void refresh(){
             for (int i = 0; i < checkBoxList.size(); i++) {
                 final int j = i;
-                Optional<CodeCfg.FieldCfg> r = selectedValues.stream().filter(e -> e.getName().equals(checkBoxList.get(j).getName())).findFirst();
+                Optional<CodeCfg.FieldDefine> r = selectedValues.stream().filter(e -> e.getName().equals(checkBoxList.get(j).getName())).findFirst();
                 if (!r.isPresent()){
                     checkBoxList.get(i).setSelected(false);
                     continue;
@@ -312,8 +311,8 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
         }
 
 
-        public CodeCfg.FieldCfg[] getSelectedValues() {
-            return selectedValues.toArray(CodeCfg.FieldCfg[]::new);
+        public CodeCfg.FieldDefine[] getSelectedValues() {
+            return selectedValues.toArray(CodeCfg.FieldDefine[]::new);
         }
         public Integer getItemIndexByValue(String val){
             for(int i = 0; i< items.size(); i++){
@@ -343,7 +342,7 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
                 JButton button = (JButton) source;
                 if (button.equals(commitButton)) {
 
-                    List<CodeCfg.FieldCfg> a = new ArrayList<CodeCfg.FieldCfg>();
+                    List<CodeCfg.FieldDefine> a = new ArrayList<CodeCfg.FieldDefine>();
                     for (int i = 0; i< checkBoxList.size(); i++){
                         JCheckBox checkBox = checkBoxList.get(i);
                         Integer index = getItemIndexByValue(checkBox.getName());

@@ -8,6 +8,8 @@
 		<result column="comment" property="comment"/>
 		<result column="schema" property="schema"/>
 		<result column="type" property="type"/>
+		<result column="not_null" property="notNull"/>
+		<result column="max_len" property="maxLen"/>
 	</resultMap>
 	<resultMap id="table" type="com.cmcc.paas.ideaplugin.codegen.db.model.DBTable">
 		<result column="name" property="name"/>
@@ -17,18 +19,30 @@
 
 	<select id="queryFields" resultMap="field">
 		SELECT
-			col.table_name,
-			col.column_name as name,
-			col.ordinal_position as sort,
-			d.description as comment,
-			col.table_schema as schema,
-			col.udt_name as type
-		FROM information_schema.columns col
-			LEFT JOIN pg_namespace ns ON col."table_name"=ns.nspname
-			LEFT JOIN pg_class c ON ns.oid=c.relnamespace AND c.relname = col.table_name
-			LEFT JOIN pg_description d ON d.objoid = c.oid AND d.objsubid = col.ordinal_position
-		WHERE col.table_schema=#{schema} AND col.table_name=#{tableName}
-		ORDER BY col.table_name, col.ordinal_position;
+			a.attnum,
+			n.nspname AS schema,
+			c.relname as table_name,
+			a.attname as name,
+			t.typname as type,
+			a.attlen as byteLen,
+			a.atttypmod as max_len,
+			a.attnotnull as not_null,
+			b.description as comment
+		FROM
+			pg_namespace n LEFT JOIN pg_class c
+									 on n.oid = c.relnamespace
+						   LEFT JOIN pg_attribute a
+									 on a.attrelid = c.oid
+						   LEFT JOIN pg_description b
+									 on a.attrelid = b.objoid and a.attnum = b.objsubid
+						   LEFT JOIN pg_type t
+									 on a.atttypid = t.oid
+		WHERE
+			n.nspname = #{schema}
+		  AND c.relname = #{tableName}
+		  AND a.attnum > 0
+		ORDER BY
+			a.attnum
 	</select>
 	<select id="queryTables" resultMap="table">
 		SELECT tb.table_name as name, d.description as comment, tb.table_schema as schema

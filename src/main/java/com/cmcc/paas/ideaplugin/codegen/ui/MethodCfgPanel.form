@@ -183,7 +183,7 @@
         <properties>
           <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
-          <text value="入参类："/>
+          <text value="入参："/>
         </properties>
       </component>
       <component id="6521a" class="javax.swing.JLabel">
@@ -194,7 +194,7 @@
         <properties>
           <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
-          <text value="出参类："/>
+          <text value="出参："/>
         </properties>
       </component>
       <component id="f2255" class="javax.swing.JTextField" binding="clsTextField">

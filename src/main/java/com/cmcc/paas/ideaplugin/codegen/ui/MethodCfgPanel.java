@@ -98,16 +98,16 @@ public class MethodCfgPanel {
         this.outputListTypeCheckBox.setSelected(model.getOutputListTypeFlag() == null ? false: model.getOutputListTypeFlag());
         this.outputPagedCheckBox.setSelected(model.getOutputPaged());
         if (model.getFields() != null){
-            List<CodeCfg.FieldCfg> fields = model.getFields().stream().map(e -> new CodeCfg.FieldCfg(e, false, null)).collect(Collectors.toList());
+            List<CodeCfg.FieldDefine> fields = model.getFields().stream().map(e -> new CodeCfg.FieldDefine(e, false, null)).collect(Collectors.toList());
             this.inputFieldSelectionBtn.setItems(fields);
             this.outputFieldSelectionBtn.setItems(fields);
         }
 
         if (model.getInputFields() != null){
-            this.inputFieldSelectionBtn.setSelectValues(model.getInputFields().toArray(CodeCfg.FieldCfg[]::new));
+            this.inputFieldSelectionBtn.setSelectValues(model.getInputFields().toArray(CodeCfg.FieldDefine[]::new));
         }
         if (model.getOutputFields() != null){
-            this.outputFieldSelectionBtn.setSelectValues(model.getOutputFields().toArray(CodeCfg.FieldCfg[]::new));
+            this.outputFieldSelectionBtn.setSelectValues(model.getOutputFields().toArray(CodeCfg.FieldDefine[]::new));
         }
     }
 }

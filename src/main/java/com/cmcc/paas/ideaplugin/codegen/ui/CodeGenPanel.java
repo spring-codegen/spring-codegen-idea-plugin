@@ -8,7 +8,6 @@ import com.cmcc.paas.ideaplugin.codegen.db.model.DBTable;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.CodeGenerator;
 import com.cmcc.paas.ideaplugin.codegen.gen.FieldUtils;
-import com.cmcc.paas.ideaplugin.codegen.setting.DataSourceSetting;
 import com.cmcc.paas.ideaplugin.codegen.services.ResourceService;
 import com.intellij.uiDesigner.core.GridConstraints;
 import org.apache.commons.beanutils.BeanUtils;
@@ -208,9 +207,9 @@ public class CodeGenPanel {
         updateClasses();
         updateMethods();
 
-        List<CodeCfg.FieldCfg> fieldCfgs = fields.stream().map(f -> new CodeCfg.FieldCfg(f.getName(), false, f.getType(), f.getComment())).toList();
+//        List<CodeCfg.FieldCfg> fieldCfgs = fields.stream().map(f -> new CodeCfg.FieldCfg(f.getName(), false, f.getType(), f.getComment())).toList();
         BeanFieldSelectionDialog dialog = BeanFieldSelectionDialog.create();
-        dialog.setFields(fieldCfgs);
+        dialog.setFields(fields);
         dialog.setVisible(true);
     }
     private String getHandledVar(String v, Map<String, Object> p){
@@ -223,8 +222,8 @@ public class CodeGenPanel {
         }
         return r;
     }
-    private List<CodeCfg.FieldCfg> getDefaultFields(String excludes, String includes){
-        List<CodeCfg.FieldCfg> allowFields = new ArrayList<>();
+    private List<CodeCfg.FieldDefine> getDefaultFields(String excludes, String includes){
+        List<CodeCfg.FieldDefine> allowFields = new ArrayList<>();
         dbTable.getFields().forEach(field -> {
             if (StringUtils.isNotEmpty(excludes)){
                 boolean isExclude = Arrays.stream(excludes.split(",")).filter(p -> Pattern.matches(p, field.getName())).findFirst().isPresent();
@@ -236,12 +235,12 @@ public class CodeGenPanel {
             if (StringUtils.isNotEmpty(includes)){
                 boolean isInclude = Arrays.stream(includes.split(",")).filter(p -> Pattern.matches(p, field.getName())).findFirst().isPresent();
                 if (isInclude){
-                    allowFields.add(new CodeCfg.FieldCfg(field.getName(), false, field.getType()));
+                    allowFields.add(new CodeCfg.FieldDefine(field.getName(), false, field.getType()));
                     return;
                 }
                 return;
             }
-            allowFields.add(new CodeCfg.FieldCfg(field.getName(), false, field.getType()));
+            allowFields.add(new CodeCfg.FieldDefine(field.getName(), false, field.getType()));
         });
         return allowFields;
     }
