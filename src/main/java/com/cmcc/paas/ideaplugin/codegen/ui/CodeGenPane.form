@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.cmcc.paas.ideaplugin.codegen.ui.CodeGenPanel">
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.cmcc.paas.ideaplugin.codegen.ui.CodeGenPane">
   <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
@@ -399,7 +399,26 @@
                         <border type="none">
                           <title-color color="-4473925"/>
                         </border>
-                        <children/>
+                        <children>
+                          <nested-form id="dff53" form-file="com/cmcc/paas/ideaplugin/codegen/ui/MethodContainerPane.form" binding="methodContainerPane">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
+                            </constraints>
+                          </nested-form>
+                          <hspacer id="ec520">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                          </hspacer>
+                          <vspacer id="e4efd">
+                            <constraints>
+                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                          </vspacer>
+                        </children>
                       </grid>
                     </children>
                   </grid>
@@ -429,7 +448,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <nested-form id="7aaa9" form-file="com/cmcc/paas/ideaplugin/codegen/ui/DBSettingPanel.form" binding="dbSettingPanel">
+              <nested-form id="7aaa9" form-file="com/cmcc/paas/ideaplugin/codegen/ui/DBSettingPane.form" binding="dbSettingPanel">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                   <gridbag weightx="1.0" weighty="1.0"/>
@@ -444,7 +463,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <nested-form id="a9a25" form-file="com/cmcc/paas/ideaplugin/codegen/ui/CodeSettingPanel.form" binding="codeSettingPanel">
+              <nested-form id="a9a25" form-file="com/cmcc/paas/ideaplugin/codegen/ui/CodeSettingPane.form" binding="codeSettingPane">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                   <gridbag weightx="1.0" weighty="1.0"/>

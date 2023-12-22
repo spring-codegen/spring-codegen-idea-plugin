@@ -10,7 +10,7 @@ class ClassGrpCfgModel {
    var svc: ClassCfgModel? = null
    var dao: ClassCfgModel? = null
 
-    class ClassCfgModel: CodeCfg.ClassDefine(){
+    class ClassCfgModel: CodeCfg.ClassCfg(){
 
     }
 }

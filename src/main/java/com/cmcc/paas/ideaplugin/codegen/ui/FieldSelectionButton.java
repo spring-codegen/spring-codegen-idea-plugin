@@ -2,6 +2,7 @@ package com.cmcc.paas.ideaplugin.codegen.ui;
 
 
 import com.cmcc.paas.ideaplugin.codegen.config.CodeCfg;
+import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.intellij.uiDesigner.core.GridConstraints;
 
 import javax.accessibility.Accessible;
@@ -22,7 +23,7 @@ import java.util.List;
  */
 public class FieldSelectionButton extends JPanel implements Accessible, ActionListener {
     protected boolean isEditable  = false;
-    private List<CodeCfg.FieldDefine> items;
+    private List<DBTableField> items;
     private MultiPopup popup;
     protected JButton arrowButton;
     private ValueChangedListener valueChangedListener;
@@ -31,7 +32,7 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
         initComponent();
     }
 
-    public FieldSelectionButton(List<CodeCfg.FieldDefine> items, Boolean supportSelectAll) {
+    public FieldSelectionButton(List<DBTableField> items, Boolean supportSelectAll) {
         this();
         this.setItems(items);
         this.setSupportSelectAll(supportSelectAll);
@@ -65,11 +66,11 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
         });
     }
 
-    public List<CodeCfg.FieldDefine> getItems() {
+    public List<DBTableField> getItems() {
         return items;
     }
 
-    public void setItems(List<CodeCfg.FieldDefine> items) {
+    public void setItems(List<DBTableField> items) {
         this.items = items;
         popup.setItems(items);
     }
@@ -103,17 +104,17 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
     }
 
 
-    public CodeCfg.FieldDefine[] getSelectedValues() {
+    public DBTableField[] getSelectedValues() {
         return popup.getSelectedValues();
     }
 
 
-    public void setSelectValues(CodeCfg.FieldDefine[] selectvalues) {
+    public void setSelectValues(DBTableField[] selectvalues) {
         popup.setSelectValues(selectvalues);
         setText(selectvalues);
     }
 
-    private void setText(CodeCfg.FieldDefine[] values) {
+    private void setText(DBTableField[] values) {
         if (values.length > 0) {
             String[] s = Arrays.stream(values).map(e -> e.getNotNull()? (e.getName()+"!") : e.getName()).toArray(String[]::new);
             arrowButton.setToolTipText(String.join(", ", s));
@@ -147,7 +148,7 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
 
     public class MultiPopup extends JPopupMenu implements ActionListener {
 
-        private List<CodeCfg.FieldDefine> items;
+        private List<DBTableField> items;
         private List<JCheckBox> checkBoxList = new ArrayList<JCheckBox>();
         private List<JCheckBox> nullChekBoxList = new ArrayList<JCheckBox>();
         private JButton commitButton;
@@ -156,7 +157,7 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
         private Boolean supportSelectAll = true;
         private JPanel checkboxPane;
         private JCheckBox checkAllBox;
-        private List<CodeCfg.FieldDefine> selectedValues = new ArrayList<>();
+        private List<DBTableField> selectedValues = new ArrayList<>();
 
         public MultiPopup() {
             super();
@@ -164,11 +165,11 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
             refreshItems();
         }
 
-        public List<CodeCfg.FieldDefine> getItems() {
+        public List<DBTableField> getItems() {
             return items;
         }
 
-        public void setItems(List<CodeCfg.FieldDefine> items) {
+        public void setItems(List<DBTableField> items) {
             this.items = items;
             refreshItems();
         }
@@ -236,7 +237,7 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
             GridLayout layout = (GridLayout)checkboxPane.getLayout();
             GridConstraints gridConstraints = new GridConstraints();
             for (int i = 0; i< items.size(); i++) {
-                CodeCfg.FieldDefine v = items.get(i);
+                DBTableField v = items.get(i);
                 JCheckBox box = new JCheckBox(v.getName());
                 box.setName(v.getName());
                 gridConstraints.setRow(i);
@@ -288,7 +289,7 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
             }
         }
 
-        public void setSelectValues(CodeCfg.FieldDefine[] values) {
+        public void setSelectValues(DBTableField[] values) {
             this.selectedValues.clear();
             this.selectedValues.addAll(Arrays.asList(values));
             refresh();
@@ -299,7 +300,7 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
         public void refresh(){
             for (int i = 0; i < checkBoxList.size(); i++) {
                 final int j = i;
-                Optional<CodeCfg.FieldDefine> r = selectedValues.stream().filter(e -> e.getName().equals(checkBoxList.get(j).getName())).findFirst();
+                Optional<DBTableField> r = selectedValues.stream().filter(e -> e.getName().equals(checkBoxList.get(j).getName())).findFirst();
                 if (!r.isPresent()){
                     checkBoxList.get(i).setSelected(false);
                     continue;
@@ -311,8 +312,8 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
         }
 
 
-        public CodeCfg.FieldDefine[] getSelectedValues() {
-            return selectedValues.toArray(CodeCfg.FieldDefine[]::new);
+        public DBTableField[] getSelectedValues() {
+            return selectedValues.toArray(DBTableField[]::new);
         }
         public Integer getItemIndexByValue(String val){
             for(int i = 0; i< items.size(); i++){
@@ -342,7 +343,7 @@ public class FieldSelectionButton extends JPanel implements Accessible, ActionLi
                 JButton button = (JButton) source;
                 if (button.equals(commitButton)) {
 
-                    List<CodeCfg.FieldDefine> a = new ArrayList<CodeCfg.FieldDefine>();
+                    List<DBTableField> a = new ArrayList<DBTableField>();
                     for (int i = 0; i< checkBoxList.size(); i++){
                         JCheckBox checkBox = checkBoxList.get(i);
                         Integer index = getItemIndexByValue(checkBox.getName());

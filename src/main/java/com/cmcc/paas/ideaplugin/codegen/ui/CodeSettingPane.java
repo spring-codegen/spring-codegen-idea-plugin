@@ -15,7 +15,7 @@ import java.io.File;
  * @author zhangyinghui
  * @date 2023/8/16
  */
-public class CodeSettingPanel {
+public class CodeSettingPane {
     private JTextField tableSchemaTextField;
     private JTextField basePkgTextField;
     private JTextField authorTextField;
@@ -29,7 +29,7 @@ public class CodeSettingPanel {
     private JButton resourceFileBtn;
     private ProjectCfg model;
 
-    public CodeSettingPanel(){
+    public CodeSettingPane(){
         System.out.println("CodeSettingPanel...");
         for (Component component : content.getComponents()) {
             if (component instanceof JTextField){

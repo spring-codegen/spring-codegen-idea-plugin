@@ -1,56 +1,48 @@
 package com.cmcc.paas.ideaplugin.codegen.ui;
 
-import com.cmcc.paas.ideaplugin.codegen.config.CodeCfg;
-import com.cmcc.paas.ideaplugin.codegen.config.MethodGrpCfgModel;
 import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author zhangyinghui
- * @date 2023/8/8
+ * @date 2023/12/21
  */
-public class MethodCfgPanel {
+public class DaoMethodCfgPane implements MethodCfgPane{
     private JLabel clsTagLabel;
     private JTextField clsTextField;
     private JTextField methodTextField;
     private JTextField inputClsTextField;
     private JTextField outputClsTextField;
-    private JPanel content;
-    private FieldSelectionButton inputFieldSelectionBtn;
-    private FieldSelectionButton outputFieldSelectionBtn;
+    private JCheckBox outputPagedCheckBox;
     private JCheckBox outputListTypeCheckBox;
     private JCheckBox inputListTypeCheckBox;
-    private JCheckBox outputPagedCheckBox;
+    private JButton inputButton;
+    private JButton outputButton;
+    private JButton dataFieldButton;
+    private JButton whereFieldButton;
+    private JPanel content;
 
-    private MethodGrpCfgModel.MethodCfgModel model;
-    public MethodCfgPanel(){
-        inputFieldSelectionBtn.setValueChangedListener(new FieldSelectionButton.ValueChangedListener() {
-            @Override
-            public void onValueChanged(FieldSelectionButton btn) {
-                model.setInputFields( Arrays.stream(inputFieldSelectionBtn.getSelectedValues()).toList());
-            }
-        });
-        outputFieldSelectionBtn.setValueChangedListener(new FieldSelectionButton.ValueChangedListener() {
-            @Override
-            public void onValueChanged(FieldSelectionButton btn) {
-                model.setInputFields( Arrays.stream(outputFieldSelectionBtn.getSelectedValues()).toList());
-            }
-        });
+    private SvcMethodCfgPane.MethodCfgModel model;
+
+    public DaoMethodCfgPane(){
+        init();
+    }
+    public void init(){
+
         for (Component component : content.getComponents()) {
             if (component instanceof JTextField){
                 TextFieldUtils.INSTANCE.addTextChangedEvent((JTextField) component, new TextFieldUtils.TextChangedEvent() {
                     @Override
                     public void onTextChanged(@NotNull JTextField textField) {
                         if (textField == methodTextField) {
-                            model.setName(methodTextField.getText());
+                            model.setMethodName(methodTextField.getText());
                         }
                         if (textField == inputClsTextField) {
                             model.setInputClassName(inputClsTextField.getText());
@@ -78,36 +70,58 @@ public class MethodCfgPanel {
                 });
             }
         }
+        inputButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BeanFieldSelectionDialog dialog = BeanFieldSelectionDialog.create();
+                dialog.setFields(model.getDbTableFields());
+                dialog.setSelectedFields(model.getInputFields());
+                dialog.setVisible(true);
+            }
+        });
+        outputButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BeanFieldSelectionDialog dialog = BeanFieldSelectionDialog.create();
+                dialog.setFields(model.getDbTableFields());
+                dialog.setSelectedFields(model.getOutputFields());
+                dialog.setVisible(true);
+            }
+        });
+        dataFieldButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BeanFieldSelectionDialog dialog = BeanFieldSelectionDialog.create();
+                dialog.setFields(model.getDbTableFields());
+                dialog.setSelectedFields(model.getSqlDataFields());
+                dialog.setVisible(true);
+            }
+        });
+        whereFieldButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BeanFieldSelectionDialog dialog = BeanFieldSelectionDialog.create();
+                dialog.setFields(model.getDbTableFields());
+                dialog.setSelectedFields(model.getSqlConditionFields());
+                dialog.setVisible(true);
+            }
+        });
     }
-    public void createUIComponents(){
-    }
+
+    @Override
     public JPanel getContent() {
         return content;
     }
 
-    public MethodGrpCfgModel.MethodCfgModel getModel(){
-        return model;
-    }
-    public void setModel(MethodGrpCfgModel.MethodCfgModel model) {
+    @Override
+    public void setModel(SvcMethodCfgPane.MethodCfgModel model) {
         this.model = model;
         this.clsTextField.setText(model.getClassName());
-        this.methodTextField.setText(model.getName());
+        this.methodTextField.setText(model.getMethodName());
         this.inputClsTextField.setText(model.getInputClassName());
         this.inputListTypeCheckBox.setSelected(model.getInputListTypeFlag() == null ? false : model.getInputListTypeFlag());
         this.outputClsTextField.setText(model.getOutputClassName());
         this.outputListTypeCheckBox.setSelected(model.getOutputListTypeFlag() == null ? false: model.getOutputListTypeFlag());
         this.outputPagedCheckBox.setSelected(model.getOutputPaged());
-        if (model.getFields() != null){
-            List<CodeCfg.FieldDefine> fields = model.getFields().stream().map(e -> new CodeCfg.FieldDefine(e, false, null)).collect(Collectors.toList());
-            this.inputFieldSelectionBtn.setItems(fields);
-            this.outputFieldSelectionBtn.setItems(fields);
-        }
-
-        if (model.getInputFields() != null){
-            this.inputFieldSelectionBtn.setSelectValues(model.getInputFields().toArray(CodeCfg.FieldDefine[]::new));
-        }
-        if (model.getOutputFields() != null){
-            this.outputFieldSelectionBtn.setSelectValues(model.getOutputFields().toArray(CodeCfg.FieldDefine[]::new));
-        }
     }
 }

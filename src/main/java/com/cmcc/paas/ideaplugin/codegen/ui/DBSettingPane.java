@@ -14,7 +14,7 @@ import java.awt.event.ActionListener;
  * @author zhangyinghui
  * @date 2023/8/16
  */
-public class DBSettingPanel {
+public class DBSettingPane {
     private JTextField tableSchemaTextField;
     private JTextField hostTextField;
     private JTextField dbNameTextField;
@@ -26,9 +26,9 @@ public class DBSettingPanel {
     private ValueChangedListener valueChangedListener;
 
     private DBCfg model;
-    public DBSettingPanel(){
+    public DBSettingPane(){
         System.out.println("CodeSettingPanel...");
-        DBSettingPanel handler = this;
+        DBSettingPane handler = this;
         for (Component component : content.getComponents()) {
             if (component instanceof JTextField){
                 TextFieldUtils.INSTANCE.addTextChangedEvent((JTextField) component, new TextFieldUtils.TextChangedEvent() {
@@ -98,6 +98,6 @@ public class DBSettingPanel {
 
     }
     public interface ValueChangedListener{
-        public void onValueChanged(DBSettingPanel dbSettingPanel);
+        public void onValueChanged(DBSettingPane dbSettingPanel);
     }
 }

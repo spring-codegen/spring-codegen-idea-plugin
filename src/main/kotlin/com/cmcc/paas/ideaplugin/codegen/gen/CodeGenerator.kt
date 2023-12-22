@@ -1,19 +1,9 @@
 package com.cmcc.paas.ideaplugin.codegen.gen
 
-import com.cmcc.paas.ideaplugin.codegen.config.ClassGrpCfgModel
-import com.cmcc.paas.ideaplugin.codegen.config.CodeCfg
-import com.cmcc.paas.ideaplugin.codegen.config.MethodGrpCfgModel
-import com.cmcc.paas.ideaplugin.codegen.config.ProjectCfg
-import com.cmcc.paas.ideaplugin.codegen.constants.AppCtx.ENV
-import com.cmcc.paas.ideaplugin.codegen.db.model.DBTable
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel
-import com.cmcc.paas.ideaplugin.codegen.gen.template.TempRender.renderToFile
 import com.intellij.util.containers.stream
 import java.util.*
-import java.util.function.Consumer
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
-import kotlin.collections.HashSet
 
 /**
  *
@@ -67,6 +57,7 @@ class CodeGenerator {
         }
         return "String";
     }
+    /*
     fun getClass(className:String, pkg: String, fields:List<CodeCfg.FieldDefine>, dbTable:DBTable): ClassModel {
         var modelFields = ArrayList<ClassModel.Field>()
         for (i in 0 until fields.size){
@@ -173,7 +164,7 @@ class CodeGenerator {
             val svcMethod = getMethod(methodGrp.svc!!, modelPkg, dbTable)
             val daoMethod = getMethod(methodGrp.dao!!, modelPkg, dbTable)
 
-            ctrlMethod.request = ClassModel.RequestURI(methodGrp.request!!.httpMethod, methodGrp.request!!.path)
+//            ctrlMethod.request = ClassModel.RequestURI(methodGrp.request!!.httpMethod, methodGrp.request!!.path)
             ctrlMethod.dependency = svcMethod;
             svcMethod.dependency = daoMethod;
             ctrlMethods.add(ctrlMethod)
@@ -233,7 +224,7 @@ class CodeGenerator {
         ctrlClass.tableName = dbTable.name
         ctrlClass.methods = ctrlMethods
         ctrlClass.dependency = svcClass
-        ctrlClass.request = ClassModel.RequestURI(null, classGrp.ctrl!!.baseURI)
+//        ctrlClass.request = ClassModel.RequestURI(null, classGrp.ctrl!!.baseURI)
         ctrlClass.name = defaultClassVarName(ctrlClass.className)
 
 
@@ -299,4 +290,5 @@ class CodeGenerator {
             data
         )
     }
+    */
 }

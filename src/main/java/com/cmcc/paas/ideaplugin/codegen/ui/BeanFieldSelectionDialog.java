@@ -18,10 +18,11 @@ public class BeanFieldSelectionDialog extends JDialog {
     private JButton buttonCancel;
     private JTable tablePanel;
 
-    private String[] tableHeaders = new String[]{"Include","Name","Type","Not Null", "Min Length", "Max Length",  "Comment"};
+    private String[] tableHeaders = new String[]{"Include", "Column","Name","Type","Not Null", "Min Length", "Max Length",  "Comment"};
 
     public enum TableHeaderIndex{
         INCLUDE,
+        COLUMN_NAME,
         NAME,
         TYPE,
         NOT_NULL,
@@ -85,7 +86,7 @@ public class BeanFieldSelectionDialog extends JDialog {
         Object[][] data = new Object[fields.size()][tableHeaders.length];
         for (int i = 0; i < data.length; i++) {
             DBTableField field = fields.get(i);
-            data[i][TableHeaderIndex.INCLUDE.ordinal()] = true;
+            data[i][TableHeaderIndex.INCLUDE.ordinal()] = false;
             data[i][TableHeaderIndex.TYPE.ordinal()] = FieldUtils.INSTANCE.javaType(field.getType());
             if (field.getMaxLen() != null && field.getMaxLen() > 4) {
                 data[i][TableHeaderIndex.MAX_LEN.ordinal()] = field.getMaxLen() - 4;
@@ -93,6 +94,7 @@ public class BeanFieldSelectionDialog extends JDialog {
             data[i][TableHeaderIndex.COMMENT.ordinal()] = field.getComment();
             data[i][TableHeaderIndex.NAME.ordinal()] = FieldUtils.INSTANCE.propertyName(field.getName());
             data[i][TableHeaderIndex.NOT_NULL.ordinal()] = field.getNotNull();
+            data[i][TableHeaderIndex.COLUMN_NAME.ordinal()] = field.getName();
         }
         tableModel.setDataVector(data, tableHeaders);
         this.tablePanel.setModel(tableModel);
@@ -104,6 +106,20 @@ public class BeanFieldSelectionDialog extends JDialog {
         this.tablePanel.getColumnModel().getColumn(TableHeaderIndex.NOT_NULL.ordinal()).setCellEditor(new DefaultCellEditor(new JCheckBox()));
         this.tablePanel.getColumnModel().getColumn(TableHeaderIndex.NOT_NULL.ordinal()).setCellRenderer(new TableCellFieldRender());
     }
+    public void setSelectedFields(List<ClassModel.Field> fields){
+        for (int i = 0 ; i< this.tablePanel.getModel().getRowCount(); i++){
+            String columnName = (String)tablePanel.getModel().getValueAt(i, TableHeaderIndex.COLUMN_NAME.ordinal());
+            for (ClassModel.Field f  : fields){
+                if (columnName.equalsIgnoreCase( f.getColumn())){
+                    tablePanel.getModel().setValueAt(true, i, TableHeaderIndex.INCLUDE.ordinal()) ;
+                    tablePanel.getModel().setValueAt( f.getJavaType(), i, TableHeaderIndex.TYPE.ordinal());
+                    tablePanel.getModel().setValueAt( f.getComment(), i, TableHeaderIndex.COMMENT.ordinal()) ;
+                    tablePanel.getModel().setValueAt( f.getName(), i, TableHeaderIndex.NAME.ordinal());
+                    tablePanel.getModel().setValueAt( f.getNotNull() , i, TableHeaderIndex.NOT_NULL.ordinal());
+                }
+            }
+        }
+    }
     public List<ClassModel.Field> getSelectedFields(){
         List<ClassModel.Field> result = new ArrayList();
         ( (DefaultTableModel) tablePanel.getModel()).getDataVector();
@@ -114,6 +130,8 @@ public class BeanFieldSelectionDialog extends JDialog {
                     (Boolean) tablePanel.getModel().getValueAt(i, TableHeaderIndex.NOT_NULL.ordinal()), null, null);
             fieldDefine.setMinLen((Integer) tablePanel.getModel().getValueAt(i, TableHeaderIndex.MIN_LEN.ordinal()));
             fieldDefine.setMaxLen((Integer) tablePanel.getModel().getValueAt(i, TableHeaderIndex.MAX_LEN.ordinal()));
+            fieldDefine.setColumn((String) tablePanel.getModel().getValueAt(i, TableHeaderIndex.COLUMN_NAME.ordinal()));
+            result.add(fieldDefine);
         }
         return result;
     }

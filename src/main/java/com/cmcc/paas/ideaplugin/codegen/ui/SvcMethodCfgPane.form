@@ -1,179 +1,159 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.cmcc.paas.ideaplugin.codegen.ui.CodeSettingPanel">
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.cmcc.paas.ideaplugin.codegen.ui.SvcMethodCfgPane">
   <grid id="27dc6" binding="content" layout-manager="GridBagLayout">
     <constraints>
-      <xy x="20" y="20" width="627" height="430"/>
+      <xy x="20" y="20" width="500" height="585"/>
     </constraints>
     <properties/>
-    <border type="none"/>
+    <border type="line">
+      <color color="-10526881"/>
+    </border>
     <children>
-      <hspacer id="6be4">
+      <hspacer id="80db8">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="ccf00">
+      <hspacer id="65d9e">
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="89ea2">
+      <hspacer id="df8e4">
         <constraints>
           <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="48ced">
+      <hspacer id="6dd48">
         <constraints>
           <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="99ab1">
+      <hspacer id="c1b3e">
         <constraints>
           <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="9e3eb">
+      <hspacer id="73c91">
         <constraints>
           <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="d6865">
+      <hspacer id="2960e">
         <constraints>
           <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="36ac4">
+      <hspacer id="33006">
         <constraints>
           <grid row="0" column="7" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="5b77c">
+      <hspacer id="1c7c6">
         <constraints>
           <grid row="0" column="8" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="7daab">
+      <hspacer id="9a48">
         <constraints>
           <grid row="0" column="9" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="c4721">
+      <hspacer id="dc626">
         <constraints>
           <grid row="0" column="10" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="427e2">
+      <hspacer id="dfb4c">
         <constraints>
           <grid row="0" column="11" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="500fc">
+      <hspacer id="ccbd0">
         <constraints>
           <grid row="0" column="12" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="91a35">
+      <hspacer id="66a15">
         <constraints>
           <grid row="0" column="13" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="3988a">
+      <hspacer id="12291">
         <constraints>
           <grid row="0" column="14" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="18910">
+      <hspacer id="ce828">
         <constraints>
           <grid row="0" column="15" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="95e04">
+      <hspacer id="5f3c1">
         <constraints>
           <grid row="0" column="16" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="f7dd0">
+      <hspacer id="de64a">
         <constraints>
           <grid row="0" column="17" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="7d504">
+      <hspacer id="84fe4">
         <constraints>
           <grid row="0" column="18" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="a64">
+      <hspacer id="e239a">
         <constraints>
           <grid row="0" column="19" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="765c5">
+      <hspacer id="fa33b">
         <constraints>
           <grid row="0" column="20" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="e1da8">
+      <hspacer id="75818">
         <constraints>
           <grid row="0" column="21" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="f5133">
+      <hspacer id="63132">
         <constraints>
           <grid row="0" column="22" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="2ced0">
+      <hspacer id="e7dba">
         <constraints>
           <grid row="0" column="23" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <component id="c9042" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
-        </constraints>
-        <properties>
-          <foreground color="-7960954"/>
-          <horizontalAlignment value="4"/>
-          <text value="Package："/>
-        </properties>
-      </component>
-      <component id="12594" class="javax.swing.JTextField" binding="basePkgTextField">
-        <constraints>
-          <grid row="2" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <text value="com.cmit.paas.computility.gateway.console"/>
-        </properties>
-      </component>
-      <component id="623a8" class="javax.swing.JLabel">
+      <component id="1b151" class="javax.swing.JLabel" binding="clsTagLabel">
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
@@ -181,21 +161,21 @@
         <properties>
           <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
-          <text value="作者："/>
+          <text value="类："/>
         </properties>
       </component>
-      <component id="e443d" class="javax.swing.JTextField" binding="authorTextField">
+      <component id="d3ca3" class="javax.swing.JLabel">
         <constraints>
-          <grid row="1" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="0.0" ipady="20"/>
         </constraints>
         <properties>
-          <text value="zhangyinghui"/>
+          <foreground color="-7960954"/>
+          <horizontalAlignment value="4"/>
+          <text value="方法："/>
         </properties>
       </component>
-      <component id="92501" class="javax.swing.JLabel">
+      <component id="555c" class="javax.swing.JLabel">
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
@@ -203,21 +183,10 @@
         <properties>
           <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
-          <text value="Model基类："/>
+          <text value="入参："/>
         </properties>
       </component>
-      <component id="b20b1" class="javax.swing.JTextField" binding="modelBaseClsTextField">
-        <constraints>
-          <grid row="3" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <text value="com.cmit.paas.computility.gateway.console.Model"/>
-        </properties>
-      </component>
-      <component id="af518" class="javax.swing.JLabel">
+      <component id="6521a" class="javax.swing.JLabel">
         <constraints>
           <grid row="4" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
@@ -225,117 +194,98 @@
         <properties>
           <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
-          <text value="Ctrl基类："/>
+          <text value="出参："/>
         </properties>
       </component>
-      <component id="e3cd6" class="javax.swing.JTextField" binding="ctrlBaseClsTextField">
+      <component id="f2255" class="javax.swing.JTextField" binding="clsTextField">
         <constraints>
-          <grid row="4" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="1" column="2" row-span="1" col-span="22" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <text value="com.cmit.paas.computility.gateway.console.ApiContextController"/>
-        </properties>
-      </component>
-      <vspacer id="56f83">
-        <constraints>
-          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="1.0"/>
-        </constraints>
-      </vspacer>
-      <grid id="95570" layout-manager="GridBagLayout">
-        <constraints>
-          <grid row="8" column="0" row-span="1" col-span="24" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties/>
-        <border type="none"/>
-        <children>
-          <hspacer id="8e3e9">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="1.0" weighty="0.0"/>
-            </constraints>
-          </hspacer>
-          <component id="b2118" class="javax.swing.JButton" binding="saveSettingBtn">
-            <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag top="0" left="20" bottom="0" right="20" weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="保存"/>
-            </properties>
-          </component>
-        </children>
-      </grid>
-      <component id="e38cc" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="5" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
-        </constraints>
-        <properties>
-          <foreground color="-7960954"/>
-          <horizontalAlignment value="4"/>
-          <text value="Source目录："/>
-        </properties>
       </component>
-      <component id="f3406" class="javax.swing.JTextField" binding="sourceDirTextField">
+      <component id="8f1e5" class="javax.swing.JTextField" binding="methodTextField">
         <constraints>
-          <grid row="5" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="2" column="2" row-span="1" col-span="22" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
-        <properties>
-          <editable value="false"/>
-          <text value=""/>
-        </properties>
+        <properties/>
       </component>
-      <component id="656d3" class="javax.swing.JButton" binding="sourceFileButton">
+      <component id="842a" class="javax.swing.JTextField" binding="inputClsTextField">
         <constraints>
-          <grid row="5" column="13" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0" ipadx="2"/>
-        </constraints>
-        <properties>
-          <minimumSize width="30" height="30"/>
-          <preferredSize width="30" height="30"/>
-          <text value="File"/>
-        </properties>
-      </component>
-      <component id="d801c" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="6" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
-        </constraints>
-        <properties>
-          <foreground color="-7960954"/>
-          <horizontalAlignment value="4"/>
-          <text value="Mapper目录："/>
-        </properties>
-      </component>
-      <component id="a7f50" class="javax.swing.JTextField" binding="mybatisMapperDirTextField">
-        <constraints>
-          <grid row="6" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="3" column="2" row-span="1" col-span="18" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
-        <properties>
-          <editable value="false"/>
-          <text value=""/>
-        </properties>
+        <properties/>
       </component>
-      <component id="423f" class="javax.swing.JButton" binding="resourceFileBtn">
+      <component id="e5b5a" class="javax.swing.JTextField" binding="outputClsTextField">
         <constraints>
-          <grid row="6" column="13" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0" ipadx="2"/>
+          <grid row="4" column="2" row-span="1" col-span="18" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="fb8de" class="javax.swing.JCheckBox" binding="outputPagedCheckBox">
+        <constraints>
+          <grid row="4" column="23" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <minimumSize width="30" height="30"/>
+          <text value="分页"/>
+        </properties>
+      </component>
+      <component id="b19d7" class="javax.swing.JCheckBox" binding="outputListTypeCheckBox">
+        <constraints>
+          <grid row="4" column="21" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <foreground color="-7960954"/>
+          <text value="列表"/>
+        </properties>
+      </component>
+      <component id="685b" class="javax.swing.JCheckBox" binding="inputListTypeCheckBox">
+        <constraints>
+          <grid row="3" column="21" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <foreground color="-7960954"/>
+          <text value="列表"/>
+        </properties>
+      </component>
+      <vspacer id="20f8c">
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="24" vsize-policy="6" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="1.0"/>
+        </constraints>
+      </vspacer>
+      <component id="ff4ca" class="javax.swing.JButton" binding="inputButton">
+        <constraints>
+          <grid row="3" column="20" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
           <preferredSize width="30" height="30"/>
-          <text value="File"/>
+          <text value="In"/>
+        </properties>
+      </component>
+      <component id="1df9" class="javax.swing.JButton" binding="outputButton">
+        <constraints>
+          <grid row="4" column="20" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <preferredSize width="30" height="30"/>
+          <text value="Out"/>
         </properties>
       </component>
     </children>

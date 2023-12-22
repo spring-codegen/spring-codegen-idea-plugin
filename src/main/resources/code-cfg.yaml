@@ -14,111 +14,125 @@ daoClass:
   dir: ""
   className: "{clsPrefix}Dao"
 methods:
-  - request:
+  - type: CTRL
+    request:
       path: /add
       httpMethod: POST
       comment: "添加"
-    ctrl:
-      name: add
-      inputClassName: "{clsPrefix}AddArg"
-      inputFieldExcludes: "id,.*time,.*_uid"
-      outputClassName: IdResult
-      outputFieldIncludes: "id"
-      outputPaged: true
-    svc:
-      name: add
-      inputClassName: "{clsPrefix}"
-      inputFieldIncludes: ".*"
-      outputClassName: Integer
-      outputFieldIncludes: "id"
-    dao:
-      name: add
-      inputClassName: "{clsPrefix}"
-      inputFieldIncludes: ".*"
-      outputClassName: Integer
-      outputFieldIncludes: "id"
-  - request:
+    name: add
+    inputClassName: "{clsPrefix}AddArg"
+    inputFieldExcludes: "id,.*time,.*_uid,del"
+    outputClassName: IdResult
+    outputFieldIncludes: "id"
+    outputPaged: true
+  - type: SVC
+    name: add
+    inputClassName: "{clsPrefix}"
+    inputFieldIncludes: ".*"
+    outputClassName: Integer
+    outputFieldIncludes: "id"
+  - type: DAO
+    name: add
+    inputClassName: "{clsPrefix}"
+    inputFieldIncludes: ".*"
+    outputClassName: Integer
+    outputFieldIncludes: "id"
+    sqlDataFieldIncludes: ".*"
+    sqlDataFieldExcludes: "id"
+    sqlConditionFieldIncludes: "-"
+  - type: CTRL
+    request:
       path: /remove
       httpMethod: POST
       comment: "删除"
-    ctrl:
-      name: remove
-      inputClassName: IdArg
-      inputFieldIncludes: "id"
-      outputClassName: "-"
-      outputFieldIncludes: "-"
-    svc:
-      name: remove
-      inputClassName: "Integer"
-      inputFieldIncludes: "id"
-      outputClassName: Boolean
-    dao:
-      name: remove
-      inputClassName: "Integer"
-      inputFieldIncludes: "id"
-      outputClassName: Boolean
-  - request:
+    name: remove
+    inputClassName: IdArg
+    inputFieldIncludes: "id"
+    outputClassName: "-"
+    outputFieldIncludes: "-"
+  - type: SVC
+    name: remove
+    inputClassName: "Integer"
+    inputFieldIncludes: "id"
+    outputClassName: Boolean
+  - type: DAO
+    name: remove
+    inputClassName: "Integer"
+    inputFieldIncludes: "id"
+    outputFieldIncludes: "-"
+    outputClassName: Boolean
+    sqlDataFieldIncludes: "-"
+    sqlConditionFieldIncludes: "id"
+  - type: CTRL
+    request:
       path: /update
       httpMethod: POST
       comment: "更新"
-    ctrl:
-      name: update
-      inputClassName: "{clsPrefix}UpdateArg"
-      inputFieldExcludes: ".*time,.*_uid"
-      outputClassName: "-"
-    svc:
-      name: update
-      inputClassName: "{clsPrefix}"
-      outputFieldIncludes: ".*"
-      outputClassName: Boolean
-    dao:
-      name: update
-      inputClassName: "{clsPrefix}"
-      outputFieldIncludes: ".*"
-      outputClassName: Boolean
-  - request:
+    name: update
+    inputClassName: "{clsPrefix}UpdateArg"
+    inputFieldExcludes: ".*time,.*_uid"
+    outputClassName: "-"
+  - type: SVC
+    name: update
+    inputClassName: "{clsPrefix}"
+    outputFieldIncludes: "-"
+    outputClassName: Boolean
+  - type: DAO
+    name: update
+    inputClassName: "{clsPrefix}"
+    outputFieldIncludes: "-"
+    outputClassName: Boolean
+    sqlDataFieldIncludes: ".*"
+    sqlDataFieldExcludes: "id"
+    sqlConditionFieldIncludes: "id"
+  - type: CTRL
+    request:
       path: /get
       httpMethod: GET
       comment: "获取详情"
-    ctrl:
-      name: get
-      inputClassName: Integer
-      inputFieldIncludes: "id"
-      outputClassName: "{clsPrefix}"
-    svc:
-      name: get
-      inputClassName: "Integer"
-      inputFieldIncludes: "id"
-      outputClassName: "{clsPrefix}"
-    dao:
-      name: get
-      inputClassName: "Integer"
-      inputFieldIncludes: "id"
-      outputClassName: "{clsPrefix}"
-      outputFieldIncludes: ".*"
-  - request:
+    name: get
+    inputClassName: Integer
+    inputFieldIncludes: "id"
+    outputClassName: "{clsPrefix}"
+  - type: SVC
+    name: get
+    inputClassName: "Integer"
+    inputFieldIncludes: "id"
+    outputClassName: "{clsPrefix}"
+  - type: DAO
+    name: get
+    inputClassName: "Integer"
+    inputFieldIncludes: "id"
+    outputClassName: "{clsPrefix}"
+    outputFieldIncludes: ".*"
+    sqlDataFieldIncludes: ".*"
+    sqlConditionFieldIncludes: "id"
+  - type: CTRL
+    request:
       path: /search
       httpMethod: GET
       comment: "检索"
-    ctrl:
-      name: search
-      inputClassName: "{clsPrefix}SearchArg"
-      inputFieldExcludes: ".*time,.*_uid"
-      outputClassName: "{clsPrefix}"
-      outputFieldIncludes: ".*"
-      outputListTypeFlag: true
-    svc:
-      name: search
-      inputClassName: "{clsPrefix}SearchArg"
-      inputFieldExcludes: ".*time,.*_uid"
-      outputClassName: "{clsPrefix}"
-      outputListTypeFlag: true
-    dao:
-      name: search
-      inputClassName: "{clsPrefix}SearchArg"
-      inputFieldExcludes: ".*time,.*_uid"
-      outputClassName: "{clsPrefix}"
-      outputListTypeFlag: true
+    name: search
+    inputClassName: "{clsPrefix}SearchArg"
+    inputFieldExcludes: ".*time,.*_uid"
+    outputClassName: "{clsPrefix}"
+    outputFieldIncludes: ".*"
+    outputListTypeFlag: true
+  - type: SVC
+    name: search
+    inputClassName: "{clsPrefix}SearchArg"
+    inputFieldExcludes: ".*time,.*_uid"
+    outputClassName: "{clsPrefix}"
+    outputListTypeFlag: true
+  - type: DAO
+    name: search
+    inputClassName: "{clsPrefix}SearchArg"
+    inputFieldExcludes: ".*time,.*_uid"
+    outputClassName: "{clsPrefix}"
+    outputListTypeFlag: true
+    sqlDataFieldIncludes: ".*"
+    sqlConditionFieldIncludes: ".*"
+    sqlConditionFieldExcludes: ".*time,.*_uid"
 renderItems:
   - title: 方法名
     field: name

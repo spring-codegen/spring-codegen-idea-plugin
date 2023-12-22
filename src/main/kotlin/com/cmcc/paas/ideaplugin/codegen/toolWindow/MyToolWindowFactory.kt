@@ -2,9 +2,8 @@ package com.cmcc.paas.ideaplugin.codegen.toolWindow
 
 import com.cmcc.paas.ideaplugin.codegen.MyBundle
 import com.cmcc.paas.ideaplugin.codegen.constants.AppCtx
-import com.cmcc.paas.ideaplugin.codegen.db.DBCtx
 import com.cmcc.paas.ideaplugin.codegen.services.MyProjectService
-import com.cmcc.paas.ideaplugin.codegen.ui.CodeGenPanel
+import com.cmcc.paas.ideaplugin.codegen.ui.CodeGenPane
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project
@@ -26,7 +25,7 @@ class MyToolWindowFactory : ToolWindowFactory {
 
         AppCtx.project = project
 //        val myToolWindow = MyToolWindow(toolWindow)
-        val myToolWindow = CodeGenPanel()
+        val myToolWindow = CodeGenPane()
         val content = ContentFactory.getInstance().createContent(myToolWindow.content, null, false)
         toolWindow.contentManager.addContent(content)
     }
