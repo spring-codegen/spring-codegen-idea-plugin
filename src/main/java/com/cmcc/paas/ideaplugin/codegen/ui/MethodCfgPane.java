@@ -23,7 +23,12 @@ public interface MethodCfgPane {
     static class MethodCfgModel{
         private String methodName;
         private String className;
+        /**
+         * add/remove/update
+         */
         private String methodType;
+        private String httpMethod;
+        private String comment;
         private List<DBTableField> dbTableFields;
         private ClassType classType;
         private String inputClassName;
@@ -38,6 +43,13 @@ public interface MethodCfgPane {
         private List<ClassModel.Field> sqlDataFields;
         private List<ClassModel.Field> sqlConditionFields;
 
+        public String getComment() {
+            return comment;
+        }
+
+        public void setComment(String comment) {
+            this.comment = comment;
+        }
 
         public String getMethodName() {
             return methodName;
@@ -45,6 +57,14 @@ public interface MethodCfgPane {
 
         public void setMethodName(String methodName) {
             this.methodName = methodName;
+        }
+
+        public String getHttpMethod() {
+            return httpMethod;
+        }
+
+        public void setHttpMethod(String httpMethod) {
+            this.httpMethod = httpMethod;
         }
 
         public String getClassName() {

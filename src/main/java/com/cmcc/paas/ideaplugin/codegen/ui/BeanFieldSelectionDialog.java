@@ -88,6 +88,7 @@ public class BeanFieldSelectionDialog extends JDialog {
             DBTableField field = fields.get(i);
             data[i][TableHeaderIndex.INCLUDE.ordinal()] = false;
             data[i][TableHeaderIndex.TYPE.ordinal()] = FieldUtils.INSTANCE.javaType(field.getType());
+//            data[i][TableHeaderIndex.TYPE.ordinal()] = field.getType();
             if (field.getMaxLen() != null && field.getMaxLen() > 4) {
                 data[i][TableHeaderIndex.MAX_LEN.ordinal()] = field.getMaxLen() - 4;
             }

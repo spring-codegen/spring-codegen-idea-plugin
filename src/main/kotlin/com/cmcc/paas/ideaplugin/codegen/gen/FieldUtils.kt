@@ -1,5 +1,8 @@
 package com.cmcc.paas.ideaplugin.codegen.gen
 
+import com.intellij.util.containers.stream
+import java.util.*
+
 /**
  *
  * @author zhangyinghui
@@ -13,6 +16,15 @@ object FieldUtils {
             s.append( if ( i > 0) a[i].capitalize() else a[i])
         }
         return s.toString()
+    }
+    fun baseTypes():Array<String>{
+        return arrayOf("Integer","Long","Boolean", "String", "Date", "BigDecimal", "List", "Map")
+    }
+    fun isCommonType(clsName:String):Boolean{
+        return arrayOf("ListResult", "IdResult", "IdArg").stream().anyMatch{e -> e.equals(clsName)}
+    }
+    fun isBaseType(clsName:String):Boolean{
+        return baseTypes().stream().anyMatch{e -> e.equals(clsName)}
     }
     fun javaType(dbType:String):String{
         if ("int2".equals(dbType)){
@@ -37,5 +49,11 @@ object FieldUtils {
     }
     fun setter(columnName:String): String{
         return "set"+ propertyName(columnName).capitalize();
+    }
+    fun getRefName(v:String):String{
+        if (isBaseType(v)){
+            return v.substring(0,1).toLowerCase(Locale.getDefault())
+        }
+        return v.substring(0,1).toLowerCase() + v.substring(1)
     }
 }

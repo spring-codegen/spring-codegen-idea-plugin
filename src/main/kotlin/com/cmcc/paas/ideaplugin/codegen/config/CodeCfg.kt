@@ -25,6 +25,7 @@ open class CodeCfg{
     }
     open class MethodCfg{
         var type: String? = null
+        var comment:String? = null
         var request: RequestCfg? = null
         var name: String? = null
         var inputClassName: String? = null

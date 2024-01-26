@@ -16,7 +16,6 @@ import javax.swing.JButton
 
 
 class MyToolWindowFactory : ToolWindowFactory {
-
     init {
         thisLogger().warn("Don't forget to remove all non-needed sample code files with their corresponding registration entries in `plugin.xml`.")
     }
@@ -24,9 +23,9 @@ class MyToolWindowFactory : ToolWindowFactory {
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
 
         AppCtx.project = project
+        var codeGenPane = CodeGenPane()
 //        val myToolWindow = MyToolWindow(toolWindow)
-        val myToolWindow = CodeGenPane()
-        val content = ContentFactory.getInstance().createContent(myToolWindow.content, null, false)
+        val content = ContentFactory.getInstance().createContent(codeGenPane.content, null, false)
         toolWindow.contentManager.addContent(content)
     }
 

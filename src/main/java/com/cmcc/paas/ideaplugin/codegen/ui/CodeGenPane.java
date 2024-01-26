@@ -6,7 +6,9 @@ import com.cmcc.paas.ideaplugin.codegen.constants.EnvKey;
 import com.cmcc.paas.ideaplugin.codegen.db.DBCtx;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTable;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
+import com.cmcc.paas.ideaplugin.codegen.gen.CodeGenerator;
 import com.cmcc.paas.ideaplugin.codegen.gen.FieldUtils;
+import com.cmcc.paas.ideaplugin.codegen.gen.ModelResult;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.CtrlClass;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.DaoClass;
@@ -107,6 +109,7 @@ public class CodeGenPane {
                 }
             }
         });
+        FieldUtils
         init();
         refreshDBCtx();
     }
@@ -177,6 +180,7 @@ public class CodeGenPane {
         p.put("tableName", tableName);
         List<DBTableField> fields = DBCtx.INSTANCE.queryFields( p);
         dbTable.setFields(fields);
+        methodContainerPane.setDbTable(dbTable);
         methodContainerPane.setDbTableFields(fields);
 
 
@@ -260,6 +264,7 @@ public class CodeGenPane {
         });
         clsCfgTable.setModel(tableModel);
         ctrlClass = new CtrlClass((String)clsCfgTable.getModel().getValueAt(0,0));
+        ctrlClass.setComment(dbTable.getComment());
         svcClass = new SvcClass((String)clsCfgTable.getModel().getValueAt(0,1));
         daoClass = new DaoClass((String)clsCfgTable.getModel().getValueAt(0,2));
     }
@@ -289,7 +294,9 @@ public class CodeGenPane {
 
     }
     public void generate(){
-
+        ctrlClass.setRequest(new CtrlClass.Request(baseUriTextField.getText(), null));
+        ModelResult modelResult = methodContainerPane.getCfgResult();
+        new CodeGenerator().gen(moduleTextField.getText(), modelResult, projectCfg);
 //        String module = moduleTextField.getText();
 //        List<MethodGrpCfgModel> methodsGrps = methodGrpCfgPanels.stream().map(e -> e.getModel()).toList();
 //        classGrp.getCtrl().setBaseURI(baseUriTextField.getText());

@@ -14,6 +14,7 @@ class ModelResult {
     var ctrlClass:CtrlClass? = null
     var svcClass:SvcClass? = null
     var daoClass:DaoClass? = null
-    var dtoList:List<ClassModel>? = null
-    var boList:List<ClassModel>? = null
+    var args:List<ClassModel>? = null
+    var results:List<ClassModel>? = null
+    var entities:List<ClassModel>? = null
 }

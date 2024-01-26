@@ -1,44 +1,45 @@
 <#include "./common.ftl">
-<@pkgDeclare cls=svcClassImpl/>
+<@pkgDeclare pkg=svcClass.pkg+".impl"/>
+<@imports items=svcClass.imports/>
 import org.springframework.stereotype.Service;
 
-<@clsComment proj=project comment=svcClassImpl.comment/>
+<@clsComment proj=project comment=svcClass.comment/>
 @Service
-public class ${svcClassImpl.className}<#if svcClassImpl.implement??> implements ${svcClassImpl.implement.className}</#if>{
-<#if svcClassImpl.dependency??>
-    private final ${svcClassImpl.dependency.className} ${svcClassImpl.dependency.name} ;
-    public ${svcClassImpl.className}(${svcClassImpl.dependency.className} ${svcClassImpl.dependency.name}) {
-    this.${svcClassImpl.dependency.name} = ${svcClassImpl.dependency.name};
+public class ${svcClass.className}Impl<#if svcClass.implement??> implements ${svcClass.implement.className}</#if>{
+<#if svcClass.dependency??>
+    private final ${svcClass.dependency.className} ${svcClass.dependency.refName} ;
+    public ${svcClass.className}Impl(${svcClass.dependency.className} ${svcClass.dependency.refName}) {
+        this.${svcClass.dependency.refName} = ${svcClass.dependency.refName};
     }
 </#if>
-<#list svcClassImpl.methods as method>
+<#list svcClass.methods as method>
     /**
     * ${method.comment!}
-    * @param ${method.inputClass.name}
+    * @param ${method.inputClass.refName}
     */
     @Override
     <#if !method.resultListFlag>
-    public ${method.outputClass.className} ${method.name}(${method.inputClass.className} ${method.inputClass.name}){
+    public ${method.outputClass.className} ${method.name}(${method.inputClass.className} ${method.inputClass.refName}){
         <#if method.dependency??>
-            <@methodCall cls1=svcClassImpl method1=method cls2=daoClass method2=method.dependency/>
+            <@methodCall cls1=svcClass method1=method cls2=daoClass method2=method.dependency/>
         </#if>
-        return ${method.outputClass.name};
+        return result;
     }
     <#elseif method.paged>
     <#else>
-    public List<${method.outputClass.className}> ${method.name}(${method.inputClass.className} ${method.inputClass.name}){
+    public List<${method.outputClass.className}> ${method.name}(${method.inputClass.className} ${method.inputClass.refName}){
         <#if method.dependency??>
-            <#assign daoArgs = method.inputClass.name>
+            <#assign daoArgs = method.inputClass.refName>
             <#if method.dependency.inputClass.className != method.inputClass.className>
-        ${method.dependency.inputClass.className} ${method.dependency.inputClass.name} = ${method.inputClass.name}.copyTo(${method.dependency.inputClass.className}.class);
-                <#assign daoArgs=method.dependency.inputClass.name>
+        ${method.dependency.inputClass.className} ${method.dependency.inputClass.refName} = ${method.inputClass.refName}.copyTo(${method.dependency.inputClass.className}.class);
+                <#assign daoArgs=method.dependency.inputClass.refName>
             </#if>
             <#if method.dependency.outputClass.className != method.outputClass.className>
-        List<${method.dependency.outputClass.className}> ${method.dependency.outputClass.name}s = ${daoClass.name}.${method.dependency.name}(${daoArgs});
-        List<${method.outputClass.className}> items = ${method.dependency.outputClass.name}s.stream().map(e -> e.copyTo(${method.outputClass.className}.class).toList();
+        List<${method.dependency.outputClass.className}> ${method.dependency.outputClass.refName}s = ${daoClass.refName}.${method.dependency.name}(${daoArgs});
+        List<${method.outputClass.className}> items = ${method.dependency.outputClass.refName}s.stream().map(e -> e.copyTo(${method.outputClass.className}.class).toList();
 
             <#elseif method.outputClass.className!="-">
-        List<${method.outputClass.className}> items = ${daoClass.name}.${method.dependency.name}(${daoArgs});
+        List<${method.outputClass.className}> items = ${daoClass.refName}.${method.dependency.name}(${daoArgs});
             </#if>
         </#if>
         return items;

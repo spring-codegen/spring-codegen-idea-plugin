@@ -124,4 +124,9 @@ public class DaoMethodCfgPane implements MethodCfgPane{
         this.outputListTypeCheckBox.setSelected(model.getOutputListTypeFlag() == null ? false: model.getOutputListTypeFlag());
         this.outputPagedCheckBox.setSelected(model.getOutputPaged());
     }
+
+    @Override
+    public MethodCfgModel getModel() {
+        return this.model;
+    }
 }

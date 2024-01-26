@@ -1,17 +1,23 @@
 <#include "./common.ftl">
-<@pkgDeclare cls=model/>
+<@pkgDeclare pkg=model.pkg/>
+<@imports items=model.imports/>
 
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 <@clsComment proj=project comment=model.comment/>
-public class ${model.className}<#if model.implement??> extends ${model.implement.className}</#if>{
+public class ${model.className}<#if model.extend??> extends ${model.extend.className}</#if>{
 <#list model.fields as field>
     /**
     * ${field.comment!}
     */
+    <#if validator>
     <#if field.notNull?? && field.notNull>
     @NotNull
+    </#if>
+    <#if field.maxLen gt 0>
+    @Size(max=${field.maxLen})
+    </#if>
     </#if>
     private ${field.javaType} ${field.name};
 </#list>

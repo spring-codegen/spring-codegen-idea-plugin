@@ -18,7 +18,7 @@ methods:
     request:
       path: /add
       httpMethod: POST
-      comment: "添加"
+    comment: "添加{entityName}"
     name: add
     inputClassName: "{clsPrefix}AddArg"
     inputFieldExcludes: "id,.*time,.*_uid,del"
@@ -29,13 +29,13 @@ methods:
     name: add
     inputClassName: "{clsPrefix}"
     inputFieldIncludes: ".*"
-    outputClassName: Integer
+    outputClassName: Long
     outputFieldIncludes: "id"
   - type: DAO
     name: add
     inputClassName: "{clsPrefix}"
     inputFieldIncludes: ".*"
-    outputClassName: Integer
+    outputClassName: Long
     outputFieldIncludes: "id"
     sqlDataFieldIncludes: ".*"
     sqlDataFieldExcludes: "id"
@@ -44,7 +44,7 @@ methods:
     request:
       path: /remove
       httpMethod: POST
-      comment: "删除"
+    comment: "删除{entityName}"
     name: remove
     inputClassName: IdArg
     inputFieldIncludes: "id"
@@ -52,12 +52,12 @@ methods:
     outputFieldIncludes: "-"
   - type: SVC
     name: remove
-    inputClassName: "Integer"
+    inputClassName: "Long"
     inputFieldIncludes: "id"
     outputClassName: Boolean
   - type: DAO
     name: remove
-    inputClassName: "Integer"
+    inputClassName: "Long"
     inputFieldIncludes: "id"
     outputFieldIncludes: "-"
     outputClassName: Boolean
@@ -67,7 +67,7 @@ methods:
     request:
       path: /update
       httpMethod: POST
-      comment: "更新"
+    comment: "更新{entityName}"
     name: update
     inputClassName: "{clsPrefix}UpdateArg"
     inputFieldExcludes: ".*time,.*_uid"
@@ -89,19 +89,19 @@ methods:
     request:
       path: /get
       httpMethod: GET
-      comment: "获取详情"
+    comment: "获取{entityName}详情"
     name: get
-    inputClassName: Integer
+    inputClassName: Long
     inputFieldIncludes: "id"
     outputClassName: "{clsPrefix}"
   - type: SVC
     name: get
-    inputClassName: "Integer"
+    inputClassName: "Long"
     inputFieldIncludes: "id"
     outputClassName: "{clsPrefix}"
   - type: DAO
     name: get
-    inputClassName: "Integer"
+    inputClassName: "Long"
     inputFieldIncludes: "id"
     outputClassName: "{clsPrefix}"
     outputFieldIncludes: ".*"
@@ -111,7 +111,7 @@ methods:
     request:
       path: /search
       httpMethod: GET
-      comment: "检索"
+    comment: "检索{entityName}"
     name: search
     inputClassName: "{clsPrefix}SearchArg"
     inputFieldExcludes: ".*time,.*_uid"
