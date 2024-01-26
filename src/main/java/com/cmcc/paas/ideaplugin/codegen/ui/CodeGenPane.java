@@ -109,7 +109,6 @@ public class CodeGenPane {
                 }
             }
         });
-        FieldUtils
         init();
         refreshDBCtx();
     }
