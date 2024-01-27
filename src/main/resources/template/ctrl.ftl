@@ -1,8 +1,10 @@
 <#include "./common.ftl">
 <@pkgDeclare pkg=ctrlClass.pkg/>
 <@imports items=ctrlClass.imports/>
+import com.cmit.paas.common.spring.exception.ParamException;
 
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import com.cmit.paas.common.spring.http.HttpResponse;
@@ -26,7 +28,8 @@ public class ${ctrlClass.className}<#if ctrlClass.extends??> extends ${ctrlClass
     @RequestMapping(path="${method.request.path}", method=RequestMethod.${method.request.httpMethod})
     <#--返回非列表-->
     <#if !method.resultListFlag>
-    public HttpResponse<#if method.outputClass.className!="-"><${method.outputClass.className}></#if> ${method.name}(${method.inputClass.className} ${method.inputClass.refName}){
+    public HttpResponse<#if method.outputClass.className!="-"><${method.outputClass.className}></#if> ${method.name}(@Validated <#if method.request.httpMethod!="GET">@RequestBody</#if> ${method.inputClass.className} ${method.inputClass.refName}, BindingResult br){
+        <@checkParam />
         HttpResponse<#if method.outputClass.className!="-"><${method.outputClass.className}></#if> res = new HttpResponse();
         <#if method.dependency??>
             <@methodCall cls1=ctrlClass method1=method cls2=svcClass method2=method.dependency/>
@@ -37,7 +40,8 @@ public class ${ctrlClass.className}<#if ctrlClass.extends??> extends ${ctrlClass
         return res;
     }
     <#elseif method.paged>
-    public HttpResponse<ListResult<${method.outputClass.className}>> ${method.name}(${method.inputClass.className} ${method.inputClass.refName}){
+    public HttpResponse<ListResult<${method.outputClass.className}>> ${method.name}(@Validated <#if method.request.httpMethod!="GET">@RequestBody</#if> ${method.inputClass.className} ${method.inputClass.refName}, BindingResult br){
+        <@checkParam />
         HttpResponse<ListResult<${method.outputClass.className}>> res = new HttpResponse();
         <#if method.dependency??>
             <@argsConvert cls1=method.inputClass cls2=method.dependency.inputClass/>
@@ -59,7 +63,8 @@ public class ${ctrlClass.className}<#if ctrlClass.extends??> extends ${ctrlClass
         return res;
     }
     <#else>
-    public HttpResponse<List<${method.outputClass.className}>> ${method.name}(${method.inputClass.className} ${method.inputClass.refName}){
+    public HttpResponse<List<${method.outputClass.className}>> ${method.name}(@Validated <#if method.request.httpMethod!="GET">@RequestBody</#if> ${method.inputClass.className} ${method.inputClass.refName}, BindingResult br){
+        <@checkParam />
         HttpResponse<List<${method.outputClass.className}>> res = new HttpResponse();
         <#if method.dependency??>
 

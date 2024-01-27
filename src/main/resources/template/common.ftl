@@ -20,7 +20,11 @@ package ${pkg};
 * @date ${.now?string["yyyy-MM-dd"]}
 */
 </#macro>
-
+<#macro checkParam>
+        if (br.hasErrors()){
+            throw new ParamException(br.getFieldError().getDefaultMessage());
+        }
+</#macro>
 <#macro argsConvert cls1 cls2>
     <#if cls1.className == cls2.className>
     <#elseif cls1.baseType>
