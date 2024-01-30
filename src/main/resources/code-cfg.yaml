@@ -55,6 +55,7 @@ methods:
     inputClassName: "Long"
     inputFieldIncludes: "id"
     outputClassName: Boolean
+    outputFieldIncludes: "-"
   - type: DAO
     name: remove
     inputClassName: "Long"
@@ -91,7 +92,7 @@ methods:
       httpMethod: GET
     comment: "获取{entityName}详情"
     name: get
-    inputClassName: Long
+    inputClassName: IdArg
     inputFieldIncludes: "id"
     outputClassName: "{clsPrefix}"
   - type: SVC

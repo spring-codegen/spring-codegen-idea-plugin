@@ -43,11 +43,15 @@ package ${pkg};
     </#if>
 </#macro>
 <#macro methodCall cls1 method1 cls2 method2>
-        <#assign args=method2.inputClass.refName>
+    <#assign args=method2.inputClass.refName>
     <#if method1.inputClass.className == method2.inputClass.className>
-        <#if DEBUG>1</#if>
+        <#if DEBUG>
+            1
+        </#if>
     <#elseif method1.inputClass.isBaseType()>
-        <#if DEBUG>2</#if>
+        <#if DEBUG>
+            2
+        </#if>
         <#assign a= method2.inputClass.fields?filter(x -> x.name == method1.inputClass.refName)>
         <#if a?size gt 0>
         ${method2.inputClass.className} ${method2.inputClass.refName} = new ${method2.inputClass.className}();
@@ -55,40 +59,54 @@ package ${pkg};
             <#assign args=method2.inputClass.refName>
         </#if>
     <#elseif method2.inputClass.isBaseType()>
-        <#if DEBUG>3</#if>
+        <#if DEBUG>
+            3
+        </#if>
         <#assign a=method1.inputClass.fields?filter(x -> x.name == method2.inputClass.refName)>
         <#if a?size gt 0>
         ${method2.inputClass.className} ${method2.inputClass.refName} = ${method1.inputClass.refName}.${a[0].getter}();
             <#assign args=method2.inputClass.refName>
         </#if>
     <#else>
-        <#if DEBUG>4</#if>
+        <#if DEBUG>
+            4
+        </#if>
         ${method2.inputClass.className} ${method2.inputClass.refName} = ${method1.inputClass.refName}.copyTo(${method2.inputClass.className}.class);
         <#assign args=method2.inputClass.refName>
     </#if>
 
     <#if method1.outputClass.className == method2.outputClass.className>
-        <#if DEBUG>5</#if>
+        <#if DEBUG>
+            5
+        </#if>
         ${method2.outputClass.className} result = ${cls2.refName}.${method2.name}(${args});
     <#elseif method2.outputClass.isBaseType()>
-        <#if DEBUG>6</#if>
+        <#if DEBUG>
+            6
+        </#if>
         ${method2.outputClass.className} ${method2.outputClass.refName} = ${cls2.refName}.${method2.name}(${args});
         <#assign a=method1.outputClass.fields?filter(x -> x.name == method2.outputClass.refName)>
         <#if a?size gt 0>
         ${method1.outputClass.className} result = new ${method1.outputClass.className}();
         result.${a[0].setter}(${method2.outputClass.refName});
         <#elseif method2.outputClass.className=="Boolean">
-            <#if DEBUG>6.1</#if>
+            <#if DEBUG>
+                6.1
+            </#if>
         </#if>
     <#elseif method1.outputClass.isBaseType()>
-        <#if DEBUG>7</#if>
+        <#if DEBUG>
+            7
+        </#if>
         ${method2.outputClass.className} ${method2.outputClass.refName} = ${cls2.refName}.${method2.name}(${args});
         <#assign a=method2.outputClass.fields?filter(x -> x.name == method1.outputClass.refName)>
         <#if a?size gt 0>
         ${method1.outputClass.className} result = ${method2.outputClass.refName}.${a[0].getter}();
         </#if>
     <#else>
-        <#if DEBUG>8</#if>
+        <#if DEBUG>
+            8
+        </#if>
         ${method1.outputClass.className} result = ${method2.outputClass.refName}.copyTo(${method1.outputClass.className}.class);
     </#if>
 </#macro>

@@ -54,8 +54,9 @@ public class CodeSettingPane {
                 fileChooser.setCurrentDirectory(new File(AppCtx.INSTANCE.getProject().getBasePath()));
                 int result = fileChooser.showDialog(content, "选择");
                 if (result == JFileChooser.APPROVE_OPTION){
-                    File selectedDir = fileChooser.getCurrentDirectory();
-                    sourceDirTextField.setText(selectedDir.getAbsolutePath());
+                    File selectedFile = fileChooser.getSelectedFile();
+                    File dir = selectedFile.isDirectory() ? selectedFile : selectedFile.getParentFile();
+                    sourceDirTextField.setText(dir.getAbsolutePath());
                 }
             }
         });
@@ -67,8 +68,9 @@ public class CodeSettingPane {
                 fileChooser.setCurrentDirectory(new File(AppCtx.INSTANCE.getProject().getBasePath()));
                 int result = fileChooser.showDialog(content, "选择");
                 if (result == JFileChooser.APPROVE_OPTION){
-                    File selectedDir = fileChooser.getCurrentDirectory();
-                    mybatisMapperDirTextField.setText(selectedDir.getAbsolutePath());
+                    File selectedFile = fileChooser.getSelectedFile();
+                    File dir = selectedFile.isDirectory() ? selectedFile : selectedFile.getParentFile();
+                    mybatisMapperDirTextField.setText(dir.getAbsolutePath());
                 }
             }
         });

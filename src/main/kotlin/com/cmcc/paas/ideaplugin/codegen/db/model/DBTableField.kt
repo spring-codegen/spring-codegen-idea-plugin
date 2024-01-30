@@ -6,6 +6,6 @@ class DBTableField {
     var name: String? = null
     var comment: String? = null
     var type: String? = null
-    var maxLen: Integer? = null
+    var maxLen: Int? = null
     var notNull:Boolean? = null
 }

@@ -147,12 +147,6 @@
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <hspacer id="b06b2">
-        <constraints>
-          <grid row="0" column="23" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="1.0" weighty="0.0"/>
-        </constraints>
-      </hspacer>
       <component id="487e2" class="javax.swing.JLabel" binding="clsTagLabel">
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -343,6 +337,19 @@
           <minimumSize width="60" height="30"/>
           <preferredSize width="60" height="30"/>
           <text value="Fields"/>
+        </properties>
+      </component>
+      <component id="7d417" class="javax.swing.JButton" binding="closeBtn">
+        <constraints>
+          <grid row="0" column="23" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="5" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <margin top="0" left="0" bottom="3" right="0"/>
+          <maximumSize width="24" height="24"/>
+          <minimumSize width="24" height="24"/>
+          <preferredSize width="24" height="24"/>
+          <text value="x"/>
         </properties>
       </component>
     </children>

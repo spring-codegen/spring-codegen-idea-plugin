@@ -54,6 +54,7 @@ open class ClassModel(var className:String, var pkg:String?, var comment:String?
         var comment:String? = null
         var cls:ClassModel? = null
         var inputListFlag:Boolean? = false
+        var type:String? = null
         open fun clone():Method{
             var m = Method(name, inputClass, outputClass, resultListFlag)
             m.dependency = if(dependency != null) dependency!!.clone() else null

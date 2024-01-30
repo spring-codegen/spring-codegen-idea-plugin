@@ -76,7 +76,7 @@ class CodeGenerator {
     fun processImports(cls:ClassModel){
         var imports:MutableSet<String> = HashSet();
         if (cls.fields != null){
-            cls!!.fields!!.forEach{f ->
+            cls.fields!!.forEach{f ->
                 if ( f.javaType == "Date" ){
                     imports.add("java.util." + f.javaType)
                 }else if (f.pkg != null && !FieldUtils.isBaseType(f.javaType)) {
@@ -328,7 +328,7 @@ class CodeGenerator {
     */
 
     fun handleModelPkg(pkg:String, models:List<ClassModel>){
-        models?.forEach {
+        models.forEach {
 
             if (!FieldUtils.isBaseType(it.className)){
                 it.pkg = pkg;
@@ -351,15 +351,15 @@ class CodeGenerator {
     }
     fun renderModel(module:String, validator:Boolean, models:List<ClassModel>, projectCfg: ProjectCfg){
 
-        models?.forEach {
+        models.forEach {
             if (!FieldUtils.isBaseType(it.className) && !FieldUtils.isCommonType(it.className) ){
                 var data = HashMap<String, Any?>();
                 data["project"] = projectCfg
                 data["model"] = it
                 data["validator"] = validator
                 it.fields?.forEach{
-                    it.setter = FieldUtils.setter(it.name!!)
-                    it.getter = FieldUtils.getter(it.name!!)
+                    it.setter = FieldUtils.setter(it.name)
+                    it.getter = FieldUtils.getter(it.name)
                 }
                 processImports(it)
                              renderToFile(projectCfg.sourceDir!!, it.pkg!!, it.className,"model.ftl", data)
@@ -423,16 +423,16 @@ class CodeGenerator {
         svcClass!!.dependency = daoClass
         svcClass.implement = svcClass
 
-        ctrlClass!!.pkg = projectCfg.basePkg + ".ctrl."+module;
-        svcClass!!.pkg = projectCfg.basePkg + ".svc."+module;
+        ctrlClass.pkg = projectCfg.basePkg + ".ctrl."+module;
+        svcClass.pkg = projectCfg.basePkg + ".svc."+module;
         daoClass!!.pkg = projectCfg.basePkg + ".dao."+module;
 
         processImports(ctrlClass)
         processImports(svcClass)
         processImports(daoClass)
 
-        f2(ctrlClass!!.methods!!)
-        f2(svcClass!!.methods!!)
+        f2(ctrlClass.methods!!)
+        f2(svcClass.methods!!)
         var data = HashMap<String, Any?>();
         data["project"] = projectCfg
         data["ctrlClass"] = ctrlClass
@@ -464,6 +464,17 @@ class CodeGenerator {
                 daoClass.pkg!!,
                 daoClass.className,
                 "dao.ftl",
+                data
+        )
+        val resultMaps: MutableMap<String, ClassModel> = HashMap()
+        if(modelResult.entities != null){
+            modelResult.entities!!.forEach { resultMaps.put(it.className, it) }
+        }
+        data.put("resultMaps", resultMaps)
+
+        renderToFile(
+                projectCfg.mybatisMapperDir!!+"/mappers/"+module+"/"+daoClass.className+"Mapper.xml",
+                "mapper.ftl",
                 data
         )
     }

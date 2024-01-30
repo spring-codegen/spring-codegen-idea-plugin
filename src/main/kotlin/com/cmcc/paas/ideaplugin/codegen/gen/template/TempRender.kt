@@ -19,7 +19,7 @@ object TempRender {
     private var configuration:Configuration? = null;
     fun getConfiguration():Configuration{
         if(configuration == null) {
-            var url = TempRender::class.java.getResource("/template")
+//            var url = TempRender::class.java.getResource("/template")
             configuration = Configuration(Configuration.getVersion())
             configuration!!.setTemplateLoader(ClassTemplateLoader(this.javaClass.classLoader, "/template"))
         }

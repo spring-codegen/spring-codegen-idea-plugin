@@ -67,12 +67,10 @@ public class ${ctrlClass.className}<#if ctrlClass.extends??> extends ${ctrlClass
         <@checkParam />
         HttpResponse<List<${method.outputClass.className}>> res = new HttpResponse();
         <#if method.dependency??>
-
             <@argsConvert cls1=method.inputClass cls2=method.dependency.inputClass/>
             <#if method.dependency.outputClass.className != method.outputClass.className>
         List<${method.dependency.outputClass.className}> ${method.dependency.outputClass.refName}s = ${svcClass.refName}.${method.dependency.name}(${method.dependency.inputClass.refName});
         List<${method.outputClass.className}> items = ${method.dependency.outputClass.refName}s.stream().map(e -> e.copyTo(${method.outputClass.className}.class).toList();
-
             <#elseif method.outputClass.className!="-">
         List<${method.outputClass.className}> items = ${svcClass.refName}.${method.dependency.name}(${method.dependency.inputClass.refName});
             </#if>

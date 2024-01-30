@@ -4,6 +4,7 @@ import com.cmcc.paas.ideaplugin.codegen.config.CodeCfg;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.FieldUtils;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
+import org.jetbrains.deft.Obj;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -31,6 +32,7 @@ public class BeanFieldSelectionDialog extends JDialog {
         COMMENT;
     }
     private List<DBTableField> fields;
+    private BeanFieldSelectionActionListener actionListener;
 
     public List<DBTableField> getFields() {
         return fields;
@@ -39,6 +41,14 @@ public class BeanFieldSelectionDialog extends JDialog {
     public void setFields(List<DBTableField> fields) {
         this.fields = fields;
         this.refresh();
+    }
+
+    public BeanFieldSelectionActionListener getActionListener() {
+        return actionListener;
+    }
+
+    public void setActionListener(BeanFieldSelectionActionListener actionListener) {
+        this.actionListener = actionListener;
     }
 
     public BeanFieldSelectionDialog() {
@@ -74,6 +84,9 @@ public class BeanFieldSelectionDialog extends JDialog {
     }
 
     private void onOK() {
+        if (actionListener != null){
+            actionListener.onFieldSelected(this);
+        }
         dispose();
     }
 
@@ -125,12 +138,18 @@ public class BeanFieldSelectionDialog extends JDialog {
         List<ClassModel.Field> result = new ArrayList();
         ( (DefaultTableModel) tablePanel.getModel()).getDataVector();
         for (int i = 0 ; i< this.tablePanel.getModel().getRowCount(); i++){
+            Boolean include = (Boolean) tablePanel.getModel().getValueAt(i, TableHeaderIndex.INCLUDE.ordinal());
+            if (!include){
+                continue;
+            }
             ClassModel.Field fieldDefine = new ClassModel.Field((String)tablePanel.getModel().getValueAt(i, TableHeaderIndex.NAME.ordinal()),
                     (String) tablePanel.getModel().getValueAt(i, TableHeaderIndex.TYPE.ordinal()),
                     (String) tablePanel.getModel().getValueAt(i, TableHeaderIndex.COMMENT.ordinal()),
                     (Boolean) tablePanel.getModel().getValueAt(i, TableHeaderIndex.NOT_NULL.ordinal()), null, null);
-            fieldDefine.setMinLen((Integer) tablePanel.getModel().getValueAt(i, TableHeaderIndex.MIN_LEN.ordinal()));
-            fieldDefine.setMaxLen((Integer) tablePanel.getModel().getValueAt(i, TableHeaderIndex.MAX_LEN.ordinal()));
+            Object v = tablePanel.getModel().getValueAt(i, TableHeaderIndex.MIN_LEN.ordinal());
+            fieldDefine.setMinLen( v == null ? -1 : Integer.parseInt(v.toString()) );
+            v = tablePanel.getModel().getValueAt(i, TableHeaderIndex.MAX_LEN.ordinal());
+            fieldDefine.setMaxLen(v == null ?  -1 : Integer.parseInt(v.toString()));
             fieldDefine.setColumn((String) tablePanel.getModel().getValueAt(i, TableHeaderIndex.COLUMN_NAME.ordinal()));
             result.add(fieldDefine);
         }

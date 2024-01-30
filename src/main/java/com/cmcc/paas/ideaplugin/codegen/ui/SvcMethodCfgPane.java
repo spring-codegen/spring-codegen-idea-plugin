@@ -1,7 +1,5 @@
 package com.cmcc.paas.ideaplugin.codegen.ui;
 
-import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,13 +9,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.List;
 
 /**
  * @author zhangyinghui
  * @date 2023/8/8
  */
-public class SvcMethodCfgPane implements MethodCfgPane{
+public class SvcMethodCfgPane extends MethodCfgPane{
     protected JLabel clsTagLabel;
     protected JTextField clsTextField;
     protected JTextField methodTextField;
@@ -29,9 +26,9 @@ public class SvcMethodCfgPane implements MethodCfgPane{
     protected JCheckBox outputPagedCheckBox;
     protected JButton inputButton;
     protected JButton outputButton;
+    private JButton closeBtn;
 
     protected MethodCfgModel model;
-
 
     public SvcMethodCfgPane(){
         init();
@@ -78,6 +75,12 @@ public class SvcMethodCfgPane implements MethodCfgPane{
                 BeanFieldSelectionDialog dialog = BeanFieldSelectionDialog.create();
                 dialog.setFields(model.getDbTableFields());
                 dialog.setSelectedFields(model.getInputFields());
+                dialog.setActionListener(new BeanFieldSelectionDialog.BeanFieldSelectionActionListener() {
+                    @Override
+                    public void onFieldSelected(BeanFieldSelectionDialog dialog) {
+                        model.setInputFields(dialog.getSelectedFields());
+                    }
+                });
                 dialog.setVisible(true);
             }
         });
@@ -87,9 +90,16 @@ public class SvcMethodCfgPane implements MethodCfgPane{
                 BeanFieldSelectionDialog dialog = BeanFieldSelectionDialog.create();
                 dialog.setFields(model.getDbTableFields());
                 dialog.setSelectedFields(model.getOutputFields());
+                dialog.setActionListener(new BeanFieldSelectionDialog.BeanFieldSelectionActionListener() {
+                    @Override
+                    public void onFieldSelected(BeanFieldSelectionDialog dialog) {
+                        model.setOutputFields(dialog.getSelectedFields());
+                    }
+                });
                 dialog.setVisible(true);
             }
         });
+        setCloseBtnAction(closeBtn);
     }
     public void createUIComponents(){
     }

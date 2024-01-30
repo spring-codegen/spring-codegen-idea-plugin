@@ -4,21 +4,48 @@ import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 /**
  * @author zhangyinghui
  * @date 2023/12/22
  */
-public interface MethodCfgPane {
-    public JPanel getContent();
-    public void setModel(MethodCfgModel model);
-    public MethodCfgModel getModel();
+public abstract class MethodCfgPane {
+    public abstract JPanel getContent();
+    public abstract void setModel(MethodCfgModel model);
+    public abstract MethodCfgModel getModel();
+
+    private MethodCfgPaneActionListener methodCfgPaneActionListener;
+
+    public MethodCfgPaneActionListener getMethodCfgPaneActionListener() {
+        return methodCfgPaneActionListener;
+    }
+
+    public void setMethodCfgPaneActionListener(MethodCfgPaneActionListener methodCfgPaneActionListener) {
+        this.methodCfgPaneActionListener = methodCfgPaneActionListener;
+    }
+    public void setCloseBtnAction(JButton btn){
+
+        MethodCfgPane self = this;
+        btn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (methodCfgPaneActionListener != null){
+                    methodCfgPaneActionListener.onClose(self);
+                }
+            }
+        });
+    }
 
     public static enum ClassType {
         CTRL,
         SVC,
         DAO;
+    }
+    static interface MethodCfgPaneActionListener{
+        void onClose(MethodCfgPane methodCfgPane);
     }
     static class MethodCfgModel{
         private String methodName;
@@ -41,7 +68,7 @@ public interface MethodCfgPane {
         private Boolean outputPaged = false;
 
         private List<ClassModel.Field> sqlDataFields;
-        private List<ClassModel.Field> sqlConditionFields;
+        private List<ClassModel.Field> sqlCondFields;
 
         public String getComment() {
             return comment;
@@ -163,12 +190,12 @@ public interface MethodCfgPane {
             this.sqlDataFields = sqlDataFields;
         }
 
-        public List<ClassModel.Field> getSqlConditionFields() {
-            return sqlConditionFields;
+        public List<ClassModel.Field> getSqlCondFields() {
+            return sqlCondFields;
         }
 
-        public void setSqlConditionFields(List<ClassModel.Field> sqlConditionFields) {
-            this.sqlConditionFields = sqlConditionFields;
+        public void setSqlCondFields(List<ClassModel.Field> sqlCondFields) {
+            this.sqlCondFields = sqlCondFields;
         }
     }
 }

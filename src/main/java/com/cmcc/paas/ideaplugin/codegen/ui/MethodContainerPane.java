@@ -138,7 +138,7 @@ public class MethodContainerPane {
     }
     public SvcMethodCfgPane.MethodCfgModel getDefaultMethodCfgModel(MethodCfgPane.ClassType classType, String methodName){
         Map p = AppCtx.INSTANCE.getENV();
-        p.put("entityName", dbTable.getComment());
+        p.put("entityName", dbTable.getComment() == null ? dbTable.getName() : dbTable.getComment());
         String className = classType == MethodCfgPane.ClassType.CTRL ? ctrlClass.getClassName() : classType == MethodCfgPane.ClassType.SVC ? svcClass.getClassName() : daoClass.getClassName();
         CodeCfg.MethodCfg methodCfg = getMethodCfg(classType, methodName);
         SvcMethodCfgPane.MethodCfgModel model = new SvcMethodCfgPane.MethodCfgModel();
@@ -163,7 +163,7 @@ public class MethodContainerPane {
 
 
         model.setSqlDataFields(getDefaultFields(methodCfg.getSqlDataFieldExcludes(), methodCfg.getSqlDataFieldIncludes()));
-        model.setSqlConditionFields(getDefaultFields(methodCfg.getSqlConditionFieldExcludes(), methodCfg.getSqlConditionFieldIncludes()));
+        model.setSqlCondFields(getDefaultFields(methodCfg.getSqlConditionFieldExcludes(), methodCfg.getSqlConditionFieldIncludes()));
 
         return model;
     }
@@ -195,7 +195,31 @@ public class MethodContainerPane {
         holder.panel.getContent().setLocation(x,y);
         holder.panel.setModel(getDefaultMethodCfgModel(classType, methodName));
         this.container.add(holder.panel.getContent());
+        holder.panel.setMethodCfgPaneActionListener(new MethodCfgPane.MethodCfgPaneActionListener() {
+            @Override
+            public void onClose(MethodCfgPane methodCfgPane) {
+                removePane(methodCfgPane);
+            }
+        });
         return holder;
+    }
+    public void removePane(MethodCfgPane methodCfgPane){
+        MethodCfgPane.ClassType classType = methodCfgPane.getModel().getClassType();
+        Map<String, MethodItemHolder> m = allMethods.get(classType);
+        Optional<Map.Entry<String, MethodItemHolder>> x =  m.entrySet().stream().filter(e -> e.getValue().panel == methodCfgPane).findFirst();
+        if (x.isPresent()){
+            Map.Entry<String, MethodItemHolder> e = x.get();
+            MethodItemHolder holder = e.getValue();
+            this.container.remove(holder.panel.getContent());
+            if (holder.dependency != null){
+                holder.dependency.caller = null;
+            }
+            if (holder.caller != null){
+                holder.caller.dependency = null;
+            }
+            m.remove(e.getKey());
+            this.resize();
+        }
     }
     public void createMethod(String methodName, Boolean ctrlChecked, Boolean svcChecked, Boolean daoChecked){
         MethodItemHolder ctrlMethodHolder = ctrlChecked ?  addClassMethod(MethodCfgPane.ClassType.CTRL, methodName) : null;
@@ -203,9 +227,11 @@ public class MethodContainerPane {
         MethodItemHolder daoMethodHolder = daoChecked ?  addClassMethod(MethodCfgPane.ClassType.DAO, methodName) : null;
         if (ctrlMethodHolder != null && svcMethodHolder != null){
             ctrlMethodHolder.dependency = svcMethodHolder;
+            svcMethodHolder.caller = ctrlMethodHolder;
         }
         if (daoMethodHolder != null && svcMethodHolder != null){
             svcMethodHolder.dependency = daoMethodHolder;
+            daoMethodHolder.caller = svcMethodHolder;
         }
         this.resize();
     }
@@ -328,6 +354,8 @@ public class MethodContainerPane {
                 }
                 if (m.getKey() == MethodCfgPane.ClassType.DAO){
                     method = new DaoClass.Method(methodCfgModel.getMethodName(), inputClass, outputClass, methodCfgModel.getOutputListTypeFlag() );
+                    ((DaoClass.Method) method).setSqlDataFields(methodCfgModel.getSqlDataFields());
+                    ((DaoClass.Method) method).setSqlCondFields(methodCfgModel.getSqlCondFields());
                     daoMethods.add(method);
                     if ( !args.containsKey(inputClass.getClassName())
                             && !entities.containsKey(inputClass.getClassName())
@@ -354,6 +382,7 @@ public class MethodContainerPane {
                     method.setOutputClass(entities.get(outputClass.getClassName()));
                 }
                 method.setComment(methodCfgModel.getComment());
+                method.setType(methodCfgModel.getMethodType());
                 e.getValue().method = method;
             }
         }
@@ -378,5 +407,6 @@ public class MethodContainerPane {
         public MethodCfgPane panel;
         public ClassModel.Method method;
         public MethodItemHolder dependency;
+        public MethodItemHolder caller;
     }
 }

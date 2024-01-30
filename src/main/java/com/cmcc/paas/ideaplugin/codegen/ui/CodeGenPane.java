@@ -204,6 +204,9 @@ public class CodeGenPane {
         }
         String r = v;
         for (String k : p.keySet()){
+            if (p.get(k) == null){
+                continue;
+            }
             r = r.replaceAll("\\{\\s*"+k+"\\s*\\}",  p.get(k).toString());
         }
         return r;
@@ -266,6 +269,9 @@ public class CodeGenPane {
         ctrlClass.setComment(dbTable.getComment());
         svcClass = new SvcClass((String)clsCfgTable.getModel().getValueAt(0,1));
         daoClass = new DaoClass((String)clsCfgTable.getModel().getValueAt(0,2));
+        ctrlClass.setTableName(dbTable.getName());
+        svcClass.setTableName(dbTable.getName());
+        daoClass.setTableName(dbTable.getName());
     }
     private void updateClassCfg(){
 //        classGrp.getCtrl().setClassName((String)clsCfgTable.getModel().getValueAt(0,0));

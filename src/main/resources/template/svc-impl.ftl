@@ -37,7 +37,6 @@ public class ${svcClass.className}Impl<#if svcClass.implement??> implements ${sv
             <#if method.dependency.outputClass.className != method.outputClass.className>
         List<${method.dependency.outputClass.className}> ${method.dependency.outputClass.refName}s = ${daoClass.refName}.${method.dependency.name}(${daoArgs});
         List<${method.outputClass.className}> items = ${method.dependency.outputClass.refName}s.stream().map(e -> e.copyTo(${method.outputClass.className}.class).toList();
-
             <#elseif method.outputClass.className!="-">
         List<${method.outputClass.className}> items = ${daoClass.refName}.${method.dependency.name}(${daoArgs});
             </#if>

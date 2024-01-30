@@ -14,7 +14,7 @@ import java.awt.event.ItemListener;
  * @author zhangyinghui
  * @date 2023/12/21
  */
-public class DaoMethodCfgPane implements MethodCfgPane{
+public class DaoMethodCfgPane extends MethodCfgPane{
     private JLabel clsTagLabel;
     private JTextField clsTextField;
     private JTextField methodTextField;
@@ -28,6 +28,7 @@ public class DaoMethodCfgPane implements MethodCfgPane{
     private JButton dataFieldButton;
     private JButton whereFieldButton;
     private JPanel content;
+    private JButton closeBtn;
 
     private SvcMethodCfgPane.MethodCfgModel model;
 
@@ -76,6 +77,12 @@ public class DaoMethodCfgPane implements MethodCfgPane{
                 BeanFieldSelectionDialog dialog = BeanFieldSelectionDialog.create();
                 dialog.setFields(model.getDbTableFields());
                 dialog.setSelectedFields(model.getInputFields());
+                dialog.setActionListener(new BeanFieldSelectionDialog.BeanFieldSelectionActionListener() {
+                    @Override
+                    public void onFieldSelected(BeanFieldSelectionDialog dialog) {
+                        model.setInputFields(dialog.getSelectedFields());
+                    }
+                });
                 dialog.setVisible(true);
             }
         });
@@ -85,6 +92,12 @@ public class DaoMethodCfgPane implements MethodCfgPane{
                 BeanFieldSelectionDialog dialog = BeanFieldSelectionDialog.create();
                 dialog.setFields(model.getDbTableFields());
                 dialog.setSelectedFields(model.getOutputFields());
+                dialog.setActionListener(new BeanFieldSelectionDialog.BeanFieldSelectionActionListener() {
+                    @Override
+                    public void onFieldSelected(BeanFieldSelectionDialog dialog) {
+                        model.setOutputFields(dialog.getSelectedFields());
+                    }
+                });
                 dialog.setVisible(true);
             }
         });
@@ -94,6 +107,12 @@ public class DaoMethodCfgPane implements MethodCfgPane{
                 BeanFieldSelectionDialog dialog = BeanFieldSelectionDialog.create();
                 dialog.setFields(model.getDbTableFields());
                 dialog.setSelectedFields(model.getSqlDataFields());
+                dialog.setActionListener(new BeanFieldSelectionDialog.BeanFieldSelectionActionListener() {
+                    @Override
+                    public void onFieldSelected(BeanFieldSelectionDialog dialog) {
+                        model.setSqlDataFields(dialog.getSelectedFields());
+                    }
+                });
                 dialog.setVisible(true);
             }
         });
@@ -102,10 +121,19 @@ public class DaoMethodCfgPane implements MethodCfgPane{
             public void actionPerformed(ActionEvent e) {
                 BeanFieldSelectionDialog dialog = BeanFieldSelectionDialog.create();
                 dialog.setFields(model.getDbTableFields());
-                dialog.setSelectedFields(model.getSqlConditionFields());
+                dialog.setSelectedFields(model.getSqlCondFields());
+                dialog.setActionListener(new BeanFieldSelectionDialog.BeanFieldSelectionActionListener() {
+                    @Override
+                    public void onFieldSelected(BeanFieldSelectionDialog dialog) {
+                        model.setSqlCondFields(dialog.getSelectedFields());
+                    }
+                });
                 dialog.setVisible(true);
             }
         });
+
+
+        setCloseBtnAction(closeBtn);
     }
 
     @Override
