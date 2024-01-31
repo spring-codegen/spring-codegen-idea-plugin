@@ -5,7 +5,6 @@ import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel
 import com.cmcc.paas.ideaplugin.codegen.gen.template.TempRender.renderToFile
 import com.intellij.util.containers.stream
 import java.util.*
-import java.util.function.Function
 import kotlin.collections.ArrayList
 
 /**
@@ -362,7 +361,7 @@ class CodeGenerator {
                     it.getter = FieldUtils.getter(it.name)
                 }
                 processImports(it)
-                             renderToFile(projectCfg.sourceDir!!, it.pkg!!, it.className,"model.ftl", data)
+                             renderToFile(projectCfg.domainSourceDir!!, it.pkg!!, it.className,"model.ftl", data)
             }
         }
     }
@@ -445,28 +444,28 @@ class CodeGenerator {
             }
         }
         renderToFile(
-                projectCfg.sourceDir!!,
+                projectCfg.ctrlSourceDir!!,
                 ctrlClass.pkg!!,
                 ctrlClass.className,
                 "ctrl.ftl",
                 data
         )
         renderToFile(
-                projectCfg.sourceDir!!,
+                projectCfg.svcSourceDir!!,
                 svcClass.pkg!!,
                 svcClass.className,
                 "svc.ftl",
                 data
         )
         renderToFile(
-                projectCfg.sourceDir!!,
+                projectCfg.svcSourceDir!!,
                 svcClass.pkg!!+".impl",
                 svcClass.className+"Impl",
                 "svc-impl.ftl",
                 data
         )
         renderToFile(
-                projectCfg.sourceDir!!,
+                projectCfg.svcSourceDir!!,
                 daoClass.pkg!!,
                 daoClass.className,
                 "dao.ftl",

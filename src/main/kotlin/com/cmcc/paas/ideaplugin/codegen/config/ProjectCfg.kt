@@ -17,7 +17,9 @@ class ProjectCfg {
     var author: String? = null
     var modelBaseCls: String? = null
     var ctrlBaseCls: String? = null
-    var sourceDir:String? = null
+    var ctrlSourceDir:String? = null
+    var svcSourceDir:String? = null
+    var domainSourceDir:String? = null
     var mybatisMapperDir:String? = null
 
     fun save(){
