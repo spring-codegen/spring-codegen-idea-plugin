@@ -8,6 +8,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import com.cmit.paas.common.spring.http.HttpResponse;
+import com.cmit.paas.common.web.model.ListResult;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 
 <@clsComment proj=project comment=ctrlClass.comment/>
 
@@ -43,19 +46,16 @@ public class ${ctrlClass.className}<#if ctrlClass.extends??> extends ${ctrlClass
     public HttpResponse<ListResult<${method.outputClass.className}>> ${method.name}(@Validated <#if method.request.httpMethod!="GET">@RequestBody</#if> ${method.inputClass.className} ${method.inputClass.refName}, BindingResult br){
         <@checkParam />
         HttpResponse<ListResult<${method.outputClass.className}>> res = new HttpResponse();
+        PageHelper.startPage(${method.inputClass.refName}.getPageNum(), ${method.inputClass.refName}.getPageSize());
         <#if method.dependency??>
             <@argsConvert cls1=method.inputClass cls2=method.dependency.inputClass/>
-        Integer totalCount = ${svcClass.refName}.get${method.dependency.name?cap_first}Count(${method.dependency.inputClass.refName});
-        List<${method.outputClass.className}> items = null;
-        if( totalCount > 0 ){
-            <#if method.dependency.outputClass.className != method.outputClass.className>
-            List<${method.dependency.outputClass.className}> ${method.dependency.outputClass.refName}s = ${svcClass.refName}.${method.dependency.name}(${method.dependency.inputClass.refName});
-            items = ${method.dependency.outputClass.refName}s.stream().map(e -> e.copyTo(${method.outputClass.className}.class).toList();
-            <#elseif method.outputClass.className!="-">
-            items = ${svcClass.refName}.${method.dependency.name}(${method.dependency.inputClass.refName});
-            </#if>
-        }
-        ListResult<${method.outputClass.className}> result = new ListResult<>(totalCount, ${method.inputClass.refName}.getPageSize(), ${method.inputClass.refName}.getOffset(), items);
+        <#if method.dependency.outputClass.className != method.outputClass.className>
+        List<${method.dependency.outputClass.className}> ${method.dependency.outputClass.refName}s = ${svcClass.refName}.${method.dependency.name}(${method.dependency.inputClass.refName});
+        List<${method.outputClass.className}> items = ${method.dependency.outputClass.refName}s.stream().map(e -> e.copyTo(${method.outputClass.className}.class).toList();
+        <#elseif method.outputClass.className!="-">
+        List<${method.outputClass.className}> items = ${svcClass.refName}.${method.dependency.name}(${method.dependency.inputClass.refName});
+        </#if>
+        ListResult<${method.outputClass.className}> result = new ListResult<>(items == null ? 0 : (int)( (Page)items).getTotal(), ((Page)items).getPageSize(), ((Page)items).getPageNum(), items);
             <#if method.outputClass.className!="-">
         res.setData(result);
             </#if>

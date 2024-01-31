@@ -438,6 +438,12 @@ class CodeGenerator {
         data["ctrlClass"] = ctrlClass
         data["svcClass"] = svcClass
         data["daoClass"] = daoClass
+        data["entityClass"] = modelResult.entities!![0]
+        modelResult.args!!.forEach {
+            if (it.className.endsWith("SearchArg")){
+                data["searchClass"] = it
+            }
+        }
         renderToFile(
                 projectCfg.sourceDir!!,
                 ctrlClass.pkg!!,

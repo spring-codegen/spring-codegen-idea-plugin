@@ -328,7 +328,6 @@ public class MethodContainerPane {
                 if (m.getKey() == MethodCfgPane.ClassType.CTRL){
                     method = new CtrlClass.Method(methodCfgModel.getMethodName(), inputClass, outputClass, methodCfgModel.getOutputListTypeFlag() );
                     method.setPaged(method.getPaged());
-                    method.setInputListFlag(methodCfgModel.getInputListTypeFlag());
                     ( (CtrlClass.Method)method).setRequest(new CtrlClass.Request(method.getName(), methodCfgModel.getHttpMethod()));
                     ctrlMethods.add(method);
                     if ( !args.containsKey(inputClass.getClassName()) ) {
@@ -383,6 +382,8 @@ public class MethodContainerPane {
                 }
                 method.setComment(methodCfgModel.getComment());
                 method.setType(methodCfgModel.getMethodType());
+                method.setInputListFlag(methodCfgModel.getInputListTypeFlag());
+                method.setPaged(methodCfgModel.getOutputPaged());
                 e.getValue().method = method;
             }
         }
