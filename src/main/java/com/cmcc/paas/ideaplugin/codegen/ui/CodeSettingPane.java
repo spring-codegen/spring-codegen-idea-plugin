@@ -29,8 +29,9 @@ public class CodeSettingPane {
     private JButton resourceFileBtn;
     private JTextField svcDirTextField;
     private JButton svcSourceFileButton;
-    private JTextField domainDirTextField;
+    private JTextField modelDirTextField;
     private JButton domainSourceFileButton;
+    private JTextField svcBaseClsTextField;
     private ProjectCfg model;
 
     public CodeSettingPane(){
@@ -88,7 +89,7 @@ public class CodeSettingPane {
                 if (result == JFileChooser.APPROVE_OPTION){
                     File selectedFile = fileChooser.getSelectedFile();
                     File dir = selectedFile.isDirectory() ? selectedFile : selectedFile.getParentFile();
-                    domainDirTextField.setText(dir.getAbsolutePath());
+                    modelDirTextField.setText(dir.getAbsolutePath());
                 }
             }
         });
@@ -116,11 +117,14 @@ public class CodeSettingPane {
     public ProjectCfg getModel() {
         model.setAuthor(authorTextField.getText());
         model.setBasePkg(basePkgTextField.getText());
-        model.setCtrlBaseCls(ctrlBaseClsTextField.getText());
         model.setModelBaseCls(modelBaseClsTextField.getText());
+        model.setModelSourceDir(modelDirTextField.getText());
+
+        model.setCtrlBaseCls(ctrlBaseClsTextField.getText());
         model.setCtrlSourceDir(ctrlDirTextField.getText());
+
+        model.setSvcBaseCls(svcBaseClsTextField.getText());
         model.setSvcSourceDir(svcDirTextField.getText());
-        model.setDomainSourceDir(domainDirTextField.getText());
         model.setMybatisMapperDir(mybatisMapperDirTextField.getText());
         return model;
     }
@@ -129,9 +133,17 @@ public class CodeSettingPane {
         this.model = model;
         basePkgTextField.setText(model.getBasePkg());
         authorTextField.setText(model.getAuthor());
+
         modelBaseClsTextField.setText(model.getModelBaseCls());
+        modelDirTextField.setText(model.getModelSourceDir());
+
         ctrlBaseClsTextField.setText(model.getCtrlBaseCls());
         ctrlDirTextField.setText(model.getCtrlSourceDir());
+
+
+        svcBaseClsTextField.setText(model.getSvcBaseCls());
+        svcDirTextField.setText(model.getSvcSourceDir());
+
         mybatisMapperDirTextField.setText(model.getMybatisMapperDir());
     }
 }

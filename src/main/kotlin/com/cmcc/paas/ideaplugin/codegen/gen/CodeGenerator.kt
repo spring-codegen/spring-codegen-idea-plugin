@@ -361,7 +361,7 @@ class CodeGenerator {
                     it.getter = FieldUtils.getter(it.name)
                 }
                 processImports(it)
-                             renderToFile(projectCfg.domainSourceDir!!, it.pkg!!, it.className,"model.ftl", data)
+                             renderToFile(projectCfg.modelSourceDir!!, it.pkg!!, it.className,"model.ftl", data)
             }
         }
     }
@@ -426,12 +426,30 @@ class CodeGenerator {
         svcClass.pkg = projectCfg.basePkg + ".svc."+module;
         daoClass!!.pkg = projectCfg.basePkg + ".dao."+module;
 
+
+        if (projectCfg.ctrlBaseCls != null) {
+            var i = projectCfg.ctrlBaseCls!!.lastIndexOf(".")
+            if (i > 0) {
+                var baseCtrlCls = ClassModel(projectCfg.ctrlBaseCls!!.substring(i + 1))
+                baseCtrlCls.pkg = projectCfg.ctrlBaseCls!!.substring(0, i)
+                ctrlClass.extend = baseCtrlCls
+            }
+        }
+        if (projectCfg.svcBaseCls != null) {
+            var i = projectCfg.svcBaseCls!!.lastIndexOf(".")
+            if (i > 0) {
+                var baseSvcCls = ClassModel(projectCfg.svcBaseCls!!.substring(i + 1))
+                baseSvcCls.pkg = projectCfg.svcBaseCls!!.substring(0, i)
+                svcClass.extend = baseSvcCls
+            }
+        }
         processImports(ctrlClass)
         processImports(svcClass)
         processImports(daoClass)
 
         f2(ctrlClass.methods!!)
         f2(svcClass.methods!!)
+
         var data = HashMap<String, Any?>();
         data["project"] = projectCfg
         data["ctrlClass"] = ctrlClass

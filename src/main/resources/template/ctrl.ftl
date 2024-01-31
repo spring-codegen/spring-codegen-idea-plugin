@@ -16,7 +16,7 @@ import com.github.pagehelper.PageHelper;
 
 @RestController
 @RequestMapping("${ctrlClass.request.path}")
-public class ${ctrlClass.className}<#if ctrlClass.extends??> extends ${ctrlClass.superClass.className}</#if>{
+public class ${ctrlClass.className}<#if ctrlClass.extend??> extends ${ctrlClass.extend.className}</#if>{
 <#if ctrlClass.dependency??>
     private final ${ctrlClass.dependency.className} ${ctrlClass.dependency.refName} ;
     public ${ctrlClass.className}(${ctrlClass.dependency.className} ${ctrlClass.dependency.refName}) {
