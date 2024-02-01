@@ -22,7 +22,7 @@ package ${pkg};
 </#macro>
 <#macro checkParam>
         if (br.hasErrors()){
-            throw new ParamException(br.getFieldError().getDefaultMessage());
+            throw new ParamException( br.getFieldError().getField() + br.getFieldError().getDefaultMessage() );
         }
 </#macro>
 <#macro argsConvert cls1 cls2>

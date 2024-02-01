@@ -38,7 +38,7 @@
             </select>
         </#if>
         <#if method.type == "update">
-            <update id="${method.name}" <#if baseTypes?seqContains(method.outputClass.className)>resultType="${method.outputClass.className}"<#else>resultMap="${method.outputClass.className}"</#if> >
+            <update id="${method.name}" >
                 UPDATE ${daoClass.tableName}
                 SET  ${columns?join(", ")}
                 WHERE
@@ -49,7 +49,7 @@
             <sql id="${method.name}Cond">
                 <where>
                     <trim prefixOverrides="AND">
-                    <#list method.inputClass.fields as field>
+                    <#list method.sqlCondFields as field>
                         <#if field.javaType == "String">
                             <if test="${field.name}!=null and !${field.name}.isEmpty()">
                                 AND ${field.column}=${r'#{'}${field.name}${r'}'}

@@ -361,7 +361,7 @@ class CodeGenerator {
                     it.getter = FieldUtils.getter(it.name)
                 }
                 processImports(it)
-                             renderToFile(projectCfg.modelSourceDir!!, it.pkg!!, it.className,"model.ftl", data)
+                renderToFile(projectCfg.modelSourceDir!!, it.pkg!!, it.className,"model.ftl", data)
             }
         }
     }
@@ -385,8 +385,8 @@ class CodeGenerator {
          * args
          */
         handleModelPkg(projectCfg.basePkg + ".domain.arg."+module,  modelResult.args!!)
-        handleModelPkg(projectCfg.basePkg + ".domain.results."+module, modelResult.results!!)
-        handleModelPkg(projectCfg.basePkg + ".domain.entities."+module, modelResult.entities!!)
+        handleModelPkg(projectCfg.basePkg + ".domain.result."+module, modelResult.results!!)
+        handleModelPkg(projectCfg.basePkg + ".domain.entity."+module, modelResult.entities!!)
 
         renderModel(module, true, modelResult.args!!, projectCfg)
         renderModel(module, false, modelResult.results!!, projectCfg)
