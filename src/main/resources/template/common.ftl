@@ -1,6 +1,6 @@
 <#assign DEBUG=false/>
 <#macro methodDeclare method>
-    <#if classType != "INTERFACE">public </#if><#if !method.resultListFlag>${method.outputClass.className}<#else>List<${method.outputClass.className}> </#if> ${method.name}(${method.inputClass.className} ${method.inputClass.refName});
+    <#if classType != "INTERFACE">public </#if><#if !method.resultListFlag>${method.outputClass.className}<#else>List<${method.outputClass.className}></#if> ${method.name}(${method.inputClass.className} ${method.inputClass.refName});
 </#macro>
 <#macro imports items>
 <#list items as item>
@@ -15,10 +15,10 @@ package ${pkg};
 </#macro>
 <#macro clsComment proj comment="">
 /**
-* ${comment!}
-* @author ${proj.author}
-* @date ${.now?string["yyyy-MM-dd"]}
-*/
+ * ${comment!}
+ * @author ${proj.author}
+ * @date ${.now?string["yyyy-MM-dd"]}
+ */
 </#macro>
 <#macro checkParam>
         if (br.hasErrors()){
