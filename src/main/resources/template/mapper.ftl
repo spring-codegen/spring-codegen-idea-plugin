@@ -9,9 +9,9 @@
     <resultMap id="${resultMap.className}" type="${resultMap.pkg}.${resultMap.className}">
         <#list resultMap.fields as field>
             <#if field.name=="id">
-                <id column="${field.column}" property="${field.name}"/>
+        <id column="${field.column}" property="${field.name}"/>
             <#else>
-                <result column="${field.column}" property="${field.name}"/>
+        <result column="${field.column}" property="${field.name}"/>
             </#if>
         </#list>
     </resultMap>
@@ -33,10 +33,7 @@
     <select id="${method.name}" <#if baseTypes?seqContains(method.outputClass.className)>resultType="${method.outputClass.className}"<#else>resultMap="${method.outputClass.className}"</#if> >
         SELECT ${columns?join(", ")}
         FROM ${daoClass.tableName}
-        WHERE
-           <#if baseTypes?seqContains(method.inputClass.className)>
-               ${conds?join(" AND ")}
-           </#if>
+        WHERE <#if baseTypes?seqContains(method.inputClass.className)>${conds?join(" AND ")}</#if>
     </select>
 
     </#if>
@@ -44,8 +41,7 @@
     <update id="${method.name}" >
         UPDATE ${daoClass.tableName}
         SET  ${columns?join(", ")}
-        WHERE
-        id=${r'#{id}'}
+        WHERE id = ${r'#{id}'}
     </update>
 
     </#if>
@@ -55,13 +51,13 @@
             <trim prefixOverrides="AND">
             <#list method.sqlCondFields as field>
                 <#if field.javaType == "String">
-                    <if test="${field.name}!=null and !${field.name}.isEmpty()">
-                        AND ${field.column}=${r'#{'}${field.name}${r'}'}
-                    </if>
+                <if test="${field.name}!=null and !${field.name}.isEmpty()">
+                    AND ${field.column}=${r'#{'}${field.name}${r'}'}
+                </if>
                 <#else>
-                    <if test="${field.name}!=null">
-                        AND ${field.column}=${r'#{'}${field.name}${r'}'}
-                    </if>
+                <if test="${field.name}!=null">
+                    AND ${field.column}=${r'#{'}${field.name}${r'}'}
+                </if>
                 </#if>
             </#list>
         </trim>

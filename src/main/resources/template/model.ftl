@@ -1,6 +1,8 @@
 <#include "./common.ftl">
 <@pkgDeclare pkg=model.pkg/>
 
+import jakarta.validation.constraints.*;
+
 <@imports items=model.imports/>
 
 <@clsComment proj=project comment=model.comment/>
