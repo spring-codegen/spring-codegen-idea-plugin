@@ -21,7 +21,8 @@ object TempRender {
         if(configuration == null) {
 //            var url = TempRender::class.java.getResource("/template")
             configuration = Configuration(Configuration.getVersion())
-            configuration!!.setTemplateLoader(ClassTemplateLoader(this.javaClass.classLoader, "/template"))
+            configuration!!.templateLoader = ClassTemplateLoader(this.javaClass.classLoader, "/template")
+            configuration!!.defaultEncoding = "UTF-8";
         }
         return configuration!!;
     }

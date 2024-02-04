@@ -1,12 +1,11 @@
 <#include "./common.ftl">
 <@pkgDeclare pkg=model.pkg/>
+
 <@imports items=model.imports/>
 
-
-import jakarta.validation.constraints.*;
-
 <@clsComment proj=project comment=model.comment/>
-public class ${model.className}<#if model.extend??> extends ${model.extend.className}</#if>{
+public class ${model.className}<#if model.extend??> extends ${model.extend.className}</#if> {
+
 <#list model.fields as field>
     /**
     * ${field.comment!}
@@ -21,12 +20,15 @@ public class ${model.className}<#if model.extend??> extends ${model.extend.class
     </#if>
     private ${field.javaType} ${field.name};
 </#list>
+
 <#list model.fields as field>
-    public ${field.javaType} ${field.getter}(){
+    public ${field.javaType} ${field.getter}() {
         return this.${field.name};
     }
-    public void ${field.setter}(${field.javaType} ${field.name}){
+
+    public void ${field.setter}(${field.javaType} ${field.name}) {
         this.${field.name} = ${field.name};
     }
+
 </#list>
 }

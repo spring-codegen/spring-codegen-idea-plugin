@@ -8,11 +8,11 @@ svcClass:
   title: "Svc类"
   dir: ""
   className: "{clsPrefix}Service"
-
 daoClass:
   title: "Dao类"
   dir: ""
   className: "{clsPrefix}Dao"
+
 methods:
   - type: CTRL
     request:

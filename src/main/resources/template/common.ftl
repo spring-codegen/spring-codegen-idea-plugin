@@ -1,6 +1,6 @@
 <#assign DEBUG=false/>
 <#macro methodDeclare method>
-    public <#if !method.resultListFlag>${method.outputClass.className}<#else>List<${method.outputClass.className}> </#if> ${method.name}(${method.inputClass.className} ${method.inputClass.refName});
+    <#if classType != "INTERFACE">public </#if><#if !method.resultListFlag>${method.outputClass.className}<#else>List<${method.outputClass.className}> </#if> ${method.name}(${method.inputClass.className} ${method.inputClass.refName});
 </#macro>
 <#macro imports items>
 <#list items as item>

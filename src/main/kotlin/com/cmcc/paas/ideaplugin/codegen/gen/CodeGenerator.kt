@@ -32,12 +32,7 @@ class CodeGenerator {
             classes.add(cls)
         }
     }
-    fun baseTypes():Array<String>{
-        return arrayOf("Integer","Long","Boolean", "String", "Date", "BigDecimal", "List", "Map")
-    }
-    fun isBaseType(clsName:String):Boolean{
-        return baseTypes().stream().anyMatch{e -> e.equals(clsName)}
-    }
+
     fun baseTypePkg(type:String):String?{
         if (type == "Integer" || type == "Long" || type == "Boolean" || type == "String"){
             return "java.lang"
@@ -51,7 +46,7 @@ class CodeGenerator {
         return null;
     }
     fun defaultClassVarName(clsName:String):String{
-        if (isBaseType(clsName)){
+        if (FieldUtils.isBaseType(clsName)){
             return clsName.substring(0,1).toLowerCase(Locale.getDefault())
         }
         return clsName.substring(0,1).toLowerCase() + clsName.substring(1)
@@ -422,8 +417,8 @@ class CodeGenerator {
         svcClass!!.dependency = daoClass
         svcClass.implement = svcClass
 
-        ctrlClass.pkg = projectCfg.basePkg + ".ctrl."+module;
-        svcClass.pkg = projectCfg.basePkg + ".svc."+module;
+        ctrlClass.pkg = projectCfg.basePkg + ".controller."+module;
+        svcClass.pkg = projectCfg.basePkg + ".service."+module;
         daoClass!!.pkg = projectCfg.basePkg + ".dao."+module;
 
 

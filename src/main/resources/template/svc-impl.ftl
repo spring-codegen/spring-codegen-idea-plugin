@@ -1,16 +1,19 @@
 <#include "./common.ftl">
 <@pkgDeclare pkg=svcClass.pkg+".impl"/>
 <@imports items=svcClass.imports/>
+
 import org.springframework.stereotype.Service;
 
 <@clsComment proj=project comment=svcClass.comment/>
 @Service
-public class ${svcClass.className}Impl<#if svcClass.implement??> implements ${svcClass.implement.className}</#if>{
+public class ${svcClass.className}Impl<#if svcClass.implement??> implements ${svcClass.implement.className}</#if> {
 <#if svcClass.dependency??>
+
     private final ${svcClass.dependency.className} ${svcClass.dependency.refName} ;
     public ${svcClass.className}Impl(${svcClass.dependency.className} ${svcClass.dependency.refName}) {
         this.${svcClass.dependency.refName} = ${svcClass.dependency.refName};
     }
+
 </#if>
 <#list svcClass.methods as method>
     /**
@@ -19,7 +22,7 @@ public class ${svcClass.className}Impl<#if svcClass.implement??> implements ${sv
     */
     @Override
     <#if !method.resultListFlag>
-    public ${method.outputClass.className} ${method.name}(${method.inputClass.className} ${method.inputClass.refName}){
+    public ${method.outputClass.className} ${method.name}(${method.inputClass.className} ${method.inputClass.refName}) {
         <#if method.dependency??>
             <@methodCall cls1=svcClass method1=method cls2=daoClass method2=method.dependency/>
         </#if>
@@ -27,7 +30,7 @@ public class ${svcClass.className}Impl<#if svcClass.implement??> implements ${sv
     }
     <#elseif method.paged>
     <#else>
-    public List<${method.outputClass.className}> ${method.name}(${method.inputClass.className} ${method.inputClass.refName}){
+    public List<${method.outputClass.className}> ${method.name}(${method.inputClass.className} ${method.inputClass.refName}) {
         <#if method.dependency??>
             <#assign daoArgs = method.inputClass.refName>
             <#if method.dependency.inputClass.className != method.inputClass.className>

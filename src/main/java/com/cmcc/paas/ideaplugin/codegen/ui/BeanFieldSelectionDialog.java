@@ -1,10 +1,8 @@
 package com.cmcc.paas.ideaplugin.codegen.ui;
 
-import com.cmcc.paas.ideaplugin.codegen.config.CodeCfg;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.FieldUtils;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
-import org.jetbrains.deft.Obj;
 
 import javax.swing.*;
 import javax.swing.table.*;
