@@ -16,6 +16,7 @@ package ${pkg};
 <#macro clsComment proj comment="">
 /**
  * ${comment!}
+ *
  * @author ${proj.author}
  * @date ${.now?string["yyyy-MM-dd"]}
  */

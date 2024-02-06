@@ -52,6 +52,8 @@ object DBCtx {
         dataSource!!.password = dbCfg!!.pwd;
         dataSource!!.url = url;
         dataSource!!.driver = driver
+        dataSource!!.connectTimeout = 10000;
+        dataSource!!.socketTimeout = 10000;
     }
     fun resetSessionFactory(){
         if(dataSource == null){

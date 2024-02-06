@@ -9,17 +9,13 @@ import org.springframework.stereotype.Service;
 public class ${svcClass.className}Impl<#if svcClass.implement??> implements ${svcClass.implement.className}</#if> {
 <#if svcClass.dependency??>
 
-    private final ${svcClass.dependency.className} ${svcClass.dependency.refName} ;
+    private final ${svcClass.dependency.className} ${svcClass.dependency.refName};
     public ${svcClass.className}Impl(${svcClass.dependency.className} ${svcClass.dependency.refName}) {
         this.${svcClass.dependency.refName} = ${svcClass.dependency.refName};
     }
 
 </#if>
 <#list svcClass.methods as method>
-    /**
-    * ${method.comment!}
-    * @param ${method.inputClass.refName}
-    */
     @Override
     <#if !method.resultListFlag>
     public ${method.outputClass.className} ${method.name}(${method.inputClass.className} ${method.inputClass.refName}) {

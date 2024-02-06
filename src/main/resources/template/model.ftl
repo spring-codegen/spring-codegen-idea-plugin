@@ -10,8 +10,8 @@ public class ${model.className}<#if model.extend??> extends ${model.extend.class
 
 <#list model.fields as field>
     /**
-    * ${field.comment!}
-    */
+     * ${field.comment!}
+     */
     <#if validator>
     <#if field.notNull?? && field.notNull>
     @NotNull()

@@ -55,9 +55,9 @@ public class CodeGenPane {
     private List<DBTable> dbTables;
 
     private CodeCfg codeCfg;
-    private CodeCfg codeSetting = new CodeCfg();
-    private ProjectCfg projectCfg = new ProjectCfg();
-    private DBCfg dbCfg = new DBCfg();
+    private final CodeCfg codeSetting = new CodeCfg();
+    private final ProjectCfg projectCfg = new ProjectCfg();
+    private final DBCfg dbCfg = new DBCfg();
     private CtrlClass ctrlClass = null;
     private SvcClass svcClass =  null;
     private DaoClass daoClass =  null;
@@ -125,17 +125,15 @@ public class CodeGenPane {
         DBCtx.INSTANCE.refresh();
         //表格下拉框
         dbTables = DBCtx.INSTANCE.queryTables();
-        if (dbTables != null) {
-            List<String> items = dbTables.stream().map(e -> e.getName()).toList();
+        List<String> items = dbTables.stream().map(DBTable::getName).toList();
 
-            DefaultComboBoxModel comboBoxModel = new DefaultComboBoxModel();
+        DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
 
-            for (String element : items) {
-                comboBoxModel.addElement(element);
-            }
-            tableComboBox.setModel(comboBoxModel);
-            tableComboBox.setSelectedItem(null);
+        for (String element : items) {
+            comboBoxModel.addElement(element);
         }
+        tableComboBox.setModel(comboBoxModel);
+        tableComboBox.setSelectedItem(null);
     }
     private void showCreateMethodDialog(){
         MethodCreateDialog dialog = MethodCreateDialog.create();
@@ -271,7 +269,9 @@ public class CodeGenPane {
         daoClass = new DaoClass((String)clsCfgTable.getModel().getValueAt(0,2));
         ctrlClass.setTableName(dbTable.getName());
         svcClass.setTableName(dbTable.getName());
+        svcClass.setComment(dbTable.getComment());
         daoClass.setTableName(dbTable.getName());
+        daoClass.setComment(dbTable.getComment());
     }
     private void updateClassCfg(){
 //        classGrp.getCtrl().setClassName((String)clsCfgTable.getModel().getValueAt(0,0));

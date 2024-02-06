@@ -25,10 +25,10 @@ public class ${ctrlClass.className}<#if ctrlClass.extend??> extends ${ctrlClass.
 </#if>
 <#list ctrlClass.methods as method>
     /**
-    * ${method.comment!}
-    *
-    * @param ${method.inputClass.refName} 请求参数
-    */
+     * ${method.comment!}
+     *
+     * @param ${method.inputClass.refName} 请求参数
+     */
     @RequestMapping(path = "/${method.request.path}", method = RequestMethod.${method.request.httpMethod})
     <#--返回非列表-->
     <#if !method.resultListFlag>
