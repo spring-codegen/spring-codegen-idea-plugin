@@ -22,7 +22,7 @@ public class DBSettingPane {
     private JTextField userTextField;
     private JPanel content;
     private JTextField pwdTextField;
-    private JButton 保存Button;
+    private JButton saveButton;
     private ValueChangedListener valueChangedListener;
 
     private DBCfg model;
@@ -34,18 +34,23 @@ public class DBSettingPane {
                 TextFieldUtils.INSTANCE.addTextChangedEvent((JTextField) component, new TextFieldUtils.TextChangedEvent() {
                     @Override
                     public void onTextChanged(@NotNull JTextField textField) {
-                        if (valueChangedListener != null){
-                            valueChangedListener.onValueChanged(handler);
-                        }
+//                        if (valueChangedListener != null){
+//                            valueChangedListener.onValueChanged(handler);
+//                        }
 
                     }
                 });
             }
         }
-        保存Button.addActionListener(new ActionListener() {
+        saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                getModel().save();
+                if (isValueChnaged()){
+                    getModel().save();
+                    if (valueChangedListener != null){
+                        valueChangedListener.onValueChanged(handler);
+                    }
+                }
             }
         });
     }
@@ -62,6 +67,27 @@ public class DBSettingPane {
         this.valueChangedListener = valueChangedListener;
     }
 
+    public boolean isValueChnaged(){
+        if (!dbNameTextField.getText().equals(model.getDbName())){
+            return true;
+        }
+        if (!hostTextField.getText().equals(model.getHost())){
+            return true;
+        }
+        if (!tableSchemaTextField.getText().equals(model.getSchema())){
+            return true;
+        }
+        if (!userTextField.getText().equals(model.getUser())){
+            return true;
+        }
+        if (!pwdTextField.getText().equals(model.getPwd())){
+            return true;
+        }
+        if (!portTextField.getText().equals(model.getPort() == null ? "" : model.getPort().toString())){
+            return true;
+        }
+        return false;
+    }
     public DBCfg getModel() {
         model.setDbName(dbNameTextField.getText());
         model.setHost(hostTextField.getText());

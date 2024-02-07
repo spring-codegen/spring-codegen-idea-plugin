@@ -35,7 +35,10 @@ object DBCtx {
             dataSource = null
             return
         }
-
+        if (dataSource != null && dataSource!!.isInited){
+            dataSource!!.close()
+            dataSource!!.restart()
+        }
         if (dataSource == null){
             dataSource = DruidDataSource();
             dataSource!!.setValidationQuery("SELECT 1")

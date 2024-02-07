@@ -15,6 +15,8 @@ import com.cmcc.paas.ideaplugin.codegen.gen.define.model.DaoClass;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.SvcClass;
 import com.cmcc.paas.ideaplugin.codegen.services.ResourceService;
 import com.intellij.uiDesigner.core.GridConstraints;
+import com.sun.jna.platform.win32.DBT;
+import org.jetbrains.deft.Obj;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -29,6 +31,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class CodeGenPane {
     private JTabbedPane tabbedPanel;
@@ -78,8 +81,13 @@ public class CodeGenPane {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     // 选择的下拉框选项
                     System.out.println(e.getItem());
-                    tableUpdated();
                     ResourceService.INSTANCE.readYaml("code-cfg.yaml");
+                    String tableName = tableComboBox.getSelectedItem().toString();
+                    dbTables.forEach( x ->{
+                        if (tableName.equals(x.getName())){
+                            selectTable(x);
+                        }
+                    });
                 }
             }
         });
@@ -105,35 +113,59 @@ public class CodeGenPane {
             @Override
             public void stateChanged(ChangeEvent e) {
                 if (tabbedPanel.getSelectedIndex() == 0){
-                    refreshDBCtx();
+//                    refreshDBCtx();
                 }
             }
         });
-        init();
-        refreshDBCtx();
-    }
-    /**
-     *
-     */
-    private void init(){
+        dbSettingPanel.setValueChangedListener(new DBSettingPane.ValueChangedListener() {
+            @Override
+            public void onValueChanged(DBSettingPane dbSettingPanel) {
+                DBCtx.INSTANCE.refresh();
+                refreshDBCtx();
+            }
+        });
         codeCfg = ResourceService.INSTANCE.getCodeCfg();
         clsCfgTable.setRowHeight(30);
         methodContainerPane.setCodeCfg(codeCfg);
-    }
-    public void refreshDBCtx(){
+
+        /**
+         * 配置数据库
+         */
         DBCtx.INSTANCE.setDbCfg(dbCfg);
         DBCtx.INSTANCE.refresh();
-        //表格下拉框
-        dbTables = DBCtx.INSTANCE.queryTables();
-        List<String> items = dbTables.stream().map(DBTable::getName).toList();
+        /**
+         * 刷新表格
+         */
+        refreshDBCtx();
+    }
+    public void refreshDBCtx(){
 
         DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
-
-        for (String element : items) {
-            comboBoxModel.addElement(element);
-        }
+        comboBoxModel.setSelectedItem(null);
         tableComboBox.setModel(comboBoxModel);
-        tableComboBox.setSelectedItem(null);
+        SwingWorker<List<DBTable>, List<DBTable>> swingWorker = new SwingWorker<List<DBTable>, List<DBTable>>() {
+            @Override
+            protected List<DBTable> doInBackground() throws Exception {
+                List<DBTable> result = DBCtx.INSTANCE.queryTables();
+                return result;
+            }
+            @Override
+            protected void done() {
+                try {
+                    dbTables = get();
+                    List<String> items = dbTables.stream().map(DBTable::getName).toList();
+                    DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
+                    for (String element : items) {
+                        comboBoxModel.addElement(element);
+                    }
+                    tableComboBox.setModel(comboBoxModel);
+                    tableComboBox.setSelectedItem(null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        swingWorker.execute();
     }
     private void showCreateMethodDialog(){
         MethodCreateDialog dialog = MethodCreateDialog.create();
@@ -162,39 +194,44 @@ public class CodeGenPane {
         codeSetting.getCtrlClass().setBaseURI(String.format("/api/v1/%s", codeSetting.getCtrlClass().getDir()));
         baseUriTextField.setText(codeSetting.getCtrlClass().getBaseURI());
     }
+    private void selectTable(DBTable dbTable){
+        this.dbTable = dbTable;
+        SwingWorker<List<DBTableField>, Object> swingWorker = new SwingWorker<List<DBTableField>, Object>(){
 
-    /**
-     * db table updated
-     */
-    private void tableUpdated(){
-        String tableName = tableComboBox.getSelectedItem().toString();
-        for (DBTable e: dbTables){
-            if (tableName.equals(e.getName())){
-                dbTable = e;
+            @Override
+            protected List<DBTableField> doInBackground() throws Exception {
+
+                var p = new HashMap <String, String>();
+                p.put("tableName", dbTable.getName());
+                List<DBTableField> fields = DBCtx.INSTANCE.queryFields( p);
+                return fields;
             }
-        }
-        var p = new HashMap <String, String>();
-        p.put("tableName", tableName);
-        List<DBTableField> fields = DBCtx.INSTANCE.queryFields( p);
-        dbTable.setFields(fields);
-        methodContainerPane.setDbTable(dbTable);
-        methodContainerPane.setDbTableFields(fields);
+            @Override
+            protected void done(){
+                List<DBTableField> fields = null;
+                try {
+                    fields = get();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return;
+                }
+                dbTable.setFields(fields);
+                methodContainerPane.setDbTable(dbTable);
+                methodContainerPane.setDbTableFields(fields);
+                String clsPrefix = dbTable.getName();
+                String tablePrefix = (String)AppCtx.INSTANCE.getENV().get(EnvKey.TABLE_PREFIX);
+                tablePrefix = tablePrefix == null ? "t_":tablePrefix;
+                if (clsPrefix.startsWith(tablePrefix)){
+                    clsPrefix = clsPrefix.substring(tablePrefix.length());
+                }
+                clsPrefix = FieldUtils.INSTANCE.className(clsPrefix);
+                AppCtx.INSTANCE.getENV().put(EnvKey.CLASS_PRERFIX, clsPrefix);
 
-
-        String clsPrefix = tableName;
-        String tablePrefix = (String)AppCtx.INSTANCE.getENV().get(EnvKey.TABLE_PREFIX);
-        tablePrefix = tablePrefix == null ? "t_":tablePrefix;
-        if (clsPrefix.startsWith(tablePrefix)){
-            clsPrefix = clsPrefix.substring(tablePrefix.length());
-        }
-        clsPrefix = FieldUtils.INSTANCE.className(clsPrefix);
-        AppCtx.INSTANCE.getENV().put(EnvKey.CLASS_PRERFIX, clsPrefix);
-
-        updateClasses();
-        updateMethods();
-
-//        List<CodeCfg.FieldCfg> fieldCfgs = fields.stream().map(f -> new CodeCfg.FieldCfg(f.getName(), false, f.getType(), f.getComment())).toList();
-
+                updateClasses();
+                updateMethods();
+            }
+        };
+        swingWorker.execute();
     }
     private String getHandledVar(String v, Map<String, Object> p){
         if (v == null){
