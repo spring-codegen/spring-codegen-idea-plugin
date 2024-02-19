@@ -50,6 +50,7 @@ public class DBSettingPane {
                     if (valueChangedListener != null){
                         valueChangedListener.onValueChanged(handler);
                     }
+                    MessageBox.showMessageAndFadeout("保存成功！");
                 }
             }
         });

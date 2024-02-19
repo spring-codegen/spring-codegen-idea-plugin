@@ -269,7 +269,7 @@
         </constraints>
         <properties>
           <preferredSize width="30" height="30"/>
-          <text value="In"/>
+          <text value="字段"/>
         </properties>
       </component>
       <component id="dc4fc" class="javax.swing.JButton" binding="outputButton">
@@ -279,7 +279,7 @@
         </constraints>
         <properties>
           <preferredSize width="30" height="30"/>
-          <text value="Out"/>
+          <text value="字段"/>
         </properties>
       </component>
       <component id="ecc2c" class="javax.swing.JLabel">

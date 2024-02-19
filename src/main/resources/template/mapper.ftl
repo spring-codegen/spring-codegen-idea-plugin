@@ -11,7 +11,7 @@
             <#if field.name=="id">
         <id column="${field.column}" property="${field.name}"/>
             <#else>
-        <result column="${field.column}" property="${field.name}"/>
+        <result column="${field.column}" property="${field.name}" <#if field.javaType == "Map">typeHandler="com.cmit.paas.common.spring.mybatis.typehandler.JsonObjectTypeHandler" </#if>/>
             </#if>
         </#list>
     </resultMap>
@@ -21,11 +21,12 @@
 <#list daoClass.methods as method>
     <#assign columns = method.sqlDataFields?map(field -> field.column)>
     <#assign values = method.sqlDataFields?map(field -> "#{"+field.name+"}")>
-    <#assign conds = method.sqlCondFields?map(field -> field.name+"=#{"+field.name+"}")>
+    <#assign conds = method.sqlCondFields?map(field -> field.column+"=#{"+field.name+"}")>
     <#if method.type == "add">
     <insert id="${method.name}" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         INSERT INTO ${daoClass.tableName}(${columns?join(", ")})
-        values (${values?join(", ")})
+<#--        values (${values?join(", ")})-->
+            values (<#list method.sqlDataFields as field><#if field_index gt 0>, </#if>${r'#{'}${field.name}<#if field.javaType=="Map">, typeHandler=com.cmit.paas.common.spring.mybatis.typehandler.JsonObjectTypeHandler</#if>${r'}'}</#list>)
     </insert>
 
     </#if>
@@ -40,8 +41,11 @@
     <#if method.type == "update">
     <update id="${method.name}" >
         UPDATE ${daoClass.tableName}
-        SET  ${columns?join(", ")}
-        WHERE id = ${r'#{id}'}
+        SET
+            <#list method.sqlDataFields as field><#if field_index gt 0>,
+            </#if>${field.column}=${r'#{'}${field.name}<#if field.javaType=="Map">, typeHandler=com.cmit.paas.common.spring.mybatis.typehandler.JsonObjectTypeHandler</#if>${r'}'}</#list>
+        WHERE
+            ${conds?join(" AND ")}
     </update>
 
     </#if>

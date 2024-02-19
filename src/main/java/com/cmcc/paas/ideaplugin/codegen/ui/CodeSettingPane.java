@@ -49,6 +49,7 @@ public class CodeSettingPane {
             @Override
             public void actionPerformed(ActionEvent e) {
                 getModel().save();
+                MessageBox.showMessageAndFadeout("保存成功！");
             }
         });
         ctrlSourceFileButton.addActionListener(new ActionListener() {

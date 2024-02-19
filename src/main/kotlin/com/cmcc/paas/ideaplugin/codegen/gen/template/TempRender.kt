@@ -1,13 +1,12 @@
 package com.cmcc.paas.ideaplugin.codegen.gen.template
 
-import com.ibm.icu.impl.data.ResourceReader
+import com.cmcc.paas.ideaplugin.codegen.ui.MessageBox
 import freemarker.cache.ClassTemplateLoader
 import freemarker.template.Configuration
 import freemarker.template.Template
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.StringWriter
-import java.net.URL
 import java.nio.charset.Charset
 
 /**
@@ -37,10 +36,20 @@ object TempRender {
     fun renderToFile(sourceDir:String, pkg:String, clsName: String, rs:String, data:Map<String, Any?>){
         var s = render(rs, data);
         var destPath = sourceDir + "/"+ pkg.replace(".", "/") + "/" + clsName+".java"
-        FileUtils.writeStringToFile(File(destPath), s, Charset.forName("UTF-8"))
+        try {
+            FileUtils.writeStringToFile(File(destPath), s, Charset.forName("UTF-8"))
+        }catch (e:Exception){
+            MessageBox.showMessageAndFadeout(e.message)
+            throw e
+        }
     }
     fun renderToFile(destPath: String, rs:String, data:Map<String, Any?>){
         var s = render(rs, data);
-        FileUtils.writeStringToFile(File(destPath), s, Charset.forName("UTF-8"))
+        try {
+            FileUtils.writeStringToFile(File(destPath), s, Charset.forName("UTF-8"))
+        }catch (e:Exception){
+            MessageBox.showMessageAndFadeout(e.message)
+            throw e
+        }
     }
 }

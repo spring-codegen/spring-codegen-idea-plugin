@@ -110,6 +110,9 @@ public class MethodContainerPane {
 
             ClassModel.Field f = new ClassModel.Field(FieldUtils.INSTANCE.propertyName(field.getName()), FieldUtils.INSTANCE.javaType(field.getType()), field.getComment(), field.getNotNull(),null, null);
             f.setColumn(field.getName());
+            if (field.getComment() != null && field.getComment().startsWith("JSON:")){
+                f.setJavaType("Map");
+            }
             if (field.getMaxLen() != null && field.getMaxLen() > 4) {
                 f.setMaxLen(field.getMaxLen() - 4);
             }

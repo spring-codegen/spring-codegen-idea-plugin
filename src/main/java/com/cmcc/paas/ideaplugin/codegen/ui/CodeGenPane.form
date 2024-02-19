@@ -166,46 +166,15 @@
                       </component>
                       <component id="67cf" class="javax.swing.JTextField" binding="moduleTextField">
                         <constraints>
-                          <grid row="4" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                          <grid row="4" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                             <preferred-size width="150" height="-1"/>
                           </grid>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
-                          <text value="api"/>
+                          <text value=""/>
                         </properties>
                       </component>
-                      <component id="1d53c" class="javax.swing.JLabel">
-                        <constraints>
-                          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0" ipady="10"/>
-                        </constraints>
-                        <properties>
-                          <font/>
-                          <foreground color="-7960954"/>
-                          <horizontalAlignment value="11"/>
-                          <text value="类："/>
-                        </properties>
-                      </component>
-                      <scrollpane id="943de" binding="clsTableScrollView">
-                        <constraints>
-                          <grid row="5" column="1" row-span="1" col-span="29" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                          <gridbag top="0" left="0" bottom="20" right="0" weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <horizontalScrollBarPolicy value="31"/>
-                          <minimumSize width="22" height="60"/>
-                          <preferredSize width="454" height="60"/>
-                          <verticalScrollBarPolicy value="21"/>
-                        </properties>
-                        <border type="none"/>
-                        <children>
-                          <component id="18183" class="javax.swing.JTable" binding="clsCfgTable">
-                            <constraints/>
-                            <properties/>
-                          </component>
-                        </children>
-                      </scrollpane>
                       <hspacer id="f5763">
                         <constraints>
                           <grid row="0" column="22" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -254,27 +223,6 @@
                           <gridbag weightx="1.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
-                      <component id="6bb19" class="javax.swing.JLabel">
-                        <constraints>
-                          <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
-                        </constraints>
-                        <properties>
-                          <font/>
-                          <foreground color="-7960954"/>
-                          <horizontalAlignment value="4"/>
-                          <text value="Base URI:"/>
-                        </properties>
-                      </component>
-                      <component id="28f96" class="javax.swing.JTextField" binding="baseUriTextField">
-                        <constraints>
-                          <grid row="4" column="4" row-span="1" col-span="4" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                            <preferred-size width="150" height="-1"/>
-                          </grid>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties/>
-                      </component>
                       <component id="d9bd4" class="javax.swing.JLabel">
                         <constraints>
                           <grid row="2" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -351,7 +299,7 @@
                       </grid>
                       <grid id="40414" layout-manager="GridBagLayout">
                         <constraints>
-                          <grid row="6" column="0" row-span="1" col-span="30" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <grid row="7" column="0" row-span="1" col-span="30" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
@@ -392,7 +340,7 @@
                       </grid>
                       <grid id="3762f" binding="methodCfgPanel" layout-manager="GridBagLayout">
                         <constraints>
-                          <grid row="7" column="0" row-span="1" col-span="30" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <grid row="8" column="0" row-span="1" col-span="30" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                           <gridbag top="0" left="10" bottom="0" right="10" weightx="0.0" weighty="1.0"/>
                         </constraints>
                         <properties/>
@@ -419,6 +367,112 @@
                             </constraints>
                           </vspacer>
                         </children>
+                      </grid>
+                      <component id="6bb19" class="javax.swing.JLabel">
+                        <constraints>
+                          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
+                        </constraints>
+                        <properties>
+                          <font/>
+                          <foreground color="-7960954"/>
+                          <horizontalAlignment value="4"/>
+                          <text value="URI前缀:"/>
+                        </properties>
+                      </component>
+                      <component id="28f96" class="javax.swing.JTextField" binding="baseUriTextField">
+                        <constraints>
+                          <grid row="5" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                            <preferred-size width="150" height="-1"/>
+                          </grid>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <text value=""/>
+                        </properties>
+                      </component>
+                      <component id="f10d6" class="javax.swing.JTextField" binding="ctrlClassNameTextField">
+                        <constraints>
+                          <grid row="4" column="8" row-span="1" col-span="21" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                            <preferred-size width="150" height="-1"/>
+                          </grid>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <text value=""/>
+                        </properties>
+                      </component>
+                      <component id="14070" class="javax.swing.JTextField" binding="svcClassNameTextField">
+                        <constraints>
+                          <grid row="5" column="8" row-span="1" col-span="21" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                            <preferred-size width="150" height="-1"/>
+                          </grid>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <text value=""/>
+                        </properties>
+                      </component>
+                      <component id="429b" class="javax.swing.JTextField" binding="daoClassNameTextField">
+                        <constraints>
+                          <grid row="6" column="8" row-span="1" col-span="21" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                            <preferred-size width="150" height="-1"/>
+                          </grid>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <text value=""/>
+                        </properties>
+                      </component>
+                      <component id="3c49b" class="javax.swing.JLabel">
+                        <constraints>
+                          <grid row="4" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
+                        </constraints>
+                        <properties>
+                          <font/>
+                          <foreground color="-7960954"/>
+                          <horizontalAlignment value="4"/>
+                          <text value="Ctrl类："/>
+                        </properties>
+                      </component>
+                      <component id="8a38e" class="javax.swing.JLabel">
+                        <constraints>
+                          <grid row="5" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
+                        </constraints>
+                        <properties>
+                          <font/>
+                          <foreground color="-7960954"/>
+                          <horizontalAlignment value="4"/>
+                          <text value="Svc类："/>
+                        </properties>
+                      </component>
+                      <component id="73925" class="javax.swing.JLabel">
+                        <constraints>
+                          <grid row="6" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
+                        </constraints>
+                        <properties>
+                          <font/>
+                          <foreground color="-7960954"/>
+                          <horizontalAlignment value="4"/>
+                          <text value="Dao类："/>
+                        </properties>
+                      </component>
+                      <grid id="a214e" layout-manager="GridBagLayout">
+                        <constraints>
+                          <grid row="4" column="6" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <background color="-4868683"/>
+                          <foreground color="-6513508"/>
+                          <maximumSize width="1" height="1"/>
+                          <preferredSize width="1" height="1"/>
+                        </properties>
+                        <border type="none"/>
+                        <children/>
                       </grid>
                     </children>
                   </grid>

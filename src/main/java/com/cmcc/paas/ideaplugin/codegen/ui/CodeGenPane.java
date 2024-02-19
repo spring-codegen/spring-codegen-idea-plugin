@@ -9,21 +9,15 @@ import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.CodeGenerator;
 import com.cmcc.paas.ideaplugin.codegen.gen.FieldUtils;
 import com.cmcc.paas.ideaplugin.codegen.gen.ModelResult;
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.CtrlClass;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.DaoClass;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.SvcClass;
 import com.cmcc.paas.ideaplugin.codegen.services.ResourceService;
 import com.intellij.uiDesigner.core.GridConstraints;
-import com.sun.jna.platform.win32.DBT;
-import org.jetbrains.deft.Obj;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,7 +25,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class CodeGenPane {
     private JTabbedPane tabbedPanel;
@@ -39,7 +32,6 @@ public class CodeGenPane {
     private JComboBox tableComboBox;
     private JTextField baseUriTextField;
     private JTextField moduleTextField;
-    private JTable clsCfgTable;
     private JPanel methodCfgPanel;
     private JTextField tablePrefixTextField;
     private JButton genBtn;
@@ -48,11 +40,14 @@ public class CodeGenPane {
     private JPanel dataSourcePanel;
     private JPanel settingsPanel;
     private JScrollPane rootScrollPanel;
-    private JScrollPane clsTableScrollView;
+//    private JScrollPane clsTableScrollView;
     private JButton addMethodButton;
     private CodeSettingPane codeSettingPane;
     private DBSettingPane dbSettingPanel;
     private MethodContainerPane methodContainerPane;
+    private JTextField ctrlClassNameTextField;
+    private JTextField svcClassNameTextField;
+    private JTextField daoClassNameTextField;
 
     private DBTable dbTable;
     private List<DBTable> dbTables;
@@ -67,8 +62,8 @@ public class CodeGenPane {
     private MethodSelectionPopupMenu methodSelectionPopupMenu;
     public CodeGenPane() {
         rootScrollPanel.setBorder(null);
-        clsTableScrollView.setBorder(null);
-        clsTableScrollView.setViewportBorder(null);
+//        clsTableScrollView.setBorder(null);
+//        clsTableScrollView.setViewportBorder(null);
 
         projectCfg.load();
         dbCfg.load();
@@ -125,7 +120,7 @@ public class CodeGenPane {
             }
         });
         codeCfg = ResourceService.INSTANCE.getCodeCfg();
-        clsCfgTable.setRowHeight(30);
+//        clsCfgTable.setRowHeight(30);
         methodContainerPane.setCodeCfg(codeCfg);
 
         /**
@@ -282,28 +277,34 @@ public class CodeGenPane {
      *选择完表执行
      */
     private void updateClasses(){
+        ctrlClassNameTextField.setText(getHandledVar(codeCfg.getCtrlClass().getClassName(), AppCtx.INSTANCE.getENV()));
+        svcClassNameTextField.setText(getHandledVar(codeCfg.getSvcClass().getClassName(),  AppCtx.INSTANCE.getENV()));
+        daoClassNameTextField.setText(getHandledVar(codeCfg.getDaoClass().getClassName(), AppCtx.INSTANCE.getENV()));
         /**
          * 表格处理
          */
-        String[][] data = new String[1][3];
-        data[0][0]  = getHandledVar(codeCfg.getCtrlClass().getClassName(), AppCtx.INSTANCE.getENV());
-        data[0][1] = getHandledVar(codeCfg.getSvcClass().getClassName(),  AppCtx.INSTANCE.getENV());
-        data[0][2] = getHandledVar(codeCfg.getDaoClass().getClassName(), AppCtx.INSTANCE.getENV());
-        String[] headers = new String[]{codeCfg.getCtrlClass().getTitle(),codeCfg.getSvcClass().getTitle(),codeCfg.getDaoClass().getTitle()};
-        DefaultTableModel tableModel = new DefaultTableModel();
-        tableModel.setDataVector(data, headers);
-        tableModel.addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                updateClassCfg();
-                updateMethods();
-            }
-        });
-        clsCfgTable.setModel(tableModel);
-        ctrlClass = new CtrlClass((String)clsCfgTable.getModel().getValueAt(0,0));
+//        String[][] data = new String[1][3];
+//        data[0][0]  = getHandledVar(codeCfg.getCtrlClass().getClassName(), AppCtx.INSTANCE.getENV());
+//        data[0][1] = getHandledVar(codeCfg.getSvcClass().getClassName(),  AppCtx.INSTANCE.getENV());
+//        data[0][2] = getHandledVar(codeCfg.getDaoClass().getClassName(), AppCtx.INSTANCE.getENV());
+//        String[] headers = new String[]{codeCfg.getCtrlClass().getTitle(),codeCfg.getSvcClass().getTitle(),codeCfg.getDaoClass().getTitle()};
+//        DefaultTableModel tableModel = new DefaultTableModel();
+//        tableModel.setDataVector(data, headers);
+//        tableModel.addTableModelListener(new TableModelListener() {
+//            @Override
+//            public void tableChanged(TableModelEvent e) {
+//                updateClassCfg();
+//                updateMethods();
+//            }
+//        });
+//        clsCfgTable.setModel(tableModel);
+//        ctrlClass = new CtrlClass((String)clsCfgTable.getModel().getValueAt(0,0));
+        ctrlClass = new CtrlClass(ctrlClassNameTextField.getText());
         ctrlClass.setComment(dbTable.getComment());
-        svcClass = new SvcClass((String)clsCfgTable.getModel().getValueAt(0,1));
-        daoClass = new DaoClass((String)clsCfgTable.getModel().getValueAt(0,2));
+//        svcClass = new SvcClass((String)clsCfgTable.getModel().getValueAt(0,1));
+//        daoClass = new DaoClass((String)clsCfgTable.getModel().getValueAt(0,2));
+        svcClass = new SvcClass(svcClassNameTextField.getText());
+        daoClass = new DaoClass(daoClassNameTextField.getText());
         ctrlClass.setTableName(dbTable.getName());
         svcClass.setTableName(dbTable.getName());
         svcClass.setComment(dbTable.getComment());
@@ -311,12 +312,12 @@ public class CodeGenPane {
         daoClass.setComment(dbTable.getComment());
     }
     private void updateClassCfg(){
-//        classGrp.getCtrl().setClassName((String)clsCfgTable.getModel().getValueAt(0,0));
-//        classGrp.getSvc().setClassName((String)clsCfgTable.getModel().getValueAt(0,1));
-//        classGrp.getDao().setClassName((String)clsCfgTable.getModel().getValueAt(0,2));
-        ctrlClass.setClassName((String)clsCfgTable.getModel().getValueAt(0,0));
-        svcClass.setClassName((String)clsCfgTable.getModel().getValueAt(0,1));
-        daoClass.setClassName((String)clsCfgTable.getModel().getValueAt(0,2));
+//        ctrlClass.setClassName((String)clsCfgTable.getModel().getValueAt(0,0));
+//        svcClass.setClassName((String)clsCfgTable.getModel().getValueAt(0,1));
+//        daoClass.setClassName((String)clsCfgTable.getModel().getValueAt(0,2));
+        ctrlClass.setClassName(ctrlClassNameTextField.getText());
+        svcClass.setClassName(svcClassNameTextField.getText());
+        daoClass.setClassName(daoClassNameTextField.getText());
     }
 
     /**
@@ -336,9 +337,15 @@ public class CodeGenPane {
 
     }
     public void generate(){
+        System.out.println("generate 1");
+        MessageBox.showMessage("生成中...");
+        System.out.println("generate 2");
         ctrlClass.setRequest(new CtrlClass.Request(baseUriTextField.getText(), null));
         ModelResult modelResult = methodContainerPane.getCfgResult();
+        System.out.println("generate 3");
         new CodeGenerator().gen(moduleTextField.getText(), modelResult, projectCfg);
+        System.out.println("generate 4");
+        MessageBox.showMessageAndFadeout("代码生成完成！");
 //        String module = moduleTextField.getText();
 //        List<MethodGrpCfgModel> methodsGrps = methodGrpCfgPanels.stream().map(e -> e.getModel()).toList();
 //        classGrp.getCtrl().setBaseURI(baseUriTextField.getText());
