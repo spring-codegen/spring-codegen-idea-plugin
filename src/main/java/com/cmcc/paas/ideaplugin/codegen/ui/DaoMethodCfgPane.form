@@ -239,6 +239,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <font size="8"/>
           <text value="分页"/>
         </properties>
       </component>
@@ -248,6 +249,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <font size="8"/>
           <foreground color="-7960954"/>
           <text value="列表"/>
         </properties>
@@ -258,26 +260,29 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <font size="8"/>
           <foreground color="-7960954"/>
           <text value="列表"/>
         </properties>
       </component>
       <component id="21d3b" class="javax.swing.JButton" binding="inputButton">
         <constraints>
-          <grid row="3" column="20" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="20" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <font size="8"/>
           <preferredSize width="30" height="30"/>
           <text value="字段"/>
         </properties>
       </component>
       <component id="dc4fc" class="javax.swing.JButton" binding="outputButton">
         <constraints>
-          <grid row="4" column="20" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="20" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <font size="8"/>
           <preferredSize width="30" height="30"/>
           <text value="字段"/>
         </properties>
@@ -290,7 +295,7 @@
         <properties>
           <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
-          <text value="SQL配置"/>
+          <text value="SQL"/>
         </properties>
       </component>
       <component id="d9de3" class="javax.swing.JLabel">
@@ -301,7 +306,7 @@
         <properties>
           <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
-          <text value="字段："/>
+          <text value="数据字段："/>
         </properties>
       </component>
       <component id="4feb1" class="javax.swing.JButton" binding="whereFieldButton">
@@ -310,10 +315,11 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <font size="8"/>
           <maximumSize width="80" height="30"/>
           <minimumSize width="60" height="30"/>
           <preferredSize width="60" height="30"/>
-          <text value="Fields"/>
+          <text value="字段"/>
         </properties>
       </component>
       <component id="91330" class="javax.swing.JLabel">
@@ -333,10 +339,11 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <font size="8"/>
           <maximumSize width="80" height="30"/>
           <minimumSize width="60" height="30"/>
           <preferredSize width="60" height="30"/>
-          <text value="Fields"/>
+          <text value="字段"/>
         </properties>
       </component>
       <component id="7d417" class="javax.swing.JButton" binding="closeBtn">

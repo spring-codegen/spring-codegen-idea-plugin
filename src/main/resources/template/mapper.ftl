@@ -26,9 +26,8 @@
     <insert id="${method.name}" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         INSERT INTO ${daoClass.tableName}(${columns?join(", ")})
 <#--        values (${values?join(", ")})-->
-            values (<#list method.sqlDataFields as field><#if field_index gt 0>, </#if>${r'#{'}${field.name}<#if field.javaType=="Map">, typeHandler=com.cmit.paas.common.spring.mybatis.typehandler.JsonObjectTypeHandler</#if>${r'}'}</#list>)
+            values (<#list method.sqlDataFields as field><#if field_index gt 0>, </#if><#if field.name == "createTime" || field.name == "updateTime">NOW()<#else>${r'#{'}${field.name}<#if field.javaType=="Map">, typeHandler=com.cmit.paas.common.spring.mybatis.typehandler.JsonObjectTypeHandler</#if>${r'}'}</#if></#list>)
     </insert>
-
     </#if>
     <#if method.type == "get">
     <select id="${method.name}" <#if baseTypes?seqContains(method.outputClass.className)>resultType="${method.outputClass.className}"<#else>resultMap="${method.outputClass.className}"</#if> >
@@ -36,18 +35,46 @@
         FROM ${daoClass.tableName}
         WHERE <#if baseTypes?seqContains(method.inputClass.className)>${conds?join(" AND ")}</#if>
     </select>
-
     </#if>
     <#if method.type == "update">
     <update id="${method.name}" >
         UPDATE ${daoClass.tableName}
         SET
-            <#list method.sqlDataFields as field><#if field_index gt 0>,
-            </#if>${field.column}=${r'#{'}${field.name}<#if field.javaType=="Map">, typeHandler=com.cmit.paas.common.spring.mybatis.typehandler.JsonObjectTypeHandler</#if>${r'}'}</#list>
+            <trim suffixOverrides=",">
+            <#list method.sqlDataFields as field>
+                <#if field.column == "update_time">
+                ${field.column}=NOW(),
+                <#else>
+                <if test="${field.name} != null">
+                    ${field.column}=${r'#{'}${field.name}<#if field.javaType=="Map">, typeHandler=com.cmit.paas.common.spring.mybatis.typehandler.JsonObjectTypeHandler</#if>${r'}'},
+                </if>
+                </#if>
+            </#list>
+            </trim>
         WHERE
             ${conds?join(" AND ")}
     </update>
-
+    </#if>
+    <#if method.type == "remove">
+        <#if method.sqlDataFields?? && ( method.sqlDataFields?size gt 0) >
+    <update id="${method.name}" >
+        UPDATE ${daoClass.tableName}
+        SET
+        <#list method.sqlDataFields as field>
+            <#if field_index == 0>
+            ${field.column}=1
+            </#if>
+        </#list>
+        WHERE
+            ${conds?join(" AND ")}
+    </update>
+        <#else>
+    <delete id="${method.name}" >
+        DELETE FROM ${daoClass.tableName}
+        WHERE
+            ${conds?join(" AND ")}
+    </delete>
+        </#if>
     </#if>
     <#if method.type == "search">
     <sql id="${method.name}Cond">

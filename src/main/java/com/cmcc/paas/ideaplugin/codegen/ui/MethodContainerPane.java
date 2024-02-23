@@ -139,11 +139,11 @@ public class MethodContainerPane {
         }
         return r;
     }
-    public SvcMethodCfgPane.MethodCfgModel getDefaultMethodCfgModel(MethodCfgPane.ClassType classType, String methodName){
+    public SvcMethodCfgPane.MethodCfgModel getDefaultMethodCfgModel(MethodCfgPane.ClassType classType, String methodType,  String methodName){
         Map p = AppCtx.INSTANCE.getENV();
         p.put("entityName", dbTable.getComment() == null ? dbTable.getName() : dbTable.getComment());
         String className = classType == MethodCfgPane.ClassType.CTRL ? ctrlClass.getClassName() : classType == MethodCfgPane.ClassType.SVC ? svcClass.getClassName() : daoClass.getClassName();
-        CodeCfg.MethodCfg methodCfg = getMethodCfg(classType, methodName);
+        CodeCfg.MethodCfg methodCfg = getMethodCfg(classType, methodType);
         SvcMethodCfgPane.MethodCfgModel model = new SvcMethodCfgPane.MethodCfgModel();
         model.setClassName(className);
         model.setMethodName(methodName);
@@ -170,7 +170,7 @@ public class MethodContainerPane {
 
         return model;
     }
-    public MethodItemHolder addClassMethod(MethodCfgPane.ClassType classType, String methodName){
+    public MethodItemHolder addClassMethod(MethodCfgPane.ClassType classType, String methodType, String methodName){
         MethodCfgPane.ClassType k = classType;
         if ( !allMethods.containsKey(k) ){
             allMethods.put(k, new LinkedHashMap<>());
@@ -196,7 +196,7 @@ public class MethodContainerPane {
         }
         holder.panel.getContent().setSize(w, ITEM_HEIGHT);
         holder.panel.getContent().setLocation(x,y);
-        holder.panel.setModel(getDefaultMethodCfgModel(classType, methodName));
+        holder.panel.setModel(getDefaultMethodCfgModel(classType, methodType, methodName));
         this.container.add(holder.panel.getContent());
         holder.panel.setMethodCfgPaneActionListener(new MethodCfgPane.MethodCfgPaneActionListener() {
             @Override
@@ -224,10 +224,10 @@ public class MethodContainerPane {
             this.resize();
         }
     }
-    public void createMethod(String methodName, Boolean ctrlChecked, Boolean svcChecked, Boolean daoChecked){
-        MethodItemHolder ctrlMethodHolder = ctrlChecked ?  addClassMethod(MethodCfgPane.ClassType.CTRL, methodName) : null;
-        MethodItemHolder svcMethodHolder = svcChecked ?  addClassMethod(MethodCfgPane.ClassType.SVC, methodName) : null;
-        MethodItemHolder daoMethodHolder = daoChecked ?  addClassMethod(MethodCfgPane.ClassType.DAO, methodName) : null;
+    public void createMethod(String methodType, String methodName, Boolean ctrlChecked, Boolean svcChecked, Boolean daoChecked){
+        MethodItemHolder ctrlMethodHolder = ctrlChecked ?  addClassMethod(MethodCfgPane.ClassType.CTRL, methodType, methodName) : null;
+        MethodItemHolder svcMethodHolder = svcChecked ?  addClassMethod(MethodCfgPane.ClassType.SVC, methodType, methodName) : null;
+        MethodItemHolder daoMethodHolder = daoChecked ?  addClassMethod(MethodCfgPane.ClassType.DAO, methodType, methodName) : null;
         if (ctrlMethodHolder != null && svcMethodHolder != null){
             ctrlMethodHolder.dependency = svcMethodHolder;
             svcMethodHolder.caller = ctrlMethodHolder;

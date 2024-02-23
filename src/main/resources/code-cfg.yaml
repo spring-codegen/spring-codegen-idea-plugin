@@ -62,7 +62,7 @@ methods:
     inputFieldIncludes: "id"
     outputFieldIncludes: "-"
     outputClassName: Boolean
-    sqlDataFieldIncludes: "-"
+    sqlDataFieldIncludes: "del"
     sqlConditionFieldIncludes: "id"
   - type: CTRL
     request:
@@ -84,7 +84,7 @@ methods:
     outputFieldIncludes: "-"
     outputClassName: Boolean
     sqlDataFieldIncludes: ".*"
-    sqlDataFieldExcludes: "id"
+    sqlDataFieldExcludes: "id,create_.*"
     sqlConditionFieldIncludes: "id"
   - type: CTRL
     request:

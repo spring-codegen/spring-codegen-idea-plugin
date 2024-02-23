@@ -164,10 +164,11 @@ public class CodeGenPane {
     }
     private void showCreateMethodDialog(){
         MethodCreateDialog dialog = MethodCreateDialog.create();
+        dialog.setMethodTypes(codeCfg.getMethods().stream().filter(e -> e.getType().equals("SVC")).map( e -> e.getName()).toList());
         dialog.setListener(new MethodCreateDialog.MethodCreateDialogListener() {
             @Override
-            public void onOK(String methodName, Boolean ctrlChecked, Boolean svcChecked, Boolean daoChecked) {
-                methodContainerPane.createMethod(methodName, ctrlChecked, svcChecked, daoChecked);
+            public void onOK(MethodCreateDialog dialog1) {
+                methodContainerPane.createMethod(dialog1.getMethodType(), dialog1.getMethodName(), dialog1.isCtrlChecked(), dialog1.isSvcChecked(), dialog1.isDaoChecked());
             }
         });
         dialog.setVisible(true);
@@ -329,11 +330,11 @@ public class CodeGenPane {
         methodContainerPane.setSvcClass(svcClass);
         methodContainerPane.setDaoClass(daoClass);
 
-        methodContainerPane.createMethod("add", true, true, true);
-        methodContainerPane.createMethod("update", true, true, true);
-        methodContainerPane.createMethod("remove", true, true, true);
-        methodContainerPane.createMethod("get", true, true, true);
-        methodContainerPane.createMethod("search", true, true, true);
+        methodContainerPane.createMethod("add", "add", true, true, true);
+        methodContainerPane.createMethod("update", "update", true, true, true);
+        methodContainerPane.createMethod("remove", "remove", true, true, true);
+        methodContainerPane.createMethod("get", "get", true, true, true);
+        methodContainerPane.createMethod("search", "search", true, true, true);
 
     }
     public void generate(){
