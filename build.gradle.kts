@@ -31,6 +31,7 @@ dependencies {
     implementation("com.alibaba:druid:1.2.18")
     implementation("commons-beanutils:commons-beanutils:1.9.4")
     implementation("org.freemarker:freemarker:2.3.32")
+    implementation("com.github.javaparser:javaparser-symbol-solver-core:3.25.9")
 }
 
 // Set the JVM language level used to build the project. Use Java 11 for 2020.3+, and Java 17 for 2022.2+.

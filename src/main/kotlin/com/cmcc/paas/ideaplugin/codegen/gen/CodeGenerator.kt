@@ -12,7 +12,7 @@ import kotlin.collections.ArrayList
  * @author zhangyinghui
  * @date 2023/8/9
  */
-class CodeGenerator {
+class CodeGenerator() {
     private var classes:MutableList<ClassModel> = ArrayList()
     private var CLS_MODEL:ClassModel = ClassModel("Model", "com.cmit.paas.common.web.model", null, null)
     private var CLS_ID_ARG:ClassModel = ClassModel("IdArg", "com.cmit.paas.common.web.model", null, null)
@@ -20,8 +20,8 @@ class CodeGenerator {
     private var CLS_LIST_RESULT:ClassModel = ClassModel("ListResult", "com.cmit.paas.common.web.model", null, null)
     private var CLS_SEARCH_MODEL:ClassModel = ClassModel("PagedSearchArg", "com.cmit.paas.common.web.model", null, null)
 
-    constructor(){
-        var a:MutableList<ClassModel.Field> = ArrayList();
+    init {
+        var a:MutableList<ClassModel.Field> = ArrayList()
         a.add( (ClassModel.Field("id","Long",null, true, "setId", "getId")))
         CLS_ID_ARG.fields = a
         CLS_ID_RESULT.fields = a
@@ -456,6 +456,9 @@ class CodeGenerator {
                 data["searchClass"] = it
             }
         }
+        var ctrlClassGenerator = CtrlClassGenerator(ctrlClass, projectCfg)
+        ctrlClassGenerator.gen()
+        return
         renderToFile(
                 projectCfg.ctrlSourceDir!!,
                 ctrlClass.pkg!!,
