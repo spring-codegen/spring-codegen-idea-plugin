@@ -10,6 +10,10 @@ import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.CtrlClass;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.DaoClass;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.SvcClass;
+import com.cmcc.paas.ideaplugin.codegen.ui.pane.CtrlMethodCfgPane;
+import com.cmcc.paas.ideaplugin.codegen.ui.pane.DaoMethodCfgPane;
+import com.cmcc.paas.ideaplugin.codegen.ui.pane.MethodCfgPane;
+import com.cmcc.paas.ideaplugin.codegen.ui.pane.SvcMethodCfgPane;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
@@ -139,7 +143,7 @@ public class MethodContainerPane {
         }
         return r;
     }
-    public SvcMethodCfgPane.MethodCfgModel getDefaultMethodCfgModel(MethodCfgPane.ClassType classType, String methodType,  String methodName){
+    public SvcMethodCfgPane.MethodCfgModel getDefaultMethodCfgModel(MethodCfgPane.ClassType classType, String methodType, String methodName){
         Map p = AppCtx.INSTANCE.getENV();
         p.put("entityName", dbTable.getComment() == null ? dbTable.getName() : dbTable.getComment());
         String className = classType == MethodCfgPane.ClassType.CTRL ? ctrlClass.getClassName() : classType == MethodCfgPane.ClassType.SVC ? svcClass.getClassName() : daoClass.getClassName();
@@ -149,6 +153,7 @@ public class MethodContainerPane {
         model.setMethodName(methodName);
         model.setClassType(classType);
         if (methodCfg.getRequest() != null) {
+            model.setPath(methodCfg.getRequest().getPath());
             model.setHttpMethod(methodCfg.getRequest().getHttpMethod());
         }
         model.setMethodType(methodCfg.getName());
@@ -191,8 +196,10 @@ public class MethodContainerPane {
         //界面
         if ( classType == MethodCfgPane.ClassType.DAO  ){
             holder.panel = new DaoMethodCfgPane();
+        }else if ( classType == MethodCfgPane.ClassType.SVC  ){
+            holder.panel = new DaoMethodCfgPane();
         }else{
-            holder.panel =new SvcMethodCfgPane();
+            holder.panel =new CtrlMethodCfgPane();
         }
         holder.panel.getContent().setSize(w, ITEM_HEIGHT);
         holder.panel.getContent().setLocation(x,y);
@@ -331,7 +338,7 @@ public class MethodContainerPane {
                 if (m.getKey() == MethodCfgPane.ClassType.CTRL){
                     method = new CtrlClass.Method(methodCfgModel.getMethodName(), inputClass, outputClass, methodCfgModel.getOutputListTypeFlag() );
                     method.setPaged(method.getPaged());
-                    ( (CtrlClass.Method)method).setRequest(new CtrlClass.Request(method.getName(), methodCfgModel.getHttpMethod()));
+                    ( (CtrlClass.Method)method).setRequest(new CtrlClass.Request(methodCfgModel.getPath(), methodCfgModel.getHttpMethod()));
                     ctrlMethods.add(method);
                     if ( !args.containsKey(inputClass.getClassName()) ) {
                         args.put(inputClass.getClassName(), inputClass);

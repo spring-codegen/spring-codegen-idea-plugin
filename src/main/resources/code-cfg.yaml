@@ -16,7 +16,7 @@ daoClass:
 methods:
   - type: CTRL
     request:
-      path: /add
+      path: ""
       httpMethod: POST
     comment: "添加{entityName}"
     name: add
@@ -42,8 +42,8 @@ methods:
     sqlConditionFieldIncludes: "-"
   - type: CTRL
     request:
-      path: /remove
-      httpMethod: POST
+      path: {id}
+      httpMethod: DELETE
     comment: "删除{entityName}"
     name: remove
     inputClassName: IdArg
@@ -66,8 +66,8 @@ methods:
     sqlConditionFieldIncludes: "id"
   - type: CTRL
     request:
-      path: /update
-      httpMethod: POST
+      path: {id}
+      httpMethod: PUT
     comment: "更新{entityName}"
     name: update
     inputClassName: "{clsPrefix}UpdateArg"
@@ -88,7 +88,7 @@ methods:
     sqlConditionFieldIncludes: "id"
   - type: CTRL
     request:
-      path: /get
+      path: {id}
       httpMethod: GET
     comment: "获取{entityName}详情"
     name: get
@@ -110,7 +110,7 @@ methods:
     sqlConditionFieldIncludes: "id"
   - type: CTRL
     request:
-      path: /search
+      path: ""
       httpMethod: GET
     comment: "检索{entityName}"
     name: search

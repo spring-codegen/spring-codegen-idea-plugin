@@ -1,4 +1,4 @@
-package com.cmcc.paas.ideaplugin.codegen.ui;
+package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
@@ -44,12 +44,13 @@ public abstract class MethodCfgPane {
         SVC,
         DAO;
     }
-    static interface MethodCfgPaneActionListener{
+    public static interface MethodCfgPaneActionListener{
         void onClose(MethodCfgPane methodCfgPane);
     }
-    static class MethodCfgModel{
+    public static class MethodCfgModel{
         private String methodName;
         private String className;
+        private String path;
         /**
          * add/remove/update
          */
@@ -76,6 +77,14 @@ public abstract class MethodCfgPane {
 
         public void setComment(String comment) {
             this.comment = comment;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
         }
 
         public String getMethodName() {

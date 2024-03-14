@@ -1,6 +1,7 @@
-package com.cmcc.paas.ideaplugin.codegen.ui;
+package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
 import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils;
+import com.cmcc.paas.ideaplugin.codegen.ui.BeanFieldSelectionDialog;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -12,27 +13,25 @@ import java.awt.event.ItemListener;
 
 /**
  * @author zhangyinghui
- * @date 2023/12/21
+ * @date 2023/8/8
  */
-public class DaoMethodCfgPane extends MethodCfgPane{
-    private JLabel clsTagLabel;
-    private JTextField clsTextField;
-    private JTextField methodTextField;
-    private JTextField inputClsTextField;
-    private JTextField outputClsTextField;
-    private JCheckBox outputPagedCheckBox;
-    private JCheckBox outputListTypeCheckBox;
-    private JCheckBox inputListTypeCheckBox;
-    private JButton inputButton;
-    private JButton outputButton;
-    private JButton dataFieldButton;
-    private JButton whereFieldButton;
-    private JPanel content;
+public class SvcMethodCfgPane extends MethodCfgPane{
+    protected JLabel clsTagLabel;
+    protected JTextField clsTextField;
+    protected JTextField methodTextField;
+    protected JTextField inputClsTextField;
+    protected JTextField outputClsTextField;
+    protected JPanel content;
+    protected JCheckBox outputListTypeCheckBox;
+    protected JCheckBox inputListTypeCheckBox;
+    protected JCheckBox outputPagedCheckBox;
+    protected JButton inputButton;
+    protected JButton outputButton;
     private JButton closeBtn;
 
-    private SvcMethodCfgPane.MethodCfgModel model;
+    protected MethodCfgModel model;
 
-    public DaoMethodCfgPane(){
+    public SvcMethodCfgPane(){
         init();
     }
     public void init(){
@@ -101,48 +100,18 @@ public class DaoMethodCfgPane extends MethodCfgPane{
                 dialog.setVisible(true);
             }
         });
-        dataFieldButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                BeanFieldSelectionDialog dialog = BeanFieldSelectionDialog.create();
-                dialog.setFields(model.getDbTableFields());
-                dialog.setSelectedFields(model.getSqlDataFields());
-                dialog.setActionListener(new BeanFieldSelectionDialog.BeanFieldSelectionActionListener() {
-                    @Override
-                    public void onFieldSelected(BeanFieldSelectionDialog dialog) {
-                        model.setSqlDataFields(dialog.getSelectedFields());
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-        whereFieldButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                BeanFieldSelectionDialog dialog = BeanFieldSelectionDialog.create();
-                dialog.setFields(model.getDbTableFields());
-                dialog.setSelectedFields(model.getSqlCondFields());
-                dialog.setActionListener(new BeanFieldSelectionDialog.BeanFieldSelectionActionListener() {
-                    @Override
-                    public void onFieldSelected(BeanFieldSelectionDialog dialog) {
-                        model.setSqlCondFields(dialog.getSelectedFields());
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-
-
         setCloseBtnAction(closeBtn);
     }
-
-    @Override
+    public void createUIComponents(){
+    }
     public JPanel getContent() {
         return content;
     }
 
-    @Override
-    public void setModel(SvcMethodCfgPane.MethodCfgModel model) {
+    public MethodCfgModel getModel(){
+        return model;
+    }
+    public void setModel(MethodCfgModel model) {
         this.model = model;
         this.clsTextField.setText(model.getClassName());
         this.methodTextField.setText(model.getMethodName());
@@ -151,10 +120,20 @@ public class DaoMethodCfgPane extends MethodCfgPane{
         this.outputClsTextField.setText(model.getOutputClassName());
         this.outputListTypeCheckBox.setSelected(model.getOutputListTypeFlag() == null ? false: model.getOutputListTypeFlag());
         this.outputPagedCheckBox.setSelected(model.getOutputPaged());
+//        if (model.getFields() != null){
+//            List<DBTableField> fields = model.getFields().stream().map(e -> new DBTableField(e, false, null)).collect(Collectors.toList());
+//            this.inputFieldSelectionBtn.setItems(fields);
+//            this.outputFieldSelectionBtn.setItems(fields);
+//        }
+//
+//        if (model.getInputFields() != null){
+//            this.inputFieldSelectionBtn.setSelectValues(model.getInputFields().toArray(CodeCfg.FieldDefine[]::new));
+//        }
+//        if (model.getOutputFields() != null){
+//            this.outputFieldSelectionBtn.setSelectValues(model.getOutputFields().toArray(CodeCfg.FieldDefine[]::new));
+//        }
     }
 
-    @Override
-    public MethodCfgModel getModel() {
-        return this.model;
-    }
+
+
 }

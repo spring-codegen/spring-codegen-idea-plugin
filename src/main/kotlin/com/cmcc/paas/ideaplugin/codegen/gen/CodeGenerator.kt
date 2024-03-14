@@ -456,9 +456,9 @@ class CodeGenerator() {
                 data["searchClass"] = it
             }
         }
-        var ctrlClassGenerator = CtrlClassGenerator(ctrlClass, projectCfg)
-        ctrlClassGenerator.gen()
-        return
+//        var ctrlClassGenerator = CtrlClassGenerator(ctrlClass, projectCfg)
+//        ctrlClassGenerator.gen()
+//        return
         renderToFile(
                 projectCfg.ctrlSourceDir!!,
                 ctrlClass.pkg!!,

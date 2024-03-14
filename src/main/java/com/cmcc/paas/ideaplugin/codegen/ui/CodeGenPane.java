@@ -341,7 +341,12 @@ public class CodeGenPane {
         System.out.println("generate 1");
         MessageBox.showMessage("生成中...");
         System.out.println("generate 2");
-        ctrlClass.setRequest(new CtrlClass.Request(baseUriTextField.getText(), null));
+        //resource name for path
+        String resourceName = (String)AppCtx.INSTANCE.getENV().get(EnvKey.CLASS_PRERFIX);
+        if (resourceName != null){
+            resourceName = resourceName.toLowerCase();
+        }
+        ctrlClass.setRequest(new CtrlClass.Request(baseUriTextField.getText() +"/" + resourceName, null));
         ModelResult modelResult = methodContainerPane.getCfgResult();
         System.out.println("generate 3");
         new CodeGenerator().gen(moduleTextField.getText(), modelResult, projectCfg);
