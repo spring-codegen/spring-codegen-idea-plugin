@@ -29,7 +29,7 @@ public class ${ctrlClass.className}<#if ctrlClass.extend??> extends ${ctrlClass.
      *
      * @param ${method.inputClass.refName} 请求参数
      */
-    @RequestMapping(path = "/${method.request.path}", method = RequestMethod.${method.request.httpMethod})
+    @RequestMapping(path = "${method.request.path}", method = RequestMethod.${method.request.httpMethod})
     <#--返回非列表-->
     <#if !method.resultListFlag>
     public HttpResponse<#if method.outputClass.className!="-"><${method.outputClass.className}><#else><?></#if> ${method.name}(@Validated <#if method.request.httpMethod!="GET">@RequestBody </#if>${method.inputClass.className} ${method.inputClass.refName}, BindingResult br) {
