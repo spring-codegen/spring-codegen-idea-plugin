@@ -42,7 +42,7 @@ methods:
     sqlConditionFieldIncludes: "-"
   - type: CTRL
     request:
-      path: {id}
+      path: "{id}"
       httpMethod: DELETE
     comment: "删除{entityName}"
     name: remove
@@ -66,7 +66,7 @@ methods:
     sqlConditionFieldIncludes: "id"
   - type: CTRL
     request:
-      path: {id}
+      path: "{id}"
       httpMethod: PUT
     comment: "更新{entityName}"
     name: update
@@ -88,7 +88,7 @@ methods:
     sqlConditionFieldIncludes: "id"
   - type: CTRL
     request:
-      path: {id}
+      path: "{id}"
       httpMethod: GET
     comment: "获取{entityName}详情"
     name: get

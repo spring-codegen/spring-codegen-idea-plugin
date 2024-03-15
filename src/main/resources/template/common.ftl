@@ -45,10 +45,13 @@ package ${pkg};
 </#macro>
 <#macro methodCall cls1 method1 cls2 method2>
     <#assign args=method2.inputClass.refName>
+<#--    入参的转换-->
+<#--    不需要类型转换-->
     <#if method1.inputClass.className == method2.inputClass.className>
         <#if DEBUG>
             1
         </#if>
+<#--        原始类型转换成复杂类型-->
     <#elseif method1.inputClass.isBaseType()>
         <#if DEBUG>
             2
@@ -59,6 +62,7 @@ package ${pkg};
         ${method2.inputClass.refName}.${a[0].setter}(method1.inputClass.refName);
             <#assign args=method2.inputClass.refName>
         </#if>
+<#--        复杂类型转换成原始类型-->
     <#elseif method2.inputClass.isBaseType()>
         <#if DEBUG>
             3
@@ -68,6 +72,7 @@ package ${pkg};
         ${method2.inputClass.className} ${method2.inputClass.refName} = ${method1.inputClass.refName}.${a[0].getter}();
             <#assign args=method2.inputClass.refName>
         </#if>
+<#--        复合类型转换成复合类型-->
     <#else>
         <#if DEBUG>
             4
@@ -75,12 +80,13 @@ package ${pkg};
         ${method2.inputClass.className} ${method2.inputClass.refName} = ${method1.inputClass.refName}.copyTo(${method2.inputClass.className}.class);
         <#assign args=method2.inputClass.refName>
     </#if>
-
+<#-- 返回结果不用转换-->
     <#if method1.outputClass.className == method2.outputClass.className>
         <#if DEBUG>
             5
         </#if>
         ${method2.outputClass.className} result = ${cls2.refName}.${method2.name}(${args});
+<#-- 返回结果从简单类型转换成其它-->
     <#elseif method2.outputClass.isBaseType()>
         <#if DEBUG>
             6
@@ -95,6 +101,7 @@ package ${pkg};
                 6.1
             </#if>
         </#if>
+<#-- 返回结果转换成简单类型-->
     <#elseif method1.outputClass.isBaseType()>
         <#if DEBUG>
             7
@@ -104,6 +111,7 @@ package ${pkg};
         <#if a?size gt 0>
         ${method1.outputClass.className} result = ${method2.outputClass.refName}.${a[0].getter}();
         </#if>
+<#--  返回结果转换成复合对象 -->
     <#else>
         <#if DEBUG>
             8

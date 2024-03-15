@@ -22,6 +22,7 @@ class CtrlClass(className:String, pkg:String?, comment:String?, fields:MutableLi
         }
     }
     class Request(var path:String, var httpMethod:String?){
+        var pathVars:ArrayList<Field>? = null
         fun clone():Request{
             return Request(path, httpMethod)
         }

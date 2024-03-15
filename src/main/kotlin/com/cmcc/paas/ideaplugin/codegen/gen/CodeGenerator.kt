@@ -2,7 +2,9 @@ package com.cmcc.paas.ideaplugin.codegen.gen
 
 import com.cmcc.paas.ideaplugin.codegen.config.ProjectCfg
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel
+import com.cmcc.paas.ideaplugin.codegen.gen.define.model.CtrlClass
 import com.cmcc.paas.ideaplugin.codegen.gen.template.TempRender.renderToFile
+import com.cmcc.paas.ideaplugin.codegen.util.StringUtils
 import com.intellij.util.containers.stream
 import java.util.*
 import kotlin.collections.ArrayList
@@ -387,7 +389,7 @@ class CodeGenerator() {
         renderModel(module, false, modelResult.results!!, projectCfg)
         renderModel(module, false, modelResult.entities!!, projectCfg)
         /**
-         *
+         * 处理refName
          */
         var f2:(List<ClassModel.Method>) -> Unit = { a:List<ClassModel.Method> ->
             a.forEach{m ->
@@ -444,6 +446,19 @@ class CodeGenerator() {
 
         f2(ctrlClass.methods!!)
         f2(svcClass.methods!!)
+        //处理ctrl method 路径参数
+        ctrlClass.methods!!.forEach { e ->
+            var m:CtrlClass.Method = e as CtrlClass.Method
+            var phs = StringUtils.parsePlaceholders(m.request!!.path)
+            var phVars = ArrayList<ClassModel.Field>()
+            phs?.forEach { e ->
+                var r = m.dependency?.inputClass?.fields!!.find { e2 -> e2.name.equals(e, true)}
+                if(r != null){
+                    phVars.add(r)
+                }
+            }
+            m.request!!.pathVars = phVars
+        }
 
         var data = HashMap<String, Any?>();
         data["project"] = projectCfg

@@ -48,6 +48,7 @@ public class CodeGenPane {
     private JTextField ctrlClassNameTextField;
     private JTextField svcClassNameTextField;
     private JTextField daoClassNameTextField;
+    private JTextField resourceNameTextField;
 
     private DBTable dbTable;
     private List<DBTable> dbTables;
@@ -220,6 +221,7 @@ public class CodeGenPane {
                 if (clsPrefix.startsWith(tablePrefix)){
                     clsPrefix = clsPrefix.substring(tablePrefix.length());
                 }
+                resourceNameTextField.setText(clsPrefix.toLowerCase().replaceAll("_", "-"));
                 clsPrefix = FieldUtils.INSTANCE.className(clsPrefix);
                 AppCtx.INSTANCE.getENV().put(EnvKey.CLASS_PRERFIX, clsPrefix);
 
@@ -342,7 +344,7 @@ public class CodeGenPane {
         MessageBox.showMessage("生成中...");
         System.out.println("generate 2");
         //resource name for path
-        String resourceName = (String)AppCtx.INSTANCE.getENV().get(EnvKey.CLASS_PRERFIX);
+        String resourceName = resourceNameTextField.getText();
         if (resourceName != null){
             resourceName = resourceName.toLowerCase();
         }

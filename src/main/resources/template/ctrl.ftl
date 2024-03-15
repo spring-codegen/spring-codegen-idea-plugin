@@ -32,7 +32,8 @@ public class ${ctrlClass.className}<#if ctrlClass.extend??> extends ${ctrlClass.
     @RequestMapping(path = "${method.request.path}", method = RequestMethod.${method.request.httpMethod})
     <#--返回非列表-->
     <#if !method.resultListFlag>
-    public HttpResponse<#if method.outputClass.className!="-"><${method.outputClass.className}><#else><?></#if> ${method.name}(@Validated <#if method.request.httpMethod!="GET">@RequestBody </#if>${method.inputClass.className} ${method.inputClass.refName}, BindingResult br) {
+        <#assign sep=false/>
+    public HttpResponse<#if method.outputClass.className!="-"><${method.outputClass.className}><#else><?></#if> ${method.name}(<#if method.request.pathVars??><#list method.request.pathVars as phVar><#assign sep=true/>@PathVariable("${phVar.name}")${phVar.javaType} ${phVar.name}</#list></#if><#if method.inputClass??>@Validated <#if method.request.httpMethod!="GET">@RequestBody </#if>${method.inputClass.className} ${method.inputClass.refName}, BindingResult br</#if>) {
         <@checkParam />
         HttpResponse<#if method.outputClass.className!="-"><${method.outputClass.className}><#else><?></#if> res = new HttpResponse<>();
         <#if method.dependency??>
