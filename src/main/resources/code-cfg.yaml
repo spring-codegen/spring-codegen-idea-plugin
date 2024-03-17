@@ -46,8 +46,8 @@ methods:
       httpMethod: DELETE
     comment: "删除{entityName}"
     name: remove
-    inputClassName: IdArg
-    inputFieldIncludes: "id"
+    inputClassName: "-"
+    inputFieldIncludes: "-"
     outputClassName: "-"
     outputFieldIncludes: "-"
   - type: SVC
@@ -92,8 +92,8 @@ methods:
       httpMethod: GET
     comment: "获取{entityName}详情"
     name: get
-    inputClassName: IdArg
-    inputFieldIncludes: "id"
+    inputClassName: "-"
+    inputFieldIncludes: "-"
     outputClassName: "{clsPrefix}"
   - type: SVC
     name: get

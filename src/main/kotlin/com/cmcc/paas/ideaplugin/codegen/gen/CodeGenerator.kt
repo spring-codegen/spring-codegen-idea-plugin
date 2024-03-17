@@ -471,9 +471,6 @@ class CodeGenerator() {
                 data["searchClass"] = it
             }
         }
-//        var ctrlClassGenerator = CtrlClassGenerator(ctrlClass, projectCfg)
-//        ctrlClassGenerator.gen()
-//        return
         renderToFile(
                 projectCfg.ctrlSourceDir!!,
                 ctrlClass.pkg!!,
@@ -513,5 +510,8 @@ class CodeGenerator() {
                 "mapper.ftl",
                 data
         )
+        var ctrlClassGenerator = CtrlClassGenerator(ctrlClass, svcClass, projectCfg)
+        ctrlClassGenerator.gen()
+//        return
     }
 }
