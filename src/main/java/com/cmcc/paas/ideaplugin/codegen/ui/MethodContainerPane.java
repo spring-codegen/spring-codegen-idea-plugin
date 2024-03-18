@@ -159,9 +159,17 @@ public class MethodContainerPane {
         model.setMethodType(methodCfg.getName());
         model.setComment(getHandledVar(methodCfg.getComment(), p));
         model.setDbTableFields(getDbTableFields());
-        model.setInputClassName(getHandledVar(methodCfg.getInputClassName(), AppCtx.INSTANCE.getENV()));
-        model.setInputFields(getDefaultFields(methodCfg.getInputFieldExcludes(), methodCfg.getInputFieldIncludes()));
-        model.setInputListTypeFlag(methodCfg.getInputListTypeFlag());
+        List<MethodCfgPane.MethodCfgModel.MethodArgModel> args = new ArrayList<>();
+        for(CodeCfg.MethodArg arg : methodCfg.getArgs()){
+            MethodCfgPane.MethodCfgModel.MethodArgModel methodArgModel = MethodCfgPane.MethodCfgModel.MethodArgModel.of(
+                    getHandledVar(arg.getInputClassName(), AppCtx.INSTANCE.getENV()),
+                    getDefaultFields(arg.getInputFieldExcludes(), arg.getInputFieldIncludes()),
+                    arg.getInputListTypeFlag(),
+                    arg.isPathVar()
+                    );
+            args.add(methodArgModel);
+        }
+        model.setArgs(args);
 
         model.setOutputClassName(getHandledVar(methodCfg.getOutputClassName(), AppCtx.INSTANCE.getENV()));
         model.setOutputListTypeFlag(methodCfg.getOutputListTypeFlag());

@@ -299,7 +299,7 @@
                       </grid>
                       <grid id="40414" layout-manager="GridBagLayout">
                         <constraints>
-                          <grid row="7" column="0" row-span="1" col-span="30" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <grid row="9" column="0" row-span="1" col-span="30" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
@@ -340,7 +340,7 @@
                       </grid>
                       <grid id="3762f" binding="methodCfgPanel" layout-manager="GridBagLayout">
                         <constraints>
-                          <grid row="8" column="0" row-span="1" col-span="30" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <grid row="10" column="0" row-span="1" col-span="30" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                           <gridbag top="0" left="10" bottom="0" right="10" weightx="0.0" weighty="1.0"/>
                         </constraints>
                         <properties/>
@@ -492,6 +492,42 @@
                           <text value="/"/>
                         </properties>
                       </component>
+                      <grid id="1c4d2" layout-manager="GridBagLayout">
+                        <constraints>
+                          <grid row="8" column="0" row-span="1" col-span="30" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none"/>
+                        <children/>
+                      </grid>
+                      <grid id="716b4" layout-manager="GridBagLayout">
+                        <constraints>
+                          <grid row="7" column="0" row-span="1" col-span="30" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="9832d" class="javax.swing.JLabel">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag top="0" left="10" bottom="0" right="10" weightx="0.0" weighty="0.0" ipady="20"/>
+                            </constraints>
+                            <properties>
+                              <font name="SimSun" size="14" style="1"/>
+                              <text value="Domain"/>
+                            </properties>
+                          </component>
+                          <component id="ee0cb" class="javax.swing.JSeparator">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="2" vsize-policy="6" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="0.0"/>
+                            </constraints>
+                            <properties/>
+                          </component>
+                        </children>
+                      </grid>
                     </children>
                   </grid>
                 </children>

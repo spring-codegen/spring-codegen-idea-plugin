@@ -2,6 +2,7 @@ package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -59,10 +60,7 @@ public abstract class MethodCfgPane {
         private String comment;
         private List<DBTableField> dbTableFields;
         private ClassType classType;
-        private String inputClassName;
-        private List<ClassModel.Field> inputFields;
-        private Boolean inputListTypeFlag = false;
-
+        private List<MethodArgModel> args;
         private String outputClassName;
         private List<ClassModel.Field> outputFields;
         private Boolean outputListTypeFlag = false;
@@ -119,6 +117,14 @@ public abstract class MethodCfgPane {
             this.methodType = methodType;
         }
 
+        public List<MethodArgModel> getArgs() {
+            return args;
+        }
+
+        public void setArgs(List<MethodArgModel> args) {
+            this.args = args;
+        }
+
         public List<DBTableField> getDbTableFields() {
             return dbTableFields;
         }
@@ -133,30 +139,6 @@ public abstract class MethodCfgPane {
 
         public void setClassType(ClassType classType) {
             this.classType = classType;
-        }
-
-        public String getInputClassName() {
-            return inputClassName;
-        }
-
-        public void setInputClassName(String inputClassName) {
-            this.inputClassName = inputClassName;
-        }
-
-        public List<ClassModel.Field> getInputFields() {
-            return inputFields;
-        }
-
-        public void setInputFields(List<ClassModel.Field> inputFields) {
-            this.inputFields = inputFields;
-        }
-
-        public Boolean getInputListTypeFlag() {
-            return inputListTypeFlag;
-        }
-
-        public void setInputListTypeFlag(Boolean inputListTypeFlag) {
-            this.inputListTypeFlag = inputListTypeFlag;
         }
 
         public String getOutputClassName() {
@@ -205,6 +187,38 @@ public abstract class MethodCfgPane {
 
         public void setSqlCondFields(List<ClassModel.Field> sqlCondFields) {
             this.sqlCondFields = sqlCondFields;
+        }
+
+        public static class MethodArgModel extends ClassModel{
+            private Boolean isPathVar = false;
+            private Boolean inputListTypeFlag = false;
+
+            public MethodArgModel(@NotNull String className) {
+                super(className);
+            }
+
+            public static MethodArgModel of(String className, List<ClassModel.Field> fields, Boolean inputListTypeFlag, Boolean isPathVar){
+                MethodArgModel argModel = new MethodArgModel(className);
+                argModel.setFields(fields);;
+                argModel.inputListTypeFlag = inputListTypeFlag;
+                argModel.isPathVar = isPathVar;
+                return argModel;
+            }
+
+            public Boolean getPathVar() {
+                return isPathVar;
+            }
+
+            public void setPathVar(Boolean pathVar) {
+                isPathVar = pathVar;
+            }
+            public Boolean getInputListTypeFlag() {
+                return inputListTypeFlag;
+            }
+
+            public void setInputListTypeFlag(Boolean inputListTypeFlag) {
+                this.inputListTypeFlag = inputListTypeFlag;
+            }
         }
     }
 }

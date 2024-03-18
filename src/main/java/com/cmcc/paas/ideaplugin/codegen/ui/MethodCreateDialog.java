@@ -30,6 +30,7 @@ public class MethodCreateDialog extends JDialog {
     }
 
     public MethodCreateDialog() {
+        setTitle("创建方法");
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);

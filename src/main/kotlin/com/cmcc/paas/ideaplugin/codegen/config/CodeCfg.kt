@@ -9,6 +9,7 @@ open class CodeCfg{
     var ctrlClass: ClassCfg? = null
     var svcClass: ClassCfg? = null
     var daoClass: ClassCfg? = null
+    var models: List<ModelCfg>? = null
     var methods: List<MethodCfg>? = null
     var renderItems: List<RenderItem>? = null
 
@@ -23,20 +24,30 @@ open class CodeCfg{
         var path: String? = null
         var comment:String? = null
     }
+    open class MethodArg{
+        var isPathVar:Boolean = false
+        var listTypeFlag: Boolean? = false
+        var modelName: String? = null
+    }
+    open class MethodResult{
+        var listTypeFlag: Boolean? = false
+        var modelName: String? = null
+    }
+    open class ModelCfg{
+        var type: String? = null
+        var className: String? = null
+        var fieldExcludes: String? =  null
+        var fieldIncludes: String? =  null
+        var outputPaged: Boolean? = false
+    }
     open class MethodCfg{
         var type: String? = null
         var comment:String? = null
         var request: RequestCfg? = null
         var name: String? = null
-        var inputClassName: String? = null
-        var inputFieldExcludes: String? =  null
-        var inputFieldIncludes: String? =  null
-        var outputClassName: String? = null
-        var outputFieldExcludes: String? =  null
-        var outputFieldIncludes: String? =  null
-        var inputListTypeFlag: Boolean? = false
-        var outputListTypeFlag: Boolean? = false
-        var outputPaged: Boolean? = false
+        var args:List<MethodArg>? = null
+        var result:MethodResult? = null
+
         var sqlDataFieldExcludes: String? =  null
         var sqlDataFieldIncludes: String? =  null
         var sqlConditionFieldExcludes: String? =  null

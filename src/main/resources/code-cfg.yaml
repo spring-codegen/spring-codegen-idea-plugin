@@ -12,7 +12,19 @@ daoClass:
   title: "Dao类"
   dir: ""
   className: "{clsPrefix}Dao"
-
+models:
+  - className: "{clsPrefix}AddArg"
+    fieldExcludes: "id,.*time,.*_uid,del"
+    type: ARG
+  - className: "{clsPrefix}"
+    fieldIncludes: ".*"
+    type: ENTITY
+  - className: "{clsPrefix}UpdateArg"
+    fieldExcludes: ".*time,.*_uid"
+    type: ARG
+  - className: "{clsPrefix}SearchArg"
+    fieldExcludes: ".*time,.*_uid"
+    type: ARG
 methods:
   - type: CTRL
     request:
@@ -20,21 +32,24 @@ methods:
       httpMethod: POST
     comment: "添加{entityName}"
     name: add
-    inputClassName: "{clsPrefix}AddArg"
-    inputFieldExcludes: "id,.*time,.*_uid,del"
+    args:
+      - inputClassName: "{clsPrefix}AddArg"
+        inputFieldExcludes: "id,.*time,.*_uid,del"
     outputClassName: IdResult
     outputFieldIncludes: "id"
     outputPaged: true
   - type: SVC
     name: add
-    inputClassName: "{clsPrefix}"
-    inputFieldIncludes: ".*"
+    args:
+      - inputClassName: "{clsPrefix}"
+        inputFieldIncludes: ".*"
     outputClassName: Long
     outputFieldIncludes: "id"
   - type: DAO
     name: add
-    inputClassName: "{clsPrefix}"
-    inputFieldIncludes: ".*"
+    args:
+      - inputClassName: "{clsPrefix}"
+        inputFieldIncludes: ".*"
     outputClassName: Long
     outputFieldIncludes: "id"
     sqlDataFieldIncludes: ".*"
@@ -46,20 +61,26 @@ methods:
       httpMethod: DELETE
     comment: "删除{entityName}"
     name: remove
-    inputClassName: "-"
-    inputFieldIncludes: "-"
+    args:
+      - isPathVar: true
+        inputClassName: "Long"
+        inputFieldIncludes: "id"
+      - inputClassName: "-"
+        inputFieldIncludes: "-"
     outputClassName: "-"
     outputFieldIncludes: "-"
   - type: SVC
     name: remove
-    inputClassName: "Long"
-    inputFieldIncludes: "id"
+    args:
+      - inputClassName: "Long"
+        inputFieldIncludes: "id"
     outputClassName: Boolean
     outputFieldIncludes: "-"
   - type: DAO
     name: remove
-    inputClassName: "Long"
-    inputFieldIncludes: "id"
+    args:
+      - inputClassName: "Long"
+        inputFieldIncludes: "id"
     outputFieldIncludes: "-"
     outputClassName: Boolean
     sqlDataFieldIncludes: "del"
@@ -70,17 +91,23 @@ methods:
       httpMethod: PUT
     comment: "更新{entityName}"
     name: update
-    inputClassName: "{clsPrefix}UpdateArg"
-    inputFieldExcludes: ".*time,.*_uid"
+    args:
+      - isPathVar: true
+        inputClassName: "Long"
+        inputFieldIncludes: "id"
+      - inputClassName: "{clsPrefix}UpdateArg"
+        inputFieldExcludes: ".*time,.*_uid"
     outputClassName: "-"
   - type: SVC
     name: update
-    inputClassName: "{clsPrefix}"
-    outputFieldIncludes: "-"
+    args:
+      - inputClassName: "{clsPrefix}"
+        outputFieldIncludes: "-"
     outputClassName: Boolean
   - type: DAO
     name: update
-    inputClassName: "{clsPrefix}"
+    args:
+      - inputClassName: "{clsPrefix}"
     outputFieldIncludes: "-"
     outputClassName: Boolean
     sqlDataFieldIncludes: ".*"
@@ -92,18 +119,24 @@ methods:
       httpMethod: GET
     comment: "获取{entityName}详情"
     name: get
-    inputClassName: "-"
-    inputFieldIncludes: "-"
+    args:
+      - isPathVar: true
+        inputClassName: "Long"
+        inputFieldIncludes: "id"
+      - inputClassName: "-"
+        inputFieldIncludes: "-"
     outputClassName: "{clsPrefix}"
   - type: SVC
     name: get
-    inputClassName: "Long"
-    inputFieldIncludes: "id"
+    args:
+      - inputClassName: "Long"
+        inputFieldIncludes: "id"
     outputClassName: "{clsPrefix}"
   - type: DAO
     name: get
-    inputClassName: "Long"
-    inputFieldIncludes: "id"
+    args:
+      - inputClassName: "Long"
+        inputFieldIncludes: "id"
     outputClassName: "{clsPrefix}"
     outputFieldIncludes: ".*"
     sqlDataFieldIncludes: ".*"
@@ -114,21 +147,24 @@ methods:
       httpMethod: GET
     comment: "检索{entityName}"
     name: search
-    inputClassName: "{clsPrefix}SearchArg"
-    inputFieldExcludes: ".*time,.*_uid"
+    args:
+      - inputClassName: "{clsPrefix}SearchArg"
+        inputFieldExcludes: ".*time,.*_uid"
     outputClassName: "{clsPrefix}"
     outputFieldIncludes: ".*"
     outputListTypeFlag: true
   - type: SVC
     name: search
-    inputClassName: "{clsPrefix}SearchArg"
-    inputFieldExcludes: ".*time,.*_uid"
+    args:
+      - inputClassName: "{clsPrefix}SearchArg"
+        inputFieldExcludes: ".*time,.*_uid"
     outputClassName: "{clsPrefix}"
     outputListTypeFlag: true
   - type: DAO
     name: search
-    inputClassName: "{clsPrefix}SearchArg"
-    inputFieldExcludes: ".*time,.*_uid"
+    args:
+      - inputClassName: "{clsPrefix}SearchArg"
+        inputFieldExcludes: ".*time,.*_uid"
     outputClassName: "{clsPrefix}"
     outputListTypeFlag: true
     sqlDataFieldIncludes: ".*"

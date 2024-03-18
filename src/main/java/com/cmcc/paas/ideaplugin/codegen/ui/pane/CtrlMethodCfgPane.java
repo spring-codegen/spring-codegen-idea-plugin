@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author zhangyinghui
@@ -28,6 +30,8 @@ public class CtrlMethodCfgPane extends MethodCfgPane {
     protected JButton inputButton;
     protected JButton outputButton;
     private JButton closeBtn;
+    private JPanel argPaneContainer;
+    private List<ArgPane> argPanes = new ArrayList<>();
 
     protected MethodCfgModel model;
 
@@ -47,9 +51,9 @@ public class CtrlMethodCfgPane extends MethodCfgPane {
                         if (textField == methodTextField) {
                             model.setMethodName(methodTextField.getText());
                         }
-                        if (textField == inputClsTextField) {
-                            model.setInputClassName(inputClsTextField.getText());
-                        }
+//                        if (textField == inputClsTextField) {
+//                            model.setInputClassName(inputClsTextField.getText());
+//                        }
                         if (textField == outputClsTextField) {
                             model.setOutputClassName(outputClsTextField.getText());
                         }
@@ -60,9 +64,9 @@ public class CtrlMethodCfgPane extends MethodCfgPane {
                 ((JCheckBox)component).addItemListener(new ItemListener() {
                     @Override
                     public void itemStateChanged(ItemEvent itemEvent) {
-                        if (itemEvent.getSource() == inputListTypeCheckBox) {
-                            model.setInputListTypeFlag(inputListTypeCheckBox.isSelected());
-                        }
+//                        if (itemEvent.getSource() == inputListTypeCheckBox) {
+//                            model.setInputListTypeFlag(inputListTypeCheckBox.isSelected());
+//                        }
                         if (itemEvent.getSource() == outputListTypeCheckBox) {
                             model.setOutputListTypeFlag(outputListTypeCheckBox.isSelected());
                         }
@@ -78,11 +82,11 @@ public class CtrlMethodCfgPane extends MethodCfgPane {
             public void actionPerformed(ActionEvent e) {
                 BeanFieldSelectionDialog dialog = BeanFieldSelectionDialog.create();
                 dialog.setFields(model.getDbTableFields());
-                dialog.setSelectedFields(model.getInputFields());
+//                dialog.setSelectedFields(model.getInputFields());
                 dialog.setActionListener(new BeanFieldSelectionDialog.BeanFieldSelectionActionListener() {
                     @Override
                     public void onFieldSelected(BeanFieldSelectionDialog dialog) {
-                        model.setInputFields(dialog.getSelectedFields());
+//                        model.setInputFields(dialog.getSelectedFields());
                     }
                 });
                 dialog.setVisible(true);
@@ -105,6 +109,12 @@ public class CtrlMethodCfgPane extends MethodCfgPane {
         });
         setCloseBtnAction(closeBtn);
     }
+    public void addArgPane(MethodCfgModel.MethodArgModel methodArgModel){
+        ArgPane argPane = new ArgPane();
+        argPane.setText(methodArgModel.getPathVar() ? methodArgModel.getRefName() : methodArgModel.getClassName());
+        argPanes.add(argPane);
+        argPaneContainer.add(argPane.getContent());
+    }
     public void createUIComponents(){
     }
     public JPanel getContent() {
@@ -118,11 +128,14 @@ public class CtrlMethodCfgPane extends MethodCfgPane {
         this.model = model;
         this.pathTextField.setText(model.getPath());
         this.methodTextField.setText(model.getMethodName());
-        this.inputClsTextField.setText(model.getInputClassName());
-        this.inputListTypeCheckBox.setSelected(model.getInputListTypeFlag() == null ? false : model.getInputListTypeFlag());
+//        this.inputClsTextField.setText(model.getInputClassName());
+//        this.inputListTypeCheckBox.setSelected(model.getInputListTypeFlag() == null ? false : model.getInputListTypeFlag());
         this.outputClsTextField.setText(model.getOutputClassName());
         this.outputListTypeCheckBox.setSelected(model.getOutputListTypeFlag() == null ? false: model.getOutputListTypeFlag());
         this.outputPagedCheckBox.setSelected(model.getOutputPaged());
+        model.getArgs().forEach( arg -> {
+            addArgPane(arg);
+        });
 //        if (model.getFields() != null){
 //            List<DBTableField> fields = model.getFields().stream().map(e -> new DBTableField(e, false, null)).collect(Collectors.toList());
 //            this.inputFieldSelectionBtn.setItems(fields);
