@@ -10,10 +10,9 @@ import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.CtrlClass;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.DaoClass;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.SvcClass;
-import com.cmcc.paas.ideaplugin.codegen.ui.pane.CtrlMethodCfgPane;
-import com.cmcc.paas.ideaplugin.codegen.ui.pane.DaoMethodCfgPane;
-import com.cmcc.paas.ideaplugin.codegen.ui.pane.MethodCfgPane;
-import com.cmcc.paas.ideaplugin.codegen.ui.pane.SvcMethodCfgPane;
+import com.cmcc.paas.ideaplugin.codegen.ui.pane.CtrlMethodSettingPane;
+import com.cmcc.paas.ideaplugin.codegen.ui.pane.DaoMethodSettingPane;
+import com.cmcc.paas.ideaplugin.codegen.ui.pane.MethodSettingPane;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
@@ -32,7 +31,7 @@ import java.util.stream.Collectors;
 public class MethodContainerPane {
     private JScrollPane scrollPane;
     private MethodContainerBackgroundPane container;
-    private Map<MethodCfgPane.ClassType, Map<String, MethodItemHolder>> allMethods = new LinkedHashMap<>();
+    private Map<MethodSettingPane.ClassType, Map<String, MethodItemHolder>> allMethods = new LinkedHashMap<>();
     private static int COLUMN_NUM = 3;
     private static int ITEM_MARGIN_H = 50;
     private static int ITEM_MARGIN_V = 20;
@@ -93,9 +92,9 @@ public class MethodContainerPane {
             }
         });
     }
-    public CodeCfg.MethodCfg getMethodCfg(MethodCfgPane.ClassType classType, String methodName){
+    public CodeCfg.MethodCfg getMethodCfg(MethodSettingPane.ClassType classType, String methodName){
         for(CodeCfg.MethodCfg m : codeCfg.getMethods()){
-            if (MethodCfgPane.ClassType.valueOf(m.getType()) == classType && methodName.indexOf(m.getName()) >= 0){
+            if (MethodSettingPane.ClassType.valueOf(m.getType()) == classType && methodName.indexOf(m.getName()) >= 0){
                 return m;
             }
         }
@@ -143,12 +142,12 @@ public class MethodContainerPane {
         }
         return r;
     }
-    public SvcMethodCfgPane.MethodCfgModel getDefaultMethodCfgModel(MethodCfgPane.ClassType classType, String methodType, String methodName){
+    public MethodSettingPane.MethodSettingModel getDefaultMethodCfgModel(MethodSettingPane.ClassType classType, String methodType, String methodName){
         Map p = AppCtx.INSTANCE.getENV();
         p.put("entityName", dbTable.getComment() == null ? dbTable.getName() : dbTable.getComment());
-        String className = classType == MethodCfgPane.ClassType.CTRL ? ctrlClass.getClassName() : classType == MethodCfgPane.ClassType.SVC ? svcClass.getClassName() : daoClass.getClassName();
+        String className = classType == MethodSettingPane.ClassType.CTRL ? ctrlClass.getClassName() : classType == MethodSettingPane.ClassType.SVC ? svcClass.getClassName() : daoClass.getClassName();
         CodeCfg.MethodCfg methodCfg = getMethodCfg(classType, methodType);
-        SvcMethodCfgPane.MethodCfgModel model = new SvcMethodCfgPane.MethodCfgModel();
+        MethodSettingPane.MethodSettingModel model = new MethodSettingPane.MethodSettingModel();
         model.setClassName(className);
         model.setMethodName(methodName);
         model.setClassType(classType);
@@ -159,22 +158,26 @@ public class MethodContainerPane {
         model.setMethodType(methodCfg.getName());
         model.setComment(getHandledVar(methodCfg.getComment(), p));
         model.setDbTableFields(getDbTableFields());
-        List<MethodCfgPane.MethodCfgModel.MethodArgModel> args = new ArrayList<>();
+        List<MethodSettingPane.MethodSettingModel.MethodArgModel> args = new ArrayList<>();
         for(CodeCfg.MethodArg arg : methodCfg.getArgs()){
-            MethodCfgPane.MethodCfgModel.MethodArgModel methodArgModel = MethodCfgPane.MethodCfgModel.MethodArgModel.of(
-                    getHandledVar(arg.getInputClassName(), AppCtx.INSTANCE.getENV()),
-                    getDefaultFields(arg.getInputFieldExcludes(), arg.getInputFieldIncludes()),
-                    arg.getInputListTypeFlag(),
+            MethodSettingPane.MethodSettingModel.MethodArgModel methodArgModel = MethodSettingPane.MethodSettingModel.MethodArgModel.of(
+                    getHandledVar(arg.getClassName(), AppCtx.INSTANCE.getENV()),
+                    arg.getRefName(),
+                    arg.getListTypeFlag(),
                     arg.isPathVar()
                     );
+            methodArgModel.setRefName(arg.getRefName());
             args.add(methodArgModel);
         }
         model.setArgs(args);
-
-        model.setOutputClassName(getHandledVar(methodCfg.getOutputClassName(), AppCtx.INSTANCE.getENV()));
-        model.setOutputListTypeFlag(methodCfg.getOutputListTypeFlag());
-        model.setOutputPaged(methodCfg.getOutputPaged());
-        model.setOutputFields(getDefaultFields(methodCfg.getOutputFieldExcludes(), methodCfg.getOutputFieldIncludes()));
+        if (methodCfg.getResult() != null){
+            MethodSettingPane.MethodSettingModel.MethodResultModel methodResultModel = MethodSettingPane.MethodSettingModel.MethodResultModel.of(
+                    getHandledVar(methodCfg.getResult().getClassName(), AppCtx.INSTANCE.getENV()),
+                    methodCfg.getResult().getRefName(),
+                    methodCfg.getResult().getListTypeFlag(),
+                    methodCfg.getResult().getOutputPaged());
+            methodResultModel.setRefName(methodCfg.getResult().getRefName());
+        }
 
 
 
@@ -183,8 +186,8 @@ public class MethodContainerPane {
 
         return model;
     }
-    public MethodItemHolder addClassMethod(MethodCfgPane.ClassType classType, String methodType, String methodName){
-        MethodCfgPane.ClassType k = classType;
+    public MethodItemHolder addClassMethod(MethodSettingPane.ClassType classType, String methodType, String methodName){
+        MethodSettingPane.ClassType k = classType;
         if ( !allMethods.containsKey(k) ){
             allMethods.put(k, new LinkedHashMap<>());
         }
@@ -202,29 +205,29 @@ public class MethodContainerPane {
         int x = classType.ordinal() * (w + ITEM_MARGIN_H);
         int y = (row-1) * (ITEM_HEIGHT + ITEM_MARGIN_H);
         //界面
-        if ( classType == MethodCfgPane.ClassType.DAO  ){
-            holder.panel = new DaoMethodCfgPane();
-        }else if ( classType == MethodCfgPane.ClassType.SVC  ){
-            holder.panel = new DaoMethodCfgPane();
+        if ( classType == MethodSettingPane.ClassType.DAO  ){
+            holder.panel = new DaoMethodSettingPane();
+        }else if ( classType == MethodSettingPane.ClassType.SVC  ){
+            holder.panel = new DaoMethodSettingPane();
         }else{
-            holder.panel =new CtrlMethodCfgPane();
+            holder.panel =new CtrlMethodSettingPane();
         }
         holder.panel.getContent().setSize(w, ITEM_HEIGHT);
         holder.panel.getContent().setLocation(x,y);
         holder.panel.setModel(getDefaultMethodCfgModel(classType, methodType, methodName));
         this.container.add(holder.panel.getContent());
-        holder.panel.setMethodCfgPaneActionListener(new MethodCfgPane.MethodCfgPaneActionListener() {
+        holder.panel.setMethodCfgPaneActionListener(new MethodSettingPane.MethodCfgPaneActionListener() {
             @Override
-            public void onClose(MethodCfgPane methodCfgPane) {
-                removePane(methodCfgPane);
+            public void onClose(MethodSettingPane methodSettingPane) {
+                removePane(methodSettingPane);
             }
         });
         return holder;
     }
-    public void removePane(MethodCfgPane methodCfgPane){
-        MethodCfgPane.ClassType classType = methodCfgPane.getModel().getClassType();
+    public void removePane(MethodSettingPane methodSettingPane){
+        MethodSettingPane.ClassType classType = methodSettingPane.getModel().getClassType();
         Map<String, MethodItemHolder> m = allMethods.get(classType);
-        Optional<Map.Entry<String, MethodItemHolder>> x =  m.entrySet().stream().filter(e -> e.getValue().panel == methodCfgPane).findFirst();
+        Optional<Map.Entry<String, MethodItemHolder>> x =  m.entrySet().stream().filter(e -> e.getValue().panel == methodSettingPane).findFirst();
         if (x.isPresent()){
             Map.Entry<String, MethodItemHolder> e = x.get();
             MethodItemHolder holder = e.getValue();
@@ -240,9 +243,9 @@ public class MethodContainerPane {
         }
     }
     public void createMethod(String methodType, String methodName, Boolean ctrlChecked, Boolean svcChecked, Boolean daoChecked){
-        MethodItemHolder ctrlMethodHolder = ctrlChecked ?  addClassMethod(MethodCfgPane.ClassType.CTRL, methodType, methodName) : null;
-        MethodItemHolder svcMethodHolder = svcChecked ?  addClassMethod(MethodCfgPane.ClassType.SVC, methodType, methodName) : null;
-        MethodItemHolder daoMethodHolder = daoChecked ?  addClassMethod(MethodCfgPane.ClassType.DAO, methodType, methodName) : null;
+        MethodItemHolder ctrlMethodHolder = ctrlChecked ?  addClassMethod(MethodSettingPane.ClassType.CTRL, methodType, methodName) : null;
+        MethodItemHolder svcMethodHolder = svcChecked ?  addClassMethod(MethodSettingPane.ClassType.SVC, methodType, methodName) : null;
+        MethodItemHolder daoMethodHolder = daoChecked ?  addClassMethod(MethodSettingPane.ClassType.DAO, methodType, methodName) : null;
         if (ctrlMethodHolder != null && svcMethodHolder != null){
             ctrlMethodHolder.dependency = svcMethodHolder;
             svcMethodHolder.caller = ctrlMethodHolder;
@@ -260,7 +263,7 @@ public class MethodContainerPane {
         int w = (scrollPane.getWidth() - (COLUMN_NUM - 1) * ITEM_MARGIN_H - CONTAINER_PADDING_RIGHT)/COLUMN_NUM;
         List<MethodContainerBackgroundPane.Line> lines = new ArrayList<>();
         int scrollViewHeight = 0;
-        for (MethodCfgPane.ClassType t : MethodCfgPane.ClassType.values()){
+        for (MethodSettingPane.ClassType t : MethodSettingPane.ClassType.values()){
             int row = 0;
             for ( Map.Entry<String, MethodItemHolder> e : allMethods.get(t).entrySet() ){
                 int x = t.ordinal() * (w + ITEM_MARGIN_H);
@@ -278,7 +281,7 @@ public class MethodContainerPane {
     }
     public void repaintRelations(){
         List<MethodContainerBackgroundPane.Line> lines = new ArrayList<>();
-        for (MethodCfgPane.ClassType t : MethodCfgPane.ClassType.values()){
+        for (MethodSettingPane.ClassType t : MethodSettingPane.ClassType.values()){
             for ( MethodItemHolder h : allMethods.get(t).values() ){
                 if (h.dependency != null){
                     int offsetX = h.panel.getContent().getWidth();
@@ -332,98 +335,98 @@ public class MethodContainerPane {
         Map<String, ClassModel> daoArgs = new LinkedHashMap<>();
         Map<String, ClassModel> daoResults = new LinkedHashMap<>();
         List<String> filterResults = new ArrayList<>();
-        for (Map.Entry<MethodCfgPane.ClassType, Map<String, MethodItemHolder>> m: allMethods.entrySet()){
-            for (Map.Entry<String, MethodItemHolder> e: m.getValue().entrySet()){
-                ClassModel.Method method = null;
-                MethodCfgPane.MethodCfgModel methodCfgModel = e.getValue().panel.getModel();
-                ClassModel inputClass = new ClassModel(methodCfgModel.getInputClassName());
-                inputClass.setFields( methodCfgModel.getInputFields() );
-                inputClass.setRefName(FieldUtils.INSTANCE.getRefName(inputClass.getClassName()));
-                ClassModel outputClass = new ClassModel(methodCfgModel.getOutputClassName());
-                outputClass.setFields(methodCfgModel.getOutputFields());
-                outputClass.setRefName(FieldUtils.INSTANCE.getRefName(outputClass.getClassName()));
-
-                if (m.getKey() == MethodCfgPane.ClassType.CTRL){
-                    method = new CtrlClass.Method(methodCfgModel.getMethodName(), inputClass, outputClass, methodCfgModel.getOutputListTypeFlag() );
-                    method.setPaged(method.getPaged());
-                    ( (CtrlClass.Method)method).setRequest(new CtrlClass.Request(methodCfgModel.getPath(), methodCfgModel.getHttpMethod()));
-                    ctrlMethods.add(method);
-                    if ( !args.containsKey(inputClass.getClassName()) ) {
-                        args.put(inputClass.getClassName(), inputClass);
-                    }
-                    if ( !"-".equals(outputClass.getClassName()) && !results.containsKey(outputClass.getClassName()) && !entities.containsKey(outputClass.getClassName())) {
-                        results.put(outputClass.getClassName(), outputClass);
-                    }
-                }
-                if (m.getKey() == MethodCfgPane.ClassType.SVC){
-                    method = new SvcClass.Method(methodCfgModel.getMethodName(), inputClass, outputClass, methodCfgModel.getOutputListTypeFlag() );
-                    svcMethods.add(method);
-                    if ( !args.containsKey(inputClass.getClassName()) && !entities.containsKey(inputClass.getClassName())) {
-                        entities.put(inputClass.getClassName(), inputClass);
-                    }
-                    if (  !entities.containsKey(outputClass.getClassName())) {
-                        entities.put(outputClass.getClassName(), outputClass);
-                    }
-                    if (results.containsKey(outputClass.getClassName())){
-                        filterResults.add(outputClass.getClassName());
-
-                    }
-                }
-                if (m.getKey() == MethodCfgPane.ClassType.DAO){
-                    method = new DaoClass.Method(methodCfgModel.getMethodName(), inputClass, outputClass, methodCfgModel.getOutputListTypeFlag() );
-                    ((DaoClass.Method) method).setSqlDataFields(methodCfgModel.getSqlDataFields());
-                    ((DaoClass.Method) method).setSqlCondFields(methodCfgModel.getSqlCondFields());
-                    daoMethods.add(method);
-                    if ( !args.containsKey(inputClass.getClassName())
-                            && !entities.containsKey(inputClass.getClassName())
-                    && !daoArgs.containsKey(inputClass.getClassName())) {
-                        daoArgs.put(inputClass.getClassName(), inputClass);
-                    }
-                    if ( !results.containsKey(outputClass.getClassName())
-                            && !entities.containsKey(outputClass.getClassName()) && !daoResults.containsKey(outputClass.getClassName())) {
-                        daoResults.put(outputClass.getClassName(), outputClass);
-                    }
-                }
-                //确保results引用统一模型
-                if ( results.containsKey(outputClass.getClassName()) ) {
-                    method.setOutputClass(results.get(outputClass.getClassName()));
-                }
-                //确保entities引用统一模型
-                if ( entities.containsKey(inputClass.getClassName()) ) {
-                    method.setInputClass(entities.get(inputClass.getClassName()));
-                }
-                if ( args.containsKey(inputClass.getClassName()) ) {
-                    method.setInputClass(args.get(inputClass.getClassName()));
-                }
-                if ( entities.containsKey(outputClass.getClassName()) ) {
-                    method.setOutputClass(entities.get(outputClass.getClassName()));
-                }
-                method.setComment(methodCfgModel.getComment());
-                method.setType(methodCfgModel.getMethodType());
-                method.setInputListFlag(methodCfgModel.getInputListTypeFlag());
-                method.setPaged(methodCfgModel.getOutputPaged());
-                e.getValue().method = method;
-            }
-        }
-        for (Map.Entry<MethodCfgPane.ClassType, Map<String, MethodItemHolder>> m: allMethods.entrySet()){
-            for (Map.Entry<String, MethodItemHolder> e: m.getValue().entrySet()){
-                if (e.getValue().dependency != null) {
-                    e.getValue().method.setDependency(e.getValue().dependency.method);
-                }
-            }
-        }
-        filterResults.forEach(e -> results.remove(e));
-        result.setArgs(args.values().stream().toList());
-        result.setResults(results.values().stream().toList());
-        result.setEntities(entities.values().stream().collect(Collectors.toList()));
-        ctrlClass.setMethods(ctrlMethods);
-        svcClass.setMethods(svcMethods);
-        daoClass.setMethods(daoMethods);
+//        for (Map.Entry<MethodSettingPane.ClassType, Map<String, MethodItemHolder>> m: allMethods.entrySet()){
+//            for (Map.Entry<String, MethodItemHolder> e: m.getValue().entrySet()){
+//                ClassModel.Method method = null;
+//                MethodSettingPane.MethodSettingModel methodSettingModel = e.getValue().panel.getModel();
+//                ClassModel inputClass = new ClassModel(methodSettingModel.getInputClassName());
+//                inputClass.setFields( methodSettingModel.getInputFields() );
+//                inputClass.setRefName(FieldUtils.INSTANCE.getRefName(inputClass.getClassName()));
+//                ClassModel outputClass = new ClassModel(methodSettingModel.getOutputClassName());
+//                outputClass.setFields(methodSettingModel.getOutputFields());
+//                outputClass.setRefName(FieldUtils.INSTANCE.getRefName(outputClass.getClassName()));
+//
+//                if (m.getKey() == MethodSettingPane.ClassType.CTRL){
+//                    method = new CtrlClass.Method(methodSettingModel.getMethodName(), inputClass, outputClass, methodSettingModel.getOutputListTypeFlag() );
+//                    method.setPaged(method.getPaged());
+//                    ( (CtrlClass.Method)method).setRequest(new CtrlClass.Request(methodSettingModel.getPath(), methodSettingModel.getHttpMethod()));
+//                    ctrlMethods.add(method);
+//                    if ( !args.containsKey(inputClass.getClassName()) ) {
+//                        args.put(inputClass.getClassName(), inputClass);
+//                    }
+//                    if ( !"-".equals(outputClass.getClassName()) && !results.containsKey(outputClass.getClassName()) && !entities.containsKey(outputClass.getClassName())) {
+//                        results.put(outputClass.getClassName(), outputClass);
+//                    }
+//                }
+//                if (m.getKey() == MethodSettingPane.ClassType.SVC){
+//                    method = new SvcClass.Method(methodSettingModel.getMethodName(), inputClass, outputClass, methodSettingModel.getOutputListTypeFlag() );
+//                    svcMethods.add(method);
+//                    if ( !args.containsKey(inputClass.getClassName()) && !entities.containsKey(inputClass.getClassName())) {
+//                        entities.put(inputClass.getClassName(), inputClass);
+//                    }
+//                    if (  !entities.containsKey(outputClass.getClassName())) {
+//                        entities.put(outputClass.getClassName(), outputClass);
+//                    }
+//                    if (results.containsKey(outputClass.getClassName())){
+//                        filterResults.add(outputClass.getClassName());
+//
+//                    }
+//                }
+//                if (m.getKey() == MethodSettingPane.ClassType.DAO){
+//                    method = new DaoClass.Method(methodSettingModel.getMethodName(), inputClass, outputClass, methodSettingModel.getOutputListTypeFlag() );
+//                    ((DaoClass.Method) method).setSqlDataFields(methodSettingModel.getSqlDataFields());
+//                    ((DaoClass.Method) method).setSqlCondFields(methodSettingModel.getSqlCondFields());
+//                    daoMethods.add(method);
+//                    if ( !args.containsKey(inputClass.getClassName())
+//                            && !entities.containsKey(inputClass.getClassName())
+//                    && !daoArgs.containsKey(inputClass.getClassName())) {
+//                        daoArgs.put(inputClass.getClassName(), inputClass);
+//                    }
+//                    if ( !results.containsKey(outputClass.getClassName())
+//                            && !entities.containsKey(outputClass.getClassName()) && !daoResults.containsKey(outputClass.getClassName())) {
+//                        daoResults.put(outputClass.getClassName(), outputClass);
+//                    }
+//                }
+//                //确保results引用统一模型
+//                if ( results.containsKey(outputClass.getClassName()) ) {
+//                    method.setOutputClass(results.get(outputClass.getClassName()));
+//                }
+//                //确保entities引用统一模型
+//                if ( entities.containsKey(inputClass.getClassName()) ) {
+//                    method.setInputClass(entities.get(inputClass.getClassName()));
+//                }
+//                if ( args.containsKey(inputClass.getClassName()) ) {
+//                    method.setInputClass(args.get(inputClass.getClassName()));
+//                }
+//                if ( entities.containsKey(outputClass.getClassName()) ) {
+//                    method.setOutputClass(entities.get(outputClass.getClassName()));
+//                }
+//                method.setComment(methodSettingModel.getComment());
+//                method.setType(methodSettingModel.getMethodType());
+//                method.setInputListFlag(methodSettingModel.getInputListTypeFlag());
+//                method.setPaged(methodSettingModel.getOutputPaged());
+//                e.getValue().method = method;
+//            }
+//        }
+//        for (Map.Entry<MethodSettingPane.ClassType, Map<String, MethodItemHolder>> m: allMethods.entrySet()){
+//            for (Map.Entry<String, MethodItemHolder> e: m.getValue().entrySet()){
+//                if (e.getValue().dependency != null) {
+//                    e.getValue().method.setDependency(e.getValue().dependency.method);
+//                }
+//            }
+//        }
+//        filterResults.forEach(e -> results.remove(e));
+//        result.setArgs(args.values().stream().toList());
+//        result.setResults(results.values().stream().toList());
+//        result.setEntities(entities.values().stream().collect(Collectors.toList()));
+//        ctrlClass.setMethods(ctrlMethods);
+//        svcClass.setMethods(svcMethods);
+//        daoClass.setMethods(daoMethods);
 
         return result;
     }
     static class MethodItemHolder {
-        public MethodCfgPane panel;
+        public MethodSettingPane panel;
         public ClassModel.Method method;
         public MethodItemHolder dependency;
         public MethodItemHolder caller;

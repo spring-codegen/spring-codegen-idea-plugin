@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.cmcc.paas.ideaplugin.codegen.ui.pane.SvcMethodCfgPane">
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.cmcc.paas.ideaplugin.codegen.ui.pane.CtrlMethodSettingPane">
   <grid id="27dc6" binding="content" layout-manager="GridBagLayout">
     <constraints>
-      <xy x="20" y="20" width="522" height="585"/>
+      <xy x="20" y="20" width="533" height="585"/>
     </constraints>
     <properties/>
     <border type="line">
@@ -155,7 +155,7 @@
         <properties>
           <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
-          <text value="类："/>
+          <text value="path："/>
         </properties>
       </component>
       <component id="d3ca3" class="javax.swing.JLabel">
@@ -191,7 +191,7 @@
           <text value="出参："/>
         </properties>
       </component>
-      <component id="f2255" class="javax.swing.JTextField" binding="clsTextField">
+      <component id="f2255" class="javax.swing.JTextField" binding="pathTextField">
         <constraints>
           <grid row="1" column="2" row-span="1" col-span="22" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -206,24 +206,6 @@
             <preferred-size width="150" height="-1"/>
           </grid>
           <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties/>
-      </component>
-      <component id="842a" class="javax.swing.JTextField" binding="inputClsTextField">
-        <constraints>
-          <grid row="3" column="2" row-span="1" col-span="18" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-          <gridbag weightx="1.0" weighty="0.0"/>
-        </constraints>
-        <properties/>
-      </component>
-      <component id="e5b5a" class="javax.swing.JTextField" binding="outputClsTextField">
-        <constraints>
-          <grid row="4" column="2" row-span="1" col-span="18" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-          <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
         <properties/>
       </component>
@@ -248,45 +230,12 @@
           <text value="列表"/>
         </properties>
       </component>
-      <component id="685b" class="javax.swing.JCheckBox" binding="inputListTypeCheckBox">
-        <constraints>
-          <grid row="3" column="21" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <font size="8"/>
-          <foreground color="-7960954"/>
-          <text value="列表"/>
-        </properties>
-      </component>
       <vspacer id="20f8c">
         <constraints>
           <grid row="5" column="0" row-span="1" col-span="24" vsize-policy="6" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="1.0"/>
         </constraints>
       </vspacer>
-      <component id="ff4ca" class="javax.swing.JButton" binding="inputButton">
-        <constraints>
-          <grid row="3" column="20" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <font size="8"/>
-          <preferredSize width="30" height="30"/>
-          <text value="字段"/>
-        </properties>
-      </component>
-      <component id="1df9" class="javax.swing.JButton" binding="outputButton">
-        <constraints>
-          <grid row="4" column="20" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <font size="8"/>
-          <preferredSize width="30" height="30"/>
-          <text value="字段"/>
-        </properties>
-      </component>
       <component id="baff6" class="javax.swing.JButton" binding="closeBtn">
         <constraints>
           <grid row="0" column="23" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="5" fill="0" indent="0" use-parent-layout="false"/>
@@ -301,6 +250,19 @@
           <text value="x"/>
         </properties>
       </component>
+      <component id="a2ef" class="javax.swing.JComboBox" binding="resultComboBox">
+        <constraints>
+          <grid row="4" column="2" row-span="1" col-span="14" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties/>
+      </component>
+      <nested-form id="acd65" form-file="com/cmcc/paas/ideaplugin/codegen/ui/pane/ArgsSettingPane.form" binding="argsSettingPane">
+        <constraints>
+          <grid row="3" column="2" row-span="1" col-span="22" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+      </nested-form>
     </children>
   </grid>
 </form>

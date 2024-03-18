@@ -13,10 +13,10 @@ import java.util.List;
  * @author zhangyinghui
  * @date 2023/12/22
  */
-public abstract class MethodCfgPane {
+public abstract class MethodSettingPane {
     public abstract JPanel getContent();
-    public abstract void setModel(MethodCfgModel model);
-    public abstract MethodCfgModel getModel();
+    public abstract void setModel(MethodSettingModel model);
+    public abstract MethodSettingModel getModel();
 
     private MethodCfgPaneActionListener methodCfgPaneActionListener;
 
@@ -29,7 +29,7 @@ public abstract class MethodCfgPane {
     }
     public void setCloseBtnAction(JButton btn){
 
-        MethodCfgPane self = this;
+        MethodSettingPane self = this;
         btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -46,9 +46,9 @@ public abstract class MethodCfgPane {
         DAO;
     }
     public static interface MethodCfgPaneActionListener{
-        void onClose(MethodCfgPane methodCfgPane);
+        void onClose(MethodSettingPane methodSettingPane);
     }
-    public static class MethodCfgModel{
+    public static class MethodSettingModel {
         private String methodName;
         private String className;
         private String path;
@@ -61,10 +61,7 @@ public abstract class MethodCfgPane {
         private List<DBTableField> dbTableFields;
         private ClassType classType;
         private List<MethodArgModel> args;
-        private String outputClassName;
-        private List<ClassModel.Field> outputFields;
-        private Boolean outputListTypeFlag = false;
-        private Boolean outputPaged = false;
+        private MethodResultModel result;
 
         private List<ClassModel.Field> sqlDataFields;
         private List<ClassModel.Field> sqlCondFields;
@@ -141,36 +138,12 @@ public abstract class MethodCfgPane {
             this.classType = classType;
         }
 
-        public String getOutputClassName() {
-            return outputClassName;
+        public MethodResultModel getResult() {
+            return result;
         }
 
-        public void setOutputClassName(String outputClassName) {
-            this.outputClassName = outputClassName;
-        }
-
-        public List<ClassModel.Field> getOutputFields() {
-            return outputFields;
-        }
-
-        public void setOutputFields(List<ClassModel.Field> outputFields) {
-            this.outputFields = outputFields;
-        }
-
-        public Boolean getOutputListTypeFlag() {
-            return outputListTypeFlag;
-        }
-
-        public void setOutputListTypeFlag(Boolean outputListTypeFlag) {
-            this.outputListTypeFlag = outputListTypeFlag;
-        }
-
-        public Boolean getOutputPaged() {
-            return outputPaged;
-        }
-
-        public void setOutputPaged(Boolean outputPaged) {
-            this.outputPaged = outputPaged;
+        public void setResult(MethodResultModel result) {
+            this.result = result;
         }
 
         public List<ClassModel.Field> getSqlDataFields() {
@@ -189,35 +162,104 @@ public abstract class MethodCfgPane {
             this.sqlCondFields = sqlCondFields;
         }
 
-        public static class MethodArgModel extends ClassModel{
+        public static class MethodArgModel{
+            private String className;
+            private String refName;
             private Boolean isPathVar = false;
-            private Boolean inputListTypeFlag = false;
+            private Boolean listTypeFlag = false;
 
-            public MethodArgModel(@NotNull String className) {
-                super(className);
+            public String getClassName() {
+                return className;
             }
 
-            public static MethodArgModel of(String className, List<ClassModel.Field> fields, Boolean inputListTypeFlag, Boolean isPathVar){
-                MethodArgModel argModel = new MethodArgModel(className);
-                argModel.setFields(fields);;
-                argModel.inputListTypeFlag = inputListTypeFlag;
-                argModel.isPathVar = isPathVar;
-                return argModel;
+            public MethodArgModel setClassName(String className) {
+                this.className = className;
+                return this;
+            }
+
+            public String getRefName() {
+                return refName;
+            }
+
+            public MethodArgModel setRefName(String refName) {
+                this.refName = refName;
+                return this;
             }
 
             public Boolean getPathVar() {
                 return isPathVar;
             }
 
-            public void setPathVar(Boolean pathVar) {
+            public MethodArgModel setPathVar(Boolean pathVar) {
                 isPathVar = pathVar;
-            }
-            public Boolean getInputListTypeFlag() {
-                return inputListTypeFlag;
+                return this;
             }
 
-            public void setInputListTypeFlag(Boolean inputListTypeFlag) {
-                this.inputListTypeFlag = inputListTypeFlag;
+            public Boolean getListTypeFlag() {
+                return listTypeFlag;
+            }
+
+            public MethodArgModel setListTypeFlag(Boolean listTypeFlag) {
+                this.listTypeFlag = listTypeFlag;
+                return this;
+            }
+
+            public static MethodArgModel of(String className, String refName, Boolean listTypeFlag, Boolean isPathVar){
+                return new MethodArgModel()
+                        .setClassName(className)
+                        .setRefName(refName)
+                        .setListTypeFlag(listTypeFlag)
+                        .setPathVar(isPathVar);
+            }
+        }
+        public static class MethodResultModel {
+            private String className;
+            private String refName;
+            private Boolean outputPaged = false;
+            private Boolean listTypeFlag = false;
+
+            public String getClassName() {
+                return className;
+            }
+
+            public MethodResultModel setClassName(String className) {
+                this.className = className;
+                return this;
+            }
+
+            public String getRefName() {
+                return refName;
+            }
+
+            public MethodResultModel setRefName(String refName) {
+                this.refName = refName;
+                return this;
+            }
+
+            public Boolean getOutputPaged() {
+                return outputPaged;
+            }
+
+            public MethodResultModel setOutputPaged(Boolean outputPaged) {
+                this.outputPaged = outputPaged;
+                return this;
+            }
+
+            public Boolean getListTypeFlag() {
+                return listTypeFlag;
+            }
+
+            public MethodResultModel setListTypeFlag(Boolean listTypeFlag) {
+                this.listTypeFlag = listTypeFlag;
+                return this;
+            }
+
+            public static MethodResultModel of(String className, String refName, Boolean listTypeFlag, Boolean outputPaged){
+                return new MethodResultModel()
+                        .setClassName(className)
+                        .setRefName(refName)
+                        .setListTypeFlag(listTypeFlag)
+                        .setOutputPaged(outputPaged);
             }
         }
     }

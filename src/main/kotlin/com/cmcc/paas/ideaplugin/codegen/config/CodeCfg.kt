@@ -24,21 +24,24 @@ open class CodeCfg{
         var path: String? = null
         var comment:String? = null
     }
-    open class MethodArg{
-        var isPathVar:Boolean = false
-        var listTypeFlag: Boolean? = false
-        var modelName: String? = null
-    }
-    open class MethodResult{
-        var listTypeFlag: Boolean? = false
-        var modelName: String? = null
-    }
     open class ModelCfg{
         var type: String? = null
         var className: String? = null
         var fieldExcludes: String? =  null
         var fieldIncludes: String? =  null
         var outputPaged: Boolean? = false
+    }
+    open class MethodArg{
+        var isPathVar:Boolean = false
+        var listTypeFlag: Boolean? = false
+        var className: String? = null
+        var refName: String? = null
+    }
+    open class MethodResult{
+        var listTypeFlag: Boolean? = false
+        var className: String? = null
+        var outputPaged: Boolean? = false
+        var refName: String? = null
     }
     open class MethodCfg{
         var type: String? = null

@@ -33,25 +33,23 @@ methods:
     comment: "添加{entityName}"
     name: add
     args:
-      - inputClassName: "{clsPrefix}AddArg"
-        inputFieldExcludes: "id,.*time,.*_uid,del"
-    outputClassName: IdResult
-    outputFieldIncludes: "id"
-    outputPaged: true
+      - className: "{clsPrefix}AddArg"
+    result:
+      className: IdResult
   - type: SVC
     name: add
     args:
-      - inputClassName: "{clsPrefix}"
-        inputFieldIncludes: ".*"
-    outputClassName: Long
-    outputFieldIncludes: "id"
+      - className: "{clsPrefix}"
+    result:
+      className: Long
+      refName: id
   - type: DAO
     name: add
     args:
-      - inputClassName: "{clsPrefix}"
-        inputFieldIncludes: ".*"
-    outputClassName: Long
-    outputFieldIncludes: "id"
+      - className: "{clsPrefix}"
+    result:
+      className: Long
+      refName: id
     sqlDataFieldIncludes: ".*"
     sqlDataFieldExcludes: "id"
     sqlConditionFieldIncludes: "-"
@@ -63,26 +61,24 @@ methods:
     name: remove
     args:
       - isPathVar: true
-        inputClassName: "Long"
-        inputFieldIncludes: "id"
-      - inputClassName: "-"
-        inputFieldIncludes: "-"
-    outputClassName: "-"
-    outputFieldIncludes: "-"
+        className: "Long"
+        refName: "id"
   - type: SVC
     name: remove
     args:
-      - inputClassName: "Long"
-        inputFieldIncludes: "id"
-    outputClassName: Boolean
-    outputFieldIncludes: "-"
+      - className: "Long"
+        refName: "id"
+    result:
+      className: Boolean
+      refName: t
   - type: DAO
     name: remove
     args:
-      - inputClassName: "Long"
-        inputFieldIncludes: "id"
-    outputFieldIncludes: "-"
-    outputClassName: Boolean
+      - className: "Long"
+        refName: "id"
+    result:
+      className: Boolean
+      refName: t
     sqlDataFieldIncludes: "del"
     sqlConditionFieldIncludes: "id"
   - type: CTRL
@@ -93,23 +89,23 @@ methods:
     name: update
     args:
       - isPathVar: true
-        inputClassName: "Long"
-        inputFieldIncludes: "id"
-      - inputClassName: "{clsPrefix}UpdateArg"
-        inputFieldExcludes: ".*time,.*_uid"
-    outputClassName: "-"
+        className: "Long"
+        refName: "id"
+      - className: "{clsPrefix}UpdateArg"
   - type: SVC
     name: update
     args:
-      - inputClassName: "{clsPrefix}"
-        outputFieldIncludes: "-"
-    outputClassName: Boolean
+      - className: "{clsPrefix}"
+    result:
+      className: Boolean
+      refName: t
   - type: DAO
     name: update
     args:
-      - inputClassName: "{clsPrefix}"
-    outputFieldIncludes: "-"
-    outputClassName: Boolean
+      - className: "{clsPrefix}"
+    result:
+      className: Boolean
+      refName: t
     sqlDataFieldIncludes: ".*"
     sqlDataFieldExcludes: "id,create_.*"
     sqlConditionFieldIncludes: "id"
@@ -121,24 +117,24 @@ methods:
     name: get
     args:
       - isPathVar: true
-        inputClassName: "Long"
-        inputFieldIncludes: "id"
-      - inputClassName: "-"
-        inputFieldIncludes: "-"
-    outputClassName: "{clsPrefix}"
+        className: "Long"
+        refName: "id"
+    result:
+      className: "{clsPrefix}"
   - type: SVC
     name: get
     args:
-      - inputClassName: "Long"
-        inputFieldIncludes: "id"
-    outputClassName: "{clsPrefix}"
+      - className: "Long"
+        refName: "id"
+    result:
+      className: "{clsPrefix}"
   - type: DAO
     name: get
     args:
-      - inputClassName: "Long"
-        inputFieldIncludes: "id"
-    outputClassName: "{clsPrefix}"
-    outputFieldIncludes: ".*"
+      - className: "Long"
+        refName: "id"
+    result:
+      className: "{clsPrefix}"
     sqlDataFieldIncludes: ".*"
     sqlConditionFieldIncludes: "id"
   - type: CTRL
@@ -148,25 +144,25 @@ methods:
     comment: "检索{entityName}"
     name: search
     args:
-      - inputClassName: "{clsPrefix}SearchArg"
-        inputFieldExcludes: ".*time,.*_uid"
-    outputClassName: "{clsPrefix}"
-    outputFieldIncludes: ".*"
-    outputListTypeFlag: true
+      - className: "{clsPrefix}SearchArg"
+    result:
+      className: "{clsPrefix}"
+      listTypeFlag: true
+      outputPaged: true
   - type: SVC
     name: search
     args:
-      - inputClassName: "{clsPrefix}SearchArg"
-        inputFieldExcludes: ".*time,.*_uid"
-    outputClassName: "{clsPrefix}"
-    outputListTypeFlag: true
+      - className: "{clsPrefix}SearchArg"
+    result:
+      className: "{clsPrefix}"
+      listTypeFlag: true
   - type: DAO
     name: search
     args:
-      - inputClassName: "{clsPrefix}SearchArg"
-        inputFieldExcludes: ".*time,.*_uid"
-    outputClassName: "{clsPrefix}"
-    outputListTypeFlag: true
+      - className: "{clsPrefix}SearchArg"
+    result:
+      className: "{clsPrefix}"
+      listTypeFlag: true
     sqlDataFieldIncludes: ".*"
     sqlConditionFieldIncludes: ".*"
     sqlConditionFieldExcludes: ".*time,.*_uid"

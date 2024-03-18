@@ -10,23 +10,19 @@ public class ArgPane {
     private JLabel textLabel;
     private JButton closeBtn;
     private JPanel content;
-    public Object data;
+    public MethodSettingPane.MethodSettingModel.MethodArgModel arg;
 
-    public Object getData() {
-        return data;
+    public MethodSettingPane.MethodSettingModel.MethodArgModel getArg() {
+        return arg;
     }
 
-    public void setData(Object data) {
-        this.data = data;
-    }
-    public void setText(String text){
-        this.textLabel.setText(text);
-    }
-    public String getText(){
-        return textLabel.getText();
-    }
-    public void setTip(String tip){
-        this.textLabel.setToolTipText(tip);
+    public void setArg(MethodSettingPane.MethodSettingModel.MethodArgModel arg, String displayName) {
+        this.arg = arg;
+        textLabel.setText(displayName);
+        textLabel.setToolTipText(String.format("%s %s %s",
+                arg.getPathVar() ? "@PathVariable(\""+arg.getRefName()+"\")":"",
+                arg.getClassName(),
+                arg.getRefName() == null ? "" : arg.getRefName()));
     }
 
     public JPanel getContent() {

@@ -13,6 +13,7 @@ import com.cmcc.paas.ideaplugin.codegen.gen.define.model.CtrlClass;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.DaoClass;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.SvcClass;
 import com.cmcc.paas.ideaplugin.codegen.services.ResourceService;
+import com.cmcc.paas.ideaplugin.codegen.ui.pane.DomainPaneContainer;
 import com.intellij.uiDesigner.core.GridConstraints;
 
 import javax.swing.*;
@@ -49,6 +50,7 @@ public class CodeGenPane {
     private JTextField svcClassNameTextField;
     private JTextField daoClassNameTextField;
     private JTextField resourceNameTextField;
+    private DomainPaneContainer domainContainer;
 
     private DBTable dbTable;
     private List<DBTable> dbTables;
