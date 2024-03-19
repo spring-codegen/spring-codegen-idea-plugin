@@ -17,6 +17,15 @@ public class DomainSelectionDialog extends JDialog implements ActionListener{
     private JRadioButton resultsRadioButton;
     private JComboBox modelComboBox;
     private Map<DomainType, List<ClassModel>> modelMaps;
+    private DomainSelectionListener listener;
+
+    public DomainSelectionListener getListener() {
+        return listener;
+    }
+
+    public void setListener(DomainSelectionListener listener) {
+        this.listener = listener;
+    }
 
     public DomainSelectionDialog(Map<DomainType, List<ClassModel>> modelMaps) {
         setTitle("选择模型");
@@ -27,6 +36,14 @@ public class DomainSelectionDialog extends JDialog implements ActionListener{
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if (listener != null){
+                    List<ClassModel> clses = modelMaps.get(getSelectedType());
+                    clses.forEach( cls -> {
+                        if (cls.getClassName().equalsIgnoreCase((String)modelComboBox.getSelectedItem())){
+                            listener.onSelectedDomain(cls);
+                        }
+                    });
+                }
                 onOK();
             }
         });
@@ -54,6 +71,10 @@ public class DomainSelectionDialog extends JDialog implements ActionListener{
         argsRadioButton.addActionListener(this);
         entitiesRadioButton.addActionListener(this);
         resultsRadioButton.addActionListener(this);
+    }
+    private DomainType getSelectedType(){
+        return argsRadioButton.isSelected() ? DomainType.ARG :
+                entitiesRadioButton.isSelected() ? DomainType.ENTITY : DomainType.RESULT;
     }
     private void selectWithType(DomainType type){
         List<ClassModel> clses = modelMaps.get(type);
@@ -89,5 +110,8 @@ public class DomainSelectionDialog extends JDialog implements ActionListener{
         if (e.getSource() == resultsRadioButton){
             selectWithType(DomainType.RESULT);
         }
+    }
+    public static interface DomainSelectionListener{
+        public void onSelectedDomain(ClassModel classModel);
     }
 }

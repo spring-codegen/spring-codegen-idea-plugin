@@ -6,7 +6,7 @@
     </constraints>
     <properties>
       <minimumSize width="200" height="150"/>
-      <preferredSize width="200" height="207"/>
+      <preferredSize width="200" height="200"/>
     </properties>
     <border type="etched">
       <color color="-10526881"/>

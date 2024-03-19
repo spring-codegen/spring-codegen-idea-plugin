@@ -3,8 +3,8 @@ package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 import com.cmcc.paas.ideaplugin.codegen.constants.DomainType;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
+import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
 import org.jetbrains.annotations.NotNull;
-import org.jsoup.select.Evaluator;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -12,6 +12,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.cmcc.paas.ideaplugin.codegen.ui.consts.NotificationType.MODEL_UPDATED;
 
 
 /**
@@ -23,7 +25,17 @@ public abstract class MethodSettingPane {
     public abstract JPanel getContent();
     public abstract void setModel(MethodSettingModel model);
     public abstract JComboBox getResultParamComboBox();
+    public abstract  ArgsSettingPane getArgsSettingPane();
     public abstract MethodSettingModel getModel();
+    public void init(){
+        NotificationCenter.INSTANCE.register(MODEL_UPDATED, new NotificationCenter.Handler() {
+            @Override
+            public void handleMessage(@NotNull Object msg) {
+                setModelMaps((Map<DomainType, List<ClassModel>>) msg);
+                resetResultParams();
+            }
+        });
+    }
 
     private MethodCfgPaneActionListener methodCfgPaneActionListener;
 
@@ -38,6 +50,7 @@ public abstract class MethodSettingPane {
 
     public void setModelMaps(Map<DomainType, List<ClassModel>> modelMaps) {
         this.modelMaps = modelMaps;
+        getArgsSettingPane().setModelMaps(modelMaps);
     }
     public void resetResultParams(){
         if (modelMaps == null){
@@ -47,12 +60,11 @@ public abstract class MethodSettingPane {
         List<ClassModel> classes = new ArrayList<>();
         DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
         comboBoxModel.addElement("-");
-        comboBoxModel.addElement(ClassModel.idResultClass().getClassName());
-        comboBoxModel.addElement(ClassModel.booleanClass().getClassName());
-        comboBoxModel.addElement(ClassModel.longClass().getClassName());
-        comboBoxModel.addElement(ClassModel.integerClass().getClassName());
-        modelMaps.values().forEach(a -> {
-            a.forEach( cls -> comboBoxModel.addElement(cls.getClassName()));
+        modelMaps.entrySet().forEach(a -> {
+            if(a.getKey() == DomainType.ARG){
+                return;
+            }
+            a.getValue().forEach( cls -> comboBoxModel.addElement(cls.getClassName()));
         });
         comboBox.setModel(comboBoxModel);
         if (getModel() != null && getModel().getResult() != null) {

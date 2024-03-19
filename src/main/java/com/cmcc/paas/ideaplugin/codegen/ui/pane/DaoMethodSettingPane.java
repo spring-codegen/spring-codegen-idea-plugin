@@ -35,6 +35,7 @@ public class DaoMethodSettingPane extends MethodSettingPane {
     }
     public void init(){
 
+        super.init();
         for (Component component : content.getComponents()) {
             if (component instanceof JTextField){
                 TextFieldUtils.INSTANCE.addTextChangedEvent((JTextField) component, new TextFieldUtils.TextChangedEvent() {
@@ -117,5 +118,9 @@ public class DaoMethodSettingPane extends MethodSettingPane {
     @Override
     public JComboBox getResultParamComboBox() {
         return resultComboBox;
+    }
+    @Override
+    public ArgsSettingPane getArgsSettingPane() {
+        return argsSettingPane;
     }
 }

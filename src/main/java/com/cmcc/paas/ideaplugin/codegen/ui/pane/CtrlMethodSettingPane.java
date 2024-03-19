@@ -36,6 +36,7 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
         init();
     }
     public void init(){
+        super.init();
         outputPagedCheckBox.setBackground(null);
         for (Component component : content.getComponents()) {
             if (component instanceof JTextField){
@@ -95,7 +96,8 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
     public JComboBox getResultParamComboBox() {
         return resultComboBox;
     }
-
-
-
+    @Override
+    public ArgsSettingPane getArgsSettingPane() {
+        return argsSettingPane;
+    }
 }

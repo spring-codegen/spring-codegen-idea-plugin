@@ -12,10 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BeanFieldSelectionDialog extends JDialog {
+    private Object userInfo;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
     private JTable tablePanel;
+    private JTextField classNameTextField;
 
     private String[] tableHeaders = new String[]{"Include", "Column","Name","Type","Not Null", "Min Length", "Max Length",  "Comment"};
 
@@ -31,6 +33,14 @@ public class BeanFieldSelectionDialog extends JDialog {
     }
     private List<DBTableField> fields;
     private BeanFieldSelectionActionListener actionListener;
+
+    public Object getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(Object userInfo) {
+        this.userInfo = userInfo;
+    }
 
     public List<DBTableField> getFields() {
         return fields;
@@ -153,7 +163,9 @@ public class BeanFieldSelectionDialog extends JDialog {
         }
         return result;
     }
-
+    public String getClassName(){
+        return classNameTextField.getText();
+    }
     public static BeanFieldSelectionDialog create() {
         BeanFieldSelectionDialog dialog = new BeanFieldSelectionDialog();
         dialog.pack();

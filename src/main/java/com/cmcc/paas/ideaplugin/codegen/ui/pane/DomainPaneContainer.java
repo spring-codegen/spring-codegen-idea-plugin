@@ -5,12 +5,17 @@ import com.cmcc.paas.ideaplugin.codegen.constants.AppCtx;
 import com.cmcc.paas.ideaplugin.codegen.constants.DomainType;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
+import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
+import com.cmcc.paas.ideaplugin.codegen.ui.BeanFieldSelectionDialog;
+import com.cmcc.paas.ideaplugin.codegen.ui.consts.NotificationType;
 import com.cmcc.paas.ideaplugin.codegen.util.CodeGenUtils;
 import com.cmcc.paas.ideaplugin.codegen.util.StringUtils;
 import com.intellij.uiDesigner.core.GridConstraints;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
 
@@ -23,12 +28,46 @@ public class DomainPaneContainer {
     private JPanel argDomainContainer;
     private JPanel entityDomainContainer;
     private JPanel resultDomainContainer;
+    private JButton addArgButton;
+    private JButton addEntityButton;
+    private JButton addResultButton;
     private Map<DomainType, List<ClassModel>> modelMaps = new HashMap<>();
     private List<DBTableField> dbTableFields;
     private List<CodeCfg.ModelCfg> modelCfgs;
     private Color[] colors = new Color[]{Color.decode("#585C5F"),Color.decode("#4A4E50")};
 
     public DomainPaneContainer(){
+        ActionListener listener = new ActionListener() {
+            /**
+             * @param actionEvent
+             */
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                DomainType domainType = DomainType.ARG;
+                if (actionEvent.getSource() == addEntityButton){
+                    domainType = DomainType.ENTITY;
+                }
+                if (actionEvent.getSource() == addResultButton){
+                    domainType = DomainType.RESULT;
+                }
+                BeanFieldSelectionDialog dialog = new BeanFieldSelectionDialog();
+                dialog.setUserInfo(domainType);
+                dialog.setFields(dbTableFields);
+                dialog.setActionListener(new BeanFieldSelectionDialog.BeanFieldSelectionActionListener() {
+                    @Override
+                    public void onFieldSelected(BeanFieldSelectionDialog dialog) {
+                        ClassModel cls = new ClassModel(dialog.getClassName());
+                        cls.setFields(dialog.getSelectedFields());
+                        addClassModel((DomainType) dialog.getUserInfo(), cls);
+                        NotificationCenter.INSTANCE.sendMessage(NotificationType.MODEL_UPDATED, modelMaps);
+                    }
+                });
+                dialog.setVisible(true);
+            }
+        };
+        addArgButton.addActionListener(listener);
+        addEntityButton.addActionListener(listener);
+        addResultButton.addActionListener(listener);
     }
     public List<DBTableField> getDbTableFields() {
         return dbTableFields;
