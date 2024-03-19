@@ -21,14 +21,14 @@ public class ArgsSettingPane {
 
     }
     public void addArgPane(MethodSettingPane.MethodSettingModel.MethodArgModel methodArgModel){
-        this.content.setLayout(new GridLayout(1, argPanes.size() + 1, 2, 3));
+//        this.argPaneContainer.setLayout(new GridLayout(1, argPanes.size() + 1, 2, 3));
         GridConstraints gridConstraints = new GridConstraints();
         gridConstraints.setRow(0);
         gridConstraints.setColumn(argPanes.size());
         ArgPane argPane = new ArgPane();
         argPane.setArg(methodArgModel, methodArgModel.getPathVar()?String.format("{%s}", methodArgModel.getRefName()) : methodArgModel.getClassName());
         argPanes.add(argPane);
-        argPaneContainer.add(argPane.getContent(), gridConstraints);
+        argPaneContainer.add(argPane.getContent());
     }
     public void setArgs(List<MethodSettingPane.MethodSettingModel.MethodArgModel> args) {
         this.args = args;

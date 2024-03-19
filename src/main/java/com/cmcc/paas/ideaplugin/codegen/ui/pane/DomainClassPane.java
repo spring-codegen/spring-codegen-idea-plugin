@@ -7,6 +7,7 @@ import com.cmcc.paas.ideaplugin.codegen.ui.BeanFieldSelectionDialog;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -31,16 +32,7 @@ public class DomainClassPane {
     }
 
     public DomainClassPane(){
-
-        fieldSelectionButton.addActionListener(new ActionListener() {
-            /**
-             * @param actionEvent
-             */
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-
-            }
-        });
+        Arrays.stream(this.content.getComponents()).forEach(e -> e.setBackground(null));
         alterButton.addActionListener(new ActionListener() {
             /**
              * @param actionEvent

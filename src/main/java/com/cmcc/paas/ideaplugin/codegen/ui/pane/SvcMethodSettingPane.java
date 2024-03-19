@@ -19,15 +19,12 @@ public class SvcMethodSettingPane extends MethodSettingPane {
     protected JLabel clsTagLabel;
     protected JTextField clsTextField;
     protected JTextField methodTextField;
-    protected JTextField inputClsTextField;
-    protected JTextField outputClsTextField;
     protected JPanel content;
     protected JCheckBox outputListTypeCheckBox;
-    protected JCheckBox inputListTypeCheckBox;
     protected JCheckBox outputPagedCheckBox;
-    protected JButton inputButton;
-    protected JButton outputButton;
     private JButton closeBtn;
+    private ArgsSettingPane argsSettingPane;
+    private JComboBox resultComboBox;
 
     protected MethodSettingModel model;
 
@@ -76,8 +73,12 @@ public class SvcMethodSettingPane extends MethodSettingPane {
         this.model = model;
         this.clsTextField.setText(model.getClassName());
         this.methodTextField.setText(model.getMethodName());
+        argsSettingPane.setArgs(model.getArgs());
+        resetResultParams();
     }
 
-
-
+    @Override
+    public JComboBox getResultParamComboBox() {
+        return resultComboBox;
+    }
 }

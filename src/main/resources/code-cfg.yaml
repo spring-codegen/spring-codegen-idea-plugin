@@ -25,6 +25,21 @@ models:
   - className: "{clsPrefix}SearchArg"
     fieldExcludes: ".*time,.*_uid"
     type: ARG
+  - className: "IdArg"
+    fieldIncludes: "id"
+    type: ARG
+  - className: "IdResult"
+    fieldExcludes: "id"
+    type: RESULT
+  - className: "Long"
+    fieldExcludes: "id"
+    type: RESULT
+  - className: "Long"
+    fieldExcludes: "id"
+    type: ARG
+  - className: "Boolean"
+    fieldExcludes: "t"
+    type: RESULT
 methods:
   - type: CTRL
     request:

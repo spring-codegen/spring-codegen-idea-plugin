@@ -360,18 +360,6 @@
                               <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                           </nested-form>
-                          <hspacer id="ec520">
-                            <constraints>
-                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                          </hspacer>
-                          <vspacer id="e4efd">
-                            <constraints>
-                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                          </vspacer>
                         </children>
                       </grid>
                       <component id="6bb19" class="javax.swing.JLabel">
@@ -466,20 +454,6 @@
                           <text value="Dao类："/>
                         </properties>
                       </component>
-                      <grid id="a214e" layout-manager="GridBagLayout">
-                        <constraints>
-                          <grid row="4" column="6" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <background color="-4868683"/>
-                          <foreground color="-6513508"/>
-                          <maximumSize width="1" height="1"/>
-                          <preferredSize width="1" height="1"/>
-                        </properties>
-                        <border type="none"/>
-                        <children/>
-                      </grid>
                       <component id="6470c" class="javax.swing.JTextField" binding="resourceNameTextField">
                         <constraints>
                           <grid row="5" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
@@ -525,6 +499,15 @@
                           </component>
                         </children>
                       </grid>
+                      <component id="ccedd" class="javax.swing.JSeparator">
+                        <constraints>
+                          <grid row="4" column="6" row-span="3" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="0.0" ipadx="1"/>
+                        </constraints>
+                        <properties>
+                          <background color="-9209475"/>
+                        </properties>
+                      </component>
                     </children>
                   </grid>
                 </children>

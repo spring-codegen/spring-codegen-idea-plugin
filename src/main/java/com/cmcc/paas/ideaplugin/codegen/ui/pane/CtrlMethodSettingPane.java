@@ -1,5 +1,7 @@
 package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
+import com.cmcc.paas.ideaplugin.codegen.constants.DomainType;
+import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -7,6 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhangyinghui
@@ -32,7 +36,7 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
         init();
     }
     public void init(){
-
+        outputPagedCheckBox.setBackground(null);
         for (Component component : content.getComponents()) {
             if (component instanceof JTextField){
                 TextFieldUtils.INSTANCE.addTextChangedEvent((JTextField) component, new TextFieldUtils.TextChangedEvent() {
@@ -84,6 +88,12 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
             this.outputPagedCheckBox.setSelected(model.getResult().getOutputPaged());
         }
         argsSettingPane.setArgs(model.getArgs());
+        resetResultParams();
+    }
+
+    @Override
+    public JComboBox getResultParamComboBox() {
+        return resultComboBox;
     }
 
 

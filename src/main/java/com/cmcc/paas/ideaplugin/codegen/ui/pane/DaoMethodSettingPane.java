@@ -19,17 +19,14 @@ public class DaoMethodSettingPane extends MethodSettingPane {
     private JLabel clsTagLabel;
     private JTextField clsTextField;
     private JTextField methodTextField;
-    private JTextField inputClsTextField;
-    private JTextField outputClsTextField;
     private JCheckBox outputPagedCheckBox;
     private JCheckBox outputListTypeCheckBox;
-    private JCheckBox inputListTypeCheckBox;
-    private JButton inputButton;
-    private JButton outputButton;
     private JButton dataFieldButton;
     private JButton whereFieldButton;
     private JPanel content;
     private JButton closeBtn;
+    private ArgsSettingPane argsSettingPane;
+    private JComboBox resultComboBox;
 
     private MethodSettingModel model;
 
@@ -108,10 +105,17 @@ public class DaoMethodSettingPane extends MethodSettingPane {
         this.model = model;
         this.clsTextField.setText(model.getClassName());
         this.methodTextField.setText(model.getMethodName());
+        argsSettingPane.setArgs(model.getArgs());
+        resetResultParams();
     }
 
     @Override
     public MethodSettingModel getModel() {
         return this.model;
+    }
+
+    @Override
+    public JComboBox getResultParamComboBox() {
+        return resultComboBox;
     }
 }

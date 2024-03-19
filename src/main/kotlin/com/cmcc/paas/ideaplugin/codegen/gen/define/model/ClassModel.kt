@@ -1,7 +1,7 @@
 package com.cmcc.paas.ideaplugin.codegen.gen.define.model
 
 import com.cmcc.paas.ideaplugin.codegen.gen.FieldUtils
-import com.jetbrains.rd.util.string.printToString
+import com.intellij.util.containers.stream
 import java.util.stream.Collectors
 
 /**
@@ -11,6 +11,31 @@ import java.util.stream.Collectors
  */
 open class ClassModel(var className: String, var pkg: String?, var comment: String?, var fields: MutableList<Field>?) {
     constructor(className: String) : this(className, null, null, null)
+    companion object{
+        val CLASS_ID_ARG = ClassModel("IdArg", "com.cmit.paas.common.web.model", null, null)
+        val CLASS_ID_RESULT = ClassModel("IdResult", "com.cmit.paas.common.web.model", null, null)
+        val CLASS_BOOL_RESULT = ClassModel("Boolean")
+        val CLASS_LONG_RESULT = ClassModel("Long")
+        val CLASS_INTEGER_RESULT = ClassModel("Integer")
+        @JvmStatic fun idArgClass():ClassModel{
+            return CLASS_ID_ARG
+        }
+        @JvmStatic fun idResultClass():ClassModel{
+            return CLASS_ID_RESULT
+        }
+        @JvmStatic fun booleanClass():ClassModel{
+            return CLASS_BOOL_RESULT
+        }
+        @JvmStatic fun longClass():ClassModel{
+            return CLASS_LONG_RESULT
+        }
+        @JvmStatic fun integerClass():ClassModel{
+            return CLASS_INTEGER_RESULT
+        }
+        @JvmStatic fun isInnerClass(className:String):Boolean{
+            return arrayOf("Boolean", "Long", "IdArg", "IdResult").stream().filter { it.equals(className, true) }.count() > 0;
+        }
+    }
 
     var tableName: String? = null
     var methods: MutableList<Method>? = ArrayList()

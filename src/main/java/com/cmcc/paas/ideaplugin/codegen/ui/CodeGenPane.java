@@ -9,11 +9,13 @@ import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.CodeGenerator;
 import com.cmcc.paas.ideaplugin.codegen.gen.FieldUtils;
 import com.cmcc.paas.ideaplugin.codegen.gen.ModelResult;
+import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.CtrlClass;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.DaoClass;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.SvcClass;
 import com.cmcc.paas.ideaplugin.codegen.services.ResourceService;
 import com.cmcc.paas.ideaplugin.codegen.ui.pane.DomainPaneContainer;
+import com.cmcc.paas.ideaplugin.codegen.util.StringUtils;
 import com.intellij.uiDesigner.core.GridConstraints;
 
 import javax.swing.*;
@@ -125,6 +127,7 @@ public class CodeGenPane {
         codeCfg = ResourceService.INSTANCE.getCodeCfg();
 //        clsCfgTable.setRowHeight(30);
         methodContainerPane.setCodeCfg(codeCfg);
+        domainContainer.setModelCfgs(codeCfg.getModels());
 
         /**
          * 配置数据库
@@ -233,19 +236,6 @@ public class CodeGenPane {
         };
         swingWorker.execute();
     }
-    private String getHandledVar(String v, Map<String, Object> p){
-        if (v == null){
-            return v;
-        }
-        String r = v;
-        for (String k : p.keySet()){
-            if (p.get(k) == null){
-                continue;
-            }
-            r = r.replaceAll("\\{\\s*"+k+"\\s*\\}",  p.get(k).toString());
-        }
-        return r;
-    }
     /*
     private List<CodeCfg.FieldDefine> getDefaultFields(String excludes, String includes){
         List<CodeCfg.FieldDefine> allowFields = new ArrayList<>();
@@ -274,40 +264,23 @@ public class CodeGenPane {
         methodCfgModel.setOutputFields(getDefaultFields(methodCfgModel.getOutputFieldExcludes(), methodCfgModel.getOutputFieldIncludes()));
     }
     private void handleClassName(MethodGrpCfgModel.MethodCfgModel methodCfgModel, Map param){
-        methodCfgModel.setInputClassName(getHandledVar(methodCfgModel.getInputClassName(), param));
-        methodCfgModel.setOutputClassName(getHandledVar(methodCfgModel.getOutputClassName(), param));
+        methodCfgModel.setInputClassName(StringUtils.replacePlaceholders(methodCfgModel.getInputClassName(), param));
+        methodCfgModel.setOutputClassName(StringUtils.replacePlaceholders(methodCfgModel.getOutputClassName(), param));
     }
 */
     /**
      *选择完表执行
      */
     private void updateClasses(){
-        ctrlClassNameTextField.setText(getHandledVar(codeCfg.getCtrlClass().getClassName(), AppCtx.INSTANCE.getENV()));
-        svcClassNameTextField.setText(getHandledVar(codeCfg.getSvcClass().getClassName(),  AppCtx.INSTANCE.getENV()));
-        daoClassNameTextField.setText(getHandledVar(codeCfg.getDaoClass().getClassName(), AppCtx.INSTANCE.getENV()));
-        /**
-         * 表格处理
-         */
-//        String[][] data = new String[1][3];
-//        data[0][0]  = getHandledVar(codeCfg.getCtrlClass().getClassName(), AppCtx.INSTANCE.getENV());
-//        data[0][1] = getHandledVar(codeCfg.getSvcClass().getClassName(),  AppCtx.INSTANCE.getENV());
-//        data[0][2] = getHandledVar(codeCfg.getDaoClass().getClassName(), AppCtx.INSTANCE.getENV());
-//        String[] headers = new String[]{codeCfg.getCtrlClass().getTitle(),codeCfg.getSvcClass().getTitle(),codeCfg.getDaoClass().getTitle()};
-//        DefaultTableModel tableModel = new DefaultTableModel();
-//        tableModel.setDataVector(data, headers);
-//        tableModel.addTableModelListener(new TableModelListener() {
-//            @Override
-//            public void tableChanged(TableModelEvent e) {
-//                updateClassCfg();
-//                updateMethods();
-//            }
-//        });
-//        clsCfgTable.setModel(tableModel);
-//        ctrlClass = new CtrlClass((String)clsCfgTable.getModel().getValueAt(0,0));
+        resetClasses();
+        resetModels();
+    }
+    private void resetClasses(){
+        ctrlClassNameTextField.setText(StringUtils.INSTANCE.replacePlaceholders(codeCfg.getCtrlClass().getClassName(), AppCtx.INSTANCE.getENV()));
+        svcClassNameTextField.setText(StringUtils.INSTANCE.replacePlaceholders(codeCfg.getSvcClass().getClassName(),  AppCtx.INSTANCE.getENV()));
+        daoClassNameTextField.setText(StringUtils.INSTANCE.replacePlaceholders(codeCfg.getDaoClass().getClassName(), AppCtx.INSTANCE.getENV()));
         ctrlClass = new CtrlClass(ctrlClassNameTextField.getText());
         ctrlClass.setComment(dbTable.getComment());
-//        svcClass = new SvcClass((String)clsCfgTable.getModel().getValueAt(0,1));
-//        daoClass = new DaoClass((String)clsCfgTable.getModel().getValueAt(0,2));
         svcClass = new SvcClass(svcClassNameTextField.getText());
         daoClass = new DaoClass(daoClassNameTextField.getText());
         ctrlClass.setTableName(dbTable.getName());
@@ -316,10 +289,10 @@ public class CodeGenPane {
         daoClass.setTableName(dbTable.getName());
         daoClass.setComment(dbTable.getComment());
     }
+    private void resetModels(){
+        domainContainer.setDbTableFields(dbTable.getFields());
+    }
     private void updateClassCfg(){
-//        ctrlClass.setClassName((String)clsCfgTable.getModel().getValueAt(0,0));
-//        svcClass.setClassName((String)clsCfgTable.getModel().getValueAt(0,1));
-//        daoClass.setClassName((String)clsCfgTable.getModel().getValueAt(0,2));
         ctrlClass.setClassName(ctrlClassNameTextField.getText());
         svcClass.setClassName(svcClassNameTextField.getText());
         daoClass.setClassName(daoClassNameTextField.getText());
@@ -330,6 +303,7 @@ public class CodeGenPane {
      */
     private void updateMethods(){
         methodContainerPane.reset();
+        methodContainerPane.setModelMaps(domainContainer.getModelMaps());
         methodContainerPane.setCtrlClass(ctrlClass);
         methodContainerPane.setSvcClass(svcClass);
         methodContainerPane.setDaoClass(daoClass);

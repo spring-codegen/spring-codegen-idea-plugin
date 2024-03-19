@@ -27,4 +27,17 @@ object StringUtils {
         }
         return if (result.size == 0) null else result
     }
+    fun replacePlaceholders(v: String?, p: Map<String, Any?>): String? {
+        if (v == null) {
+            return v
+        }
+        var r: String = v
+        for (k in p.keys) {
+            if (p[k] == null) {
+                continue
+            }
+            r = r.replace("\\{\\s*$k\\s*\\}".toRegex(), p[k].toString())
+        }
+        return r
+    }
 }

@@ -2,14 +2,20 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.cmcc.paas.ideaplugin.codegen.ui.pane.ArgsSettingPane">
   <grid id="27dc6" binding="content" layout-manager="GridBagLayout">
     <constraints>
-      <xy x="20" y="20" width="500" height="68"/>
+      <xy x="20" y="20" width="245" height="68"/>
     </constraints>
-    <properties/>
+    <properties>
+      <autoscrolls value="true"/>
+      <background color="-12828863"/>
+      <inheritsPopupMenu value="false"/>
+      <minimumSize width="30" height="10"/>
+      <preferredSize width="30" height="20"/>
+    </properties>
     <border type="none"/>
     <children>
       <grid id="eb3da" binding="argPaneContainer" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="1.0"/>
         </constraints>
         <properties>
@@ -20,14 +26,15 @@
       </grid>
       <component id="6951c" class="javax.swing.JButton" binding="addArgButton">
         <constraints>
-          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag top="0" left="0" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <borderPainted value="false"/>
           <contentAreaFilled value="false"/>
-          <minimumSize width="30" height="30"/>
-          <preferredSize width="50" height="30"/>
+          <maximumSize width="60" height="30"/>
+          <minimumSize width="60" height="30"/>
+          <preferredSize width="60" height="30"/>
           <text value="+参数"/>
         </properties>
       </component>

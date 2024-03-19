@@ -1,21 +1,28 @@
 package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
+import com.cmcc.paas.ideaplugin.codegen.constants.DomainType;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
 import org.jetbrains.annotations.NotNull;
+import org.jsoup.select.Evaluator;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 
 /**
  * @author zhangyinghui
  * @date 2023/12/22
  */
 public abstract class MethodSettingPane {
+    private Map<DomainType, List<ClassModel>> modelMaps;
     public abstract JPanel getContent();
     public abstract void setModel(MethodSettingModel model);
+    public abstract JComboBox getResultParamComboBox();
     public abstract MethodSettingModel getModel();
 
     private MethodCfgPaneActionListener methodCfgPaneActionListener;
@@ -24,6 +31,34 @@ public abstract class MethodSettingPane {
         return methodCfgPaneActionListener;
     }
 
+    public Map<DomainType, List<ClassModel>> getModelMaps() {
+        return modelMaps;
+    }
+
+
+    public void setModelMaps(Map<DomainType, List<ClassModel>> modelMaps) {
+        this.modelMaps = modelMaps;
+    }
+    public void resetResultParams(){
+        if (modelMaps == null){
+            return;
+        }
+        JComboBox comboBox = getResultParamComboBox();
+        List<ClassModel> classes = new ArrayList<>();
+        DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
+        comboBoxModel.addElement("-");
+        comboBoxModel.addElement(ClassModel.idResultClass().getClassName());
+        comboBoxModel.addElement(ClassModel.booleanClass().getClassName());
+        comboBoxModel.addElement(ClassModel.longClass().getClassName());
+        comboBoxModel.addElement(ClassModel.integerClass().getClassName());
+        modelMaps.values().forEach(a -> {
+            a.forEach( cls -> comboBoxModel.addElement(cls.getClassName()));
+        });
+        comboBox.setModel(comboBoxModel);
+        if (getModel() != null && getModel().getResult() != null) {
+            comboBox.setSelectedItem(getModel().getResult().className);
+        }
+    }
     public void setMethodCfgPaneActionListener(MethodCfgPaneActionListener methodCfgPaneActionListener) {
         this.methodCfgPaneActionListener = methodCfgPaneActionListener;
     }

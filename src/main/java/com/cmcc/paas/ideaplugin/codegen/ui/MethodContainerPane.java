@@ -2,6 +2,7 @@ package com.cmcc.paas.ideaplugin.codegen.ui;
 
 import com.cmcc.paas.ideaplugin.codegen.config.CodeCfg;
 import com.cmcc.paas.ideaplugin.codegen.constants.AppCtx;
+import com.cmcc.paas.ideaplugin.codegen.constants.DomainType;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTable;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.FieldUtils;
@@ -13,6 +14,7 @@ import com.cmcc.paas.ideaplugin.codegen.gen.define.model.SvcClass;
 import com.cmcc.paas.ideaplugin.codegen.ui.pane.CtrlMethodSettingPane;
 import com.cmcc.paas.ideaplugin.codegen.ui.pane.DaoMethodSettingPane;
 import com.cmcc.paas.ideaplugin.codegen.ui.pane.MethodSettingPane;
+import com.cmcc.paas.ideaplugin.codegen.ui.pane.SvcMethodSettingPane;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
@@ -32,17 +34,26 @@ public class MethodContainerPane {
     private JScrollPane scrollPane;
     private MethodContainerBackgroundPane container;
     private Map<MethodSettingPane.ClassType, Map<String, MethodItemHolder>> allMethods = new LinkedHashMap<>();
+    private Map<DomainType, List<ClassModel>> modelMaps;
     private static int COLUMN_NUM = 3;
     private static int ITEM_MARGIN_H = 50;
     private static int ITEM_MARGIN_V = 20;
     private static int CONTAINER_PADDING_RIGHT = 30;
-    private static int ITEM_HEIGHT = 200;
+    private static int ITEM_HEIGHT = 220;
     private CodeCfg codeCfg;
     private List<DBTableField> dbTableFields;
     private CtrlClass ctrlClass = null;
     private SvcClass svcClass =  null;
     private DaoClass daoClass =  null;
     private DBTable dbTable;
+
+    public Map<DomainType, List<ClassModel>> getModelMaps() {
+        return modelMaps;
+    }
+
+    public void setModelMaps(Map<DomainType, List<ClassModel>> modelMaps) {
+        this.modelMaps = modelMaps;
+    }
 
     public CtrlClass getCtrlClass() {
         return ctrlClass;
@@ -77,11 +88,9 @@ public class MethodContainerPane {
     }
 
     public MethodContainerPane(){
-//        content.setLayout(null);
-//        content.setBackground(Color.red);
         GridBagConstraints constraints = new GridBagConstraints();
         container = new MethodContainerBackgroundPane();
-//        container.setBackground(Color.blue);
+        scrollPane.setBorder(null);
         scrollPane.setViewportView(container);
         container.setLayout(null);
         scrollPane.addComponentListener(new ComponentAdapter() {
@@ -177,6 +186,7 @@ public class MethodContainerPane {
                     methodCfg.getResult().getListTypeFlag(),
                     methodCfg.getResult().getOutputPaged());
             methodResultModel.setRefName(methodCfg.getResult().getRefName());
+            model.setResult(methodResultModel);
         }
 
 
@@ -208,10 +218,11 @@ public class MethodContainerPane {
         if ( classType == MethodSettingPane.ClassType.DAO  ){
             holder.panel = new DaoMethodSettingPane();
         }else if ( classType == MethodSettingPane.ClassType.SVC  ){
-            holder.panel = new DaoMethodSettingPane();
+            holder.panel = new SvcMethodSettingPane();
         }else{
             holder.panel =new CtrlMethodSettingPane();
         }
+        holder.panel.setModelMaps(modelMaps);
         holder.panel.getContent().setSize(w, ITEM_HEIGHT);
         holder.panel.getContent().setLocation(x,y);
         holder.panel.setModel(getDefaultMethodCfgModel(classType, methodType, methodName));
