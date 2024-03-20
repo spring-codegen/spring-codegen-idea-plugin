@@ -17,15 +17,17 @@ object NotificationCenter {
         }
         events[event]!!.remove(handler)
     }
-    fun sendMessage(event:String, msg:Any){
+    fun sendMessage(event:String, data:Any){
         if ( events[event] == null ){
             return
         }
         thread {
-            events[event]!!.forEach{ it.handleMessage(msg)}
+            events[event]!!.forEach{ it.handleMessage(Message(event, data))}
         }
     }
     public interface Handler{
-        public fun handleMessage(msg:Any);
+        public fun handleMessage(msg:Message);
+    }
+    public class Message(var envent:String, var data:Any){
     }
 }

@@ -2,36 +2,30 @@ package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
 import com.cmcc.paas.ideaplugin.codegen.constants.DomainType;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
-import com.cmcc.paas.ideaplugin.codegen.ui.MethodCreateDialog;
+import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
 import com.cmcc.paas.ideaplugin.codegen.ui.dialog.DomainSelectionDialog;
 import com.intellij.uiDesigner.core.GridConstraints;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.cmcc.paas.ideaplugin.codegen.ui.consts.NotificationType.MODEL_ADDED;
+import static com.cmcc.paas.ideaplugin.codegen.ui.consts.NotificationType.MODEL_UPDATED;
+
 public class ArgsSettingPane {
     private JPanel content;
     private JPanel argPaneContainer;
     private List<ArgPane> argPanes = new ArrayList<>();
     private JButton addArgButton;
-    private Map<DomainType, List<ClassModel>> modelMaps;
 
     private List<MethodSettingPane.MethodSettingModel.MethodArgModel> args;
     public List<MethodSettingPane.MethodSettingModel.MethodArgModel> getArgs() {
         return args;
-    }
-
-    public Map<DomainType, List<ClassModel>> getModelMaps() {
-        return modelMaps;
-    }
-
-    public void setModelMaps(Map<DomainType, List<ClassModel>> modelMaps) {
-        this.modelMaps = modelMaps;
     }
 
     public ArgsSettingPane(){
@@ -42,8 +36,8 @@ public class ArgsSettingPane {
              */
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                DomainSelectionDialog dialog = DomainSelectionDialog.create(modelMaps);
-                dialog.setListener(new DomainSelectionDialog.DomainSelectionListener() {
+                DomainSelectionDialog dialog = DomainSelectionDialog.create();
+                dialog.setListener(new DomainSelectionDialog.SelectionListener() {
                     /**
                      * @param classModel
                      */
@@ -57,6 +51,11 @@ public class ArgsSettingPane {
                 dialog.setVisible(true);
 
             }
+        });
+
+        NotificationCenter.INSTANCE.register(MODEL_UPDATED, msg -> {
+            ClassModel cls = (ClassModel) msg.getData();
+
         });
     }
     public void addArgPane(MethodSettingPane.MethodSettingModel.MethodArgModel methodArgModel){
@@ -80,7 +79,14 @@ public class ArgsSettingPane {
         args.forEach( e -> addArgPane(e));
     }
 
-
+    public void updateClassModel(ClassModel classModel){
+        argPanes.stream().forEach( e -> {
+            if (e.getArg().getClassModel() == classModel){
+                e.getArg().setClassName(classModel.getClassName());
+                e.setArg(e.getArg(), classModel.getClassName());
+            }
+        });
+    }
     public JPanel getContent() {
         return content;
     }

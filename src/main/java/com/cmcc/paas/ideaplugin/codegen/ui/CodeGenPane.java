@@ -198,6 +198,7 @@ public class CodeGenPane {
     }
     private void selectTable(DBTable dbTable){
         this.dbTable = dbTable;
+        AppCtx.INSTANCE.setCurrentTable(dbTable);
         SwingWorker<List<DBTableField>, Object> swingWorker = new SwingWorker<List<DBTableField>, Object>(){
 
             @Override
@@ -218,8 +219,6 @@ public class CodeGenPane {
                     return;
                 }
                 dbTable.setFields(fields);
-                methodContainerPane.setDbTable(dbTable);
-                methodContainerPane.setDbTableFields(fields);
                 String clsPrefix = dbTable.getName();
                 String tablePrefix = (String)AppCtx.INSTANCE.getENV().get(EnvKey.TABLE_PREFIX);
                 tablePrefix = tablePrefix == null ? "t_":tablePrefix;
@@ -290,7 +289,7 @@ public class CodeGenPane {
         daoClass.setComment(dbTable.getComment());
     }
     private void resetModels(){
-        domainContainer.setDbTableFields(dbTable.getFields());
+        domainContainer.reset();
     }
     private void updateClassCfg(){
         ctrlClass.setClassName(ctrlClassNameTextField.getText());
@@ -303,7 +302,6 @@ public class CodeGenPane {
      */
     private void updateMethods(){
         methodContainerPane.reset();
-        methodContainerPane.setModelMaps(domainContainer.getModelMaps());
         methodContainerPane.setCtrlClass(ctrlClass);
         methodContainerPane.setSvcClass(svcClass);
         methodContainerPane.setDaoClass(daoClass);

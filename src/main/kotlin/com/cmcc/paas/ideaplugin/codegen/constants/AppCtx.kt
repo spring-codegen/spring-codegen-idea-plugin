@@ -1,5 +1,7 @@
 package com.cmcc.paas.ideaplugin.codegen.constants
 
+import com.cmcc.paas.ideaplugin.codegen.db.model.DBTable
+import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel
 import com.intellij.openapi.project.Project
 
 /**
@@ -10,4 +12,6 @@ import com.intellij.openapi.project.Project
 object AppCtx {
     var ENV:Map<String, Any> = HashMap()
     var project:Project? = null
+    var modelMaps:Map<DomainType, List<ClassModel>>? = null
+    var currentTable:DBTable ? = null
 }

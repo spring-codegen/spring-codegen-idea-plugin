@@ -128,6 +128,12 @@ public class BeanFieldSelectionDialog extends JDialog {
         this.tablePanel.getColumnModel().getColumn(TableHeaderIndex.NOT_NULL.ordinal()).setCellEditor(new DefaultCellEditor(new JCheckBox()));
         this.tablePanel.getColumnModel().getColumn(TableHeaderIndex.NOT_NULL.ordinal()).setCellRenderer(new TableCellFieldRender());
     }
+    public void setClassName(String className){
+        this.classNameTextField.setText(className);
+    }
+    public String getClassName(){
+        return this.classNameTextField.getText();
+    }
     public void setSelectedFields(List<ClassModel.Field> fields){
         for (int i = 0 ; i< this.tablePanel.getModel().getRowCount(); i++){
             String columnName = (String)tablePanel.getModel().getValueAt(i, TableHeaderIndex.COLUMN_NAME.ordinal());
@@ -162,9 +168,6 @@ public class BeanFieldSelectionDialog extends JDialog {
             result.add(fieldDefine);
         }
         return result;
-    }
-    public String getClassName(){
-        return classNameTextField.getText();
     }
     public static BeanFieldSelectionDialog create() {
         BeanFieldSelectionDialog dialog = new BeanFieldSelectionDialog();

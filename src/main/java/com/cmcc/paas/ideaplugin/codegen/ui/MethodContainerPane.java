@@ -7,10 +7,7 @@ import com.cmcc.paas.ideaplugin.codegen.db.model.DBTable;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.FieldUtils;
 import com.cmcc.paas.ideaplugin.codegen.gen.ModelResult;
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.CtrlClass;
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.DaoClass;
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.SvcClass;
+import com.cmcc.paas.ideaplugin.codegen.gen.define.model.*;
 import com.cmcc.paas.ideaplugin.codegen.ui.pane.CtrlMethodSettingPane;
 import com.cmcc.paas.ideaplugin.codegen.ui.pane.DaoMethodSettingPane;
 import com.cmcc.paas.ideaplugin.codegen.ui.pane.MethodSettingPane;
@@ -34,26 +31,16 @@ public class MethodContainerPane {
     private JScrollPane scrollPane;
     private MethodContainerBackgroundPane container;
     private Map<MethodSettingPane.ClassType, Map<String, MethodItemHolder>> allMethods = new LinkedHashMap<>();
-    private Map<DomainType, List<ClassModel>> modelMaps;
     private static int COLUMN_NUM = 3;
     private static int ITEM_MARGIN_H = 50;
     private static int ITEM_MARGIN_V = 20;
     private static int CONTAINER_PADDING_RIGHT = 30;
     private static int ITEM_HEIGHT = 220;
     private CodeCfg codeCfg;
-    private List<DBTableField> dbTableFields;
     private CtrlClass ctrlClass = null;
     private SvcClass svcClass =  null;
     private DaoClass daoClass =  null;
-    private DBTable dbTable;
 
-    public Map<DomainType, List<ClassModel>> getModelMaps() {
-        return modelMaps;
-    }
-
-    public void setModelMaps(Map<DomainType, List<ClassModel>> modelMaps) {
-        this.modelMaps = modelMaps;
-    }
 
     public CtrlClass getCtrlClass() {
         return ctrlClass;
@@ -77,14 +64,6 @@ public class MethodContainerPane {
 
     public void setDaoClass(DaoClass daoClass) {
         this.daoClass = daoClass;
-    }
-
-    public DBTable getDbTable() {
-        return dbTable;
-    }
-
-    public void setDbTable(DBTable dbTable) {
-        this.dbTable = dbTable;
     }
 
     public MethodContainerPane(){
@@ -112,7 +91,7 @@ public class MethodContainerPane {
 
     private List<ClassModel.Field> getDefaultFields(String excludes, String includes){
         List<ClassModel.Field> allowFields = new ArrayList<>();
-        dbTableFields.forEach(field -> {
+        AppCtx.INSTANCE.getCurrentTable().getFields().forEach(field -> {
             if (StringUtils.isNotEmpty(excludes)){
                 boolean isExclude = Arrays.stream(excludes.split(",")).filter(p -> Pattern.matches(p, field.getName())).findFirst().isPresent();
                 if (isExclude){
@@ -153,6 +132,7 @@ public class MethodContainerPane {
     }
     public MethodSettingPane.MethodSettingModel getDefaultMethodCfgModel(MethodSettingPane.ClassType classType, String methodType, String methodName){
         Map p = AppCtx.INSTANCE.getENV();
+        DBTable dbTable = AppCtx.INSTANCE.getCurrentTable();
         p.put("entityName", dbTable.getComment() == null ? dbTable.getName() : dbTable.getComment());
         String className = classType == MethodSettingPane.ClassType.CTRL ? ctrlClass.getClassName() : classType == MethodSettingPane.ClassType.SVC ? svcClass.getClassName() : daoClass.getClassName();
         CodeCfg.MethodCfg methodCfg = getMethodCfg(classType, methodType);
@@ -166,7 +146,7 @@ public class MethodContainerPane {
         }
         model.setMethodType(methodCfg.getName());
         model.setComment(getHandledVar(methodCfg.getComment(), p));
-        model.setDbTableFields(getDbTableFields());
+        model.setDbTableFields(dbTable.getFields());
         List<MethodSettingPane.MethodSettingModel.MethodArgModel> args = new ArrayList<>();
         for(CodeCfg.MethodArg arg : methodCfg.getArgs()){
             MethodSettingPane.MethodSettingModel.MethodArgModel methodArgModel = MethodSettingPane.MethodSettingModel.MethodArgModel.of(
@@ -176,6 +156,7 @@ public class MethodContainerPane {
                     arg.isPathVar()
                     );
             methodArgModel.setRefName(arg.getRefName());
+            methodArgModel.setClassModel(DomainModels.INSTANCE.getClassModelByName(methodArgModel.getClassName()));;
             args.add(methodArgModel);
         }
         model.setArgs(args);
@@ -186,6 +167,7 @@ public class MethodContainerPane {
                     methodCfg.getResult().getListTypeFlag(),
                     methodCfg.getResult().getOutputPaged());
             methodResultModel.setRefName(methodCfg.getResult().getRefName());
+            methodResultModel.setClassModel(DomainModels.INSTANCE.getClassModelByName(methodResultModel.getClassName()));
             model.setResult(methodResultModel);
         }
 
@@ -222,7 +204,6 @@ public class MethodContainerPane {
         }else{
             holder.panel =new CtrlMethodSettingPane();
         }
-        holder.panel.setModelMaps(modelMaps);
         holder.panel.getContent().setSize(w, ITEM_HEIGHT);
         holder.panel.getContent().setLocation(x,y);
         holder.panel.setModel(getDefaultMethodCfgModel(classType, methodType, methodName));
@@ -320,14 +301,6 @@ public class MethodContainerPane {
 
     public void setCodeCfg(CodeCfg codeCfg) {
         this.codeCfg = codeCfg;
-    }
-
-    public List<DBTableField> getDbTableFields() {
-        return dbTableFields;
-    }
-
-    public void setDbTableFields(List<DBTableField> dbTableFields) {
-        this.dbTableFields = dbTableFields;
     }
     public ModelResult getCfgResult(){
         ModelResult result = new ModelResult();

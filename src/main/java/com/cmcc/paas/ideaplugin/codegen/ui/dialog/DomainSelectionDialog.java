@@ -2,6 +2,7 @@ package com.cmcc.paas.ideaplugin.codegen.ui.dialog;
 
 import com.cmcc.paas.ideaplugin.codegen.constants.DomainType;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
+import com.cmcc.paas.ideaplugin.codegen.gen.define.model.DomainModels;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -16,28 +17,26 @@ public class DomainSelectionDialog extends JDialog implements ActionListener{
     private JRadioButton entitiesRadioButton;
     private JRadioButton resultsRadioButton;
     private JComboBox modelComboBox;
-    private Map<DomainType, List<ClassModel>> modelMaps;
-    private DomainSelectionListener listener;
+    private SelectionListener listener;
 
-    public DomainSelectionListener getListener() {
+    public SelectionListener getListener() {
         return listener;
     }
 
-    public void setListener(DomainSelectionListener listener) {
+    public void setListener(SelectionListener listener) {
         this.listener = listener;
     }
 
-    public DomainSelectionDialog(Map<DomainType, List<ClassModel>> modelMaps) {
+    public DomainSelectionDialog() {
         setTitle("选择模型");
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        this.modelMaps = modelMaps;
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (listener != null){
-                    List<ClassModel> clses = modelMaps.get(getSelectedType());
+                    List<ClassModel> clses = DomainModels.INSTANCE.getModesByType(getSelectedType());
                     clses.forEach( cls -> {
                         if (cls.getClassName().equalsIgnoreCase((String)modelComboBox.getSelectedItem())){
                             listener.onSelectedDomain(cls);
@@ -77,7 +76,7 @@ public class DomainSelectionDialog extends JDialog implements ActionListener{
                 entitiesRadioButton.isSelected() ? DomainType.ENTITY : DomainType.RESULT;
     }
     private void selectWithType(DomainType type){
-        List<ClassModel> clses = modelMaps.get(type);
+        List<ClassModel> clses = DomainModels.INSTANCE.getModesByType(type);
         DefaultComboBoxModel<String>  methodTypeModel = new DefaultComboBoxModel<>();
         clses.forEach(e -> methodTypeModel.addElement(e.getClassName()));
         modelComboBox.setModel(methodTypeModel);
@@ -93,8 +92,8 @@ public class DomainSelectionDialog extends JDialog implements ActionListener{
         dispose();
     }
 
-    public static DomainSelectionDialog create(Map<DomainType, List<ClassModel>> modelMaps) {
-        DomainSelectionDialog dialog = new DomainSelectionDialog(modelMaps);
+    public static DomainSelectionDialog create() {
+        DomainSelectionDialog dialog = new DomainSelectionDialog();
         dialog.pack();
         return dialog;
     }
@@ -111,7 +110,7 @@ public class DomainSelectionDialog extends JDialog implements ActionListener{
             selectWithType(DomainType.RESULT);
         }
     }
-    public static interface DomainSelectionListener{
+    public static interface SelectionListener {
         public void onSelectedDomain(ClassModel classModel);
     }
 }

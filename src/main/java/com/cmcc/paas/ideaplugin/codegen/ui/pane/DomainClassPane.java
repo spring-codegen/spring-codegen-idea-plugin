@@ -1,8 +1,11 @@
 package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
+import com.cmcc.paas.ideaplugin.codegen.constants.AppCtx;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
+import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
 import com.cmcc.paas.ideaplugin.codegen.ui.BeanFieldSelectionDialog;
+import com.cmcc.paas.ideaplugin.codegen.ui.consts.NotificationType;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -21,15 +24,7 @@ public class DomainClassPane {
     private JLabel classNameLabel;
     private JButton alterButton;
     private ClassModel classModel;
-    private List<DBTableField> tableFields;
-
-    public List<DBTableField> getTableFields() {
-        return tableFields;
-    }
-
-    public void setTableFields(List<DBTableField> tableFields) {
-        this.tableFields = tableFields;
-    }
+    private OperationActionListener actionListener;
 
     public DomainClassPane(){
         Arrays.stream(this.content.getComponents()).forEach(e -> e.setBackground(null));
@@ -40,24 +35,33 @@ public class DomainClassPane {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 BeanFieldSelectionDialog dialog = BeanFieldSelectionDialog.create();
-                dialog.setFields(tableFields);
+                dialog.setFields(AppCtx.INSTANCE.getCurrentTable().getFields());
                 dialog.setSelectedFields(classModel.getFields());
+                dialog.setClassName(classModel.getClassName());
                 dialog.setActionListener(new BeanFieldSelectionDialog.BeanFieldSelectionActionListener() {
                     @Override
                     public void onFieldSelected(BeanFieldSelectionDialog dialog) {
                         classModel.setFields(dialog.getSelectedFields());
+                        if (!classModel.getClassName().equalsIgnoreCase(dialog.getClassName())){
+                            classModel.setClassName(dialog.getClassName());
+                            classNameLabel.setText(dialog.getClassName());
+                            NotificationCenter.INSTANCE.sendMessage(NotificationType.MODEL_UPDATED, classModel);
+                        }
                     }
                 });
                 dialog.setVisible(true);
             }
         });
+        DomainClassPane handler = this;
         deleteButton.addActionListener(new ActionListener() {
             /**
              * @param actionEvent
              */
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-
+                if (actionListener != null){
+                    actionListener.onDomainClassRemove(handler);
+                }
             }
         });
     }
@@ -75,5 +79,9 @@ public class DomainClassPane {
         this.classModel = classModel;
         classNameLabel.setText(classModel.getClassName());
         classNameLabel.setToolTipText(String.format("%s %s", classModel.getClassName(), classModel.getRefName()));
+    }
+    public static interface OperationActionListener{
+        public void onDomainClassRemove(DomainClassPane domainClassPane);
+        public void onDomainClassAlter(DomainClassPane domainClassPane);
     }
 }

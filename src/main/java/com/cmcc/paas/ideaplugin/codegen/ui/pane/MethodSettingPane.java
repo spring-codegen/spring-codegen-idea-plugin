@@ -1,8 +1,10 @@
 package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
+import com.cmcc.paas.ideaplugin.codegen.constants.AppCtx;
 import com.cmcc.paas.ideaplugin.codegen.constants.DomainType;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
+import com.cmcc.paas.ideaplugin.codegen.gen.define.model.DomainModels;
 import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.cmcc.paas.ideaplugin.codegen.ui.consts.NotificationType.MODEL_ADDED;
 import static com.cmcc.paas.ideaplugin.codegen.ui.consts.NotificationType.MODEL_UPDATED;
 
 
@@ -21,20 +24,23 @@ import static com.cmcc.paas.ideaplugin.codegen.ui.consts.NotificationType.MODEL_
  * @date 2023/12/22
  */
 public abstract class MethodSettingPane {
-    private Map<DomainType, List<ClassModel>> modelMaps;
     public abstract JPanel getContent();
     public abstract void setModel(MethodSettingModel model);
     public abstract JComboBox getResultParamComboBox();
     public abstract  ArgsSettingPane getArgsSettingPane();
     public abstract MethodSettingModel getModel();
     public void init(){
-        NotificationCenter.INSTANCE.register(MODEL_UPDATED, new NotificationCenter.Handler() {
+        NotificationCenter.Handler modelUpdateHandler = new NotificationCenter.Handler() {
             @Override
-            public void handleMessage(@NotNull Object msg) {
-                setModelMaps((Map<DomainType, List<ClassModel>>) msg);
+            public void handleMessage(@NotNull NotificationCenter.Message msg) {
                 resetResultParams();
+                if (msg.getEnvent().equalsIgnoreCase(MODEL_UPDATED)){
+                    getArgsSettingPane().updateClassModel((ClassModel) msg.getData());
+                }
             }
-        });
+        };
+        NotificationCenter.INSTANCE.register(MODEL_ADDED, modelUpdateHandler);
+        NotificationCenter.INSTANCE.register(MODEL_UPDATED, modelUpdateHandler);
     }
 
     private MethodCfgPaneActionListener methodCfgPaneActionListener;
@@ -43,29 +49,16 @@ public abstract class MethodSettingPane {
         return methodCfgPaneActionListener;
     }
 
-    public Map<DomainType, List<ClassModel>> getModelMaps() {
-        return modelMaps;
-    }
-
-
-    public void setModelMaps(Map<DomainType, List<ClassModel>> modelMaps) {
-        this.modelMaps = modelMaps;
-        getArgsSettingPane().setModelMaps(modelMaps);
-    }
     public void resetResultParams(){
-        if (modelMaps == null){
-            return;
-        }
         JComboBox comboBox = getResultParamComboBox();
         List<ClassModel> classes = new ArrayList<>();
         DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
         comboBoxModel.addElement("-");
-        modelMaps.entrySet().forEach(a -> {
-            if(a.getKey() == DomainType.ARG){
-                return;
-            }
-            a.getValue().forEach( cls -> comboBoxModel.addElement(cls.getClassName()));
-        });
+        List<ClassModel> a = DomainModels.INSTANCE.getModesByType(DomainType.ENTITY);
+        a.forEach( cls -> comboBoxModel.addElement(cls.getClassName()));
+        a = DomainModels.INSTANCE.getModesByType(DomainType.RESULT);
+        a.forEach( cls -> comboBoxModel.addElement(cls.getClassName()));
+
         comboBox.setModel(comboBoxModel);
         if (getModel() != null && getModel().getResult() != null) {
             comboBox.setSelectedItem(getModel().getResult().className);
@@ -210,10 +203,19 @@ public abstract class MethodSettingPane {
         }
 
         public static class MethodArgModel{
+            private ClassModel classModel;
             private String className;
             private String refName;
             private Boolean isPathVar = false;
             private Boolean listTypeFlag = false;
+
+            public ClassModel getClassModel() {
+                return classModel;
+            }
+
+            public void setClassModel(ClassModel classModel) {
+                this.classModel = classModel;
+            }
 
             public String getClassName() {
                 return className;
@@ -260,10 +262,19 @@ public abstract class MethodSettingPane {
             }
         }
         public static class MethodResultModel {
+            private ClassModel classModel;
             private String className;
             private String refName;
             private Boolean outputPaged = false;
             private Boolean listTypeFlag = false;
+
+            public ClassModel getClassModel() {
+                return classModel;
+            }
+
+            public void setClassModel(ClassModel classModel) {
+                this.classModel = classModel;
+            }
 
             public String getClassName() {
                 return className;
