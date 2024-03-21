@@ -1,16 +1,20 @@
 package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
-import com.cmcc.paas.ideaplugin.codegen.constants.DomainType;
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils;
+import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils.TextChangedEvent;
+import com.cmcc.paas.ideaplugin.codegen.util.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
-import java.util.Map;
+
+import static java.awt.Font.BOLD;
+import static java.awt.Font.PLAIN;
 
 /**
  * @author zhangyinghui
@@ -28,19 +32,25 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
     protected JButton outputButton;
     private JButton closeBtn;
     private JComboBox resultComboBox;
-    private ArgsSettingPane argsSettingPane;
+    private JComboBox argComboBox;
+//    private ArgsSettingPane argsSettingPane;
 
     protected MethodSettingModel model;
+    private Color PATH_TEXT_FIELD_COLOR = Color.decode("#BBBBBB");
+    private Color PATH_TEXT_FIELD_COLOR_HL = Color.decode("#BB9E1B");
 
     public CtrlMethodSettingPane(){
         init();
+        TextFieldUtils.INSTANCE.addTextChangedEvent(pathTextField, textField -> {
+            updatePathTextFieldUI();
+        });
     }
     public void init(){
         super.init();
         outputPagedCheckBox.setBackground(null);
         for (Component component : content.getComponents()) {
             if (component instanceof JTextField){
-                TextFieldUtils.INSTANCE.addTextChangedEvent((JTextField) component, new TextFieldUtils.TextChangedEvent() {
+                TextFieldUtils.INSTANCE.addTextChangedEvent((JTextField) component, new TextChangedEvent() {
                     @Override
                     public void onTextChanged(@NotNull JTextField textField) {
                         if (textField == pathTextField) {
@@ -73,6 +83,18 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
     }
     public void createUIComponents(){
     }
+    private void updatePathTextFieldUI(){
+        List<String> a = StringUtils.INSTANCE.parsePlaceholders(pathTextField.getText());
+        if (a != null){
+            pathTextField.setForeground( PATH_TEXT_FIELD_COLOR_HL);
+            pathTextField.setFont( pathTextField.getFont().deriveFont( BOLD) );
+            pathTextField.setToolTipText(String.format("路径参数%s会作为方法的入参",  String.join(",", a.toArray(new String[0])) ) );
+        }else{
+            pathTextField.setForeground( PATH_TEXT_FIELD_COLOR );
+            pathTextField.setFont( pathTextField.getFont().deriveFont(PLAIN ) );
+            pathTextField.setToolTipText(null);
+        }
+    }
     public JPanel getContent() {
         return content;
     }
@@ -88,16 +110,24 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
             this.outputListTypeCheckBox.setSelected(model.getResult().getListTypeFlag() == null ? false : model.getResult().getListTypeFlag());
             this.outputPagedCheckBox.setSelected(model.getResult().getOutputPaged());
         }
-        argsSettingPane.setArgs(model.getArgs());
-        resetResultParams();
+//        argsSettingPane.setArgs(model.getArgs());
+        resetArgComboBox();
+        resetReturnComboBox();
+        updatePathTextFieldUI();
     }
 
     @Override
-    public JComboBox getResultParamComboBox() {
+    public JComboBox getReturnComboBox() {
         return resultComboBox;
     }
+
     @Override
-    public ArgsSettingPane getArgsSettingPane() {
-        return argsSettingPane;
+    public JComboBox getArgComboBox() {
+        return argComboBox;
     }
+
+//    @Override
+//    public ArgsSettingPane getArgsSettingPane() {
+//        return argsSettingPane;
+//    }
 }

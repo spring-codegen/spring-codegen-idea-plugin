@@ -1,13 +1,10 @@
 package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
 import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils;
-import com.cmcc.paas.ideaplugin.codegen.ui.BeanFieldSelectionDialog;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
@@ -23,8 +20,9 @@ public class SvcMethodSettingPane extends MethodSettingPane {
     protected JCheckBox outputListTypeCheckBox;
     protected JCheckBox outputPagedCheckBox;
     private JButton closeBtn;
-    private ArgsSettingPane argsSettingPane;
+//    private ArgsSettingPane argsSettingPane;
     private JComboBox resultComboBox;
+    private JComboBox argComboBox;
 
     protected MethodSettingModel model;
 
@@ -73,16 +71,22 @@ public class SvcMethodSettingPane extends MethodSettingPane {
         this.model = model;
         this.clsTextField.setText(model.getClassName());
         this.methodTextField.setText(model.getMethodName());
-        argsSettingPane.setArgs(model.getArgs());
-        resetResultParams();
+//        argsSettingPane.setArgs(model.getArgs());
+        resetArgComboBox();
+        resetReturnComboBox();
     }
 
     @Override
-    public JComboBox getResultParamComboBox() {
+    public JComboBox getReturnComboBox() {
         return resultComboBox;
     }
+//    @Override
+//    public ArgsSettingPane getArgsSettingPane() {
+//        return argsSettingPane;
+//    }
+
     @Override
-    public ArgsSettingPane getArgsSettingPane() {
-        return argsSettingPane;
+    public JComboBox getArgComboBox() {
+        return argComboBox;
     }
 }

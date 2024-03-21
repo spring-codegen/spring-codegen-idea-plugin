@@ -68,17 +68,26 @@ public class DomainPaneContainer {
         addEntityButton.addActionListener(listener);
         addResultButton.addActionListener(listener);
     }
-
-    public void reset() {
-        List<DBTableField> tableFields = AppCtx.INSTANCE.getCurrentTable().getFields();
-        Map p = AppCtx.INSTANCE.getENV();
+    public void reset(){
         DomainModels.INSTANCE.clear();
         Arrays.stream(new JComponent[]{argDomainContainer, entityDomainContainer, resultDomainContainer}).forEach(e->e.removeAll());
+
+
+        List<DBTableField> tableFields = AppCtx.INSTANCE.getCurrentTable().getFields();
+        Map p = AppCtx.INSTANCE.getENV();
         modelCfgs.forEach(e -> {
             ClassModel cls = new ClassModel(StringUtils.INSTANCE.replacePlaceholders(e.getClassName(), p));
             List<ClassModel.Field> fields = CodeGenUtils.INSTANCE.getDefaultFields(tableFields, e.getFieldIncludes(), e.getFieldExcludes());
             cls.setFields(fields);
             addClassModel(DomainType.valueOf(e.getType()), cls);
+        });
+        System.out.println("DomainPaneContainer reset....");
+
+        SwingUtilities.invokeLater(()->{
+            SwingUtilities.invokeLater(() -> {
+                content.revalidate();
+                content.repaint();
+            });
         });
     }
 

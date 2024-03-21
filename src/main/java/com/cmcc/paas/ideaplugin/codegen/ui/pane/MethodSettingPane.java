@@ -1,11 +1,11 @@
 package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
-import com.cmcc.paas.ideaplugin.codegen.constants.AppCtx;
 import com.cmcc.paas.ideaplugin.codegen.constants.DomainType;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.DomainModels;
 import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
+import org.apache.commons.collections.ListUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -13,7 +13,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static com.cmcc.paas.ideaplugin.codegen.ui.consts.NotificationType.MODEL_ADDED;
 import static com.cmcc.paas.ideaplugin.codegen.ui.consts.NotificationType.MODEL_UPDATED;
@@ -26,16 +25,19 @@ import static com.cmcc.paas.ideaplugin.codegen.ui.consts.NotificationType.MODEL_
 public abstract class MethodSettingPane {
     public abstract JPanel getContent();
     public abstract void setModel(MethodSettingModel model);
-    public abstract JComboBox getResultParamComboBox();
-    public abstract  ArgsSettingPane getArgsSettingPane();
+    public abstract JComboBox getReturnComboBox();
+    public abstract JComboBox getArgComboBox();
+//    public abstract  ArgsSettingPane getArgsSettingPane();
     public abstract MethodSettingModel getModel();
     public void init(){
         NotificationCenter.Handler modelUpdateHandler = new NotificationCenter.Handler() {
             @Override
             public void handleMessage(@NotNull NotificationCenter.Message msg) {
-                resetResultParams();
+                resetReturnComboBox();
                 if (msg.getEnvent().equalsIgnoreCase(MODEL_UPDATED)){
-                    getArgsSettingPane().updateClassModel((ClassModel) msg.getData());
+//                    getArgsSettingPane().updateClassModel((ClassModel) msg.getData());
+                    resetArgComboBox();
+                    resetReturnComboBox();
                 }
             }
         };
@@ -49,19 +51,25 @@ public abstract class MethodSettingPane {
         return methodCfgPaneActionListener;
     }
 
-    public void resetResultParams(){
-        JComboBox comboBox = getResultParamComboBox();
-        List<ClassModel> classes = new ArrayList<>();
+    private void resetComboBoxWithDomainTypes(JComboBox comboBox, DomainType... type){
+        List<ClassModel> classModels = DomainModels.INSTANCE.getModesByTypes(type);
         DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
         comboBoxModel.addElement("-");
-        List<ClassModel> a = DomainModels.INSTANCE.getModesByType(DomainType.ENTITY);
-        a.forEach( cls -> comboBoxModel.addElement(cls.getClassName()));
-        a = DomainModels.INSTANCE.getModesByType(DomainType.RESULT);
-        a.forEach( cls -> comboBoxModel.addElement(cls.getClassName()));
-
+        classModels.forEach( e -> comboBoxModel.addElement(e.getClassName()) );
         comboBox.setModel(comboBoxModel);
+    }
+    public void resetReturnComboBox(){
+        resetComboBoxWithDomainTypes(getReturnComboBox(), DomainType.ENTITY, DomainType.RESULT);
         if (getModel() != null && getModel().getResult() != null) {
-            comboBox.setSelectedItem(getModel().getResult().className);
+            ClassModel classModel = getModel().getResult().getClassModel();
+            getReturnComboBox().setSelectedItem( classModel != null ? classModel.getClassName() : getModel().getResult().className);
+        }
+    }
+    public void resetArgComboBox(){
+        resetComboBoxWithDomainTypes(getArgComboBox(), DomainType.ARG, DomainType.ENTITY);
+        if (getModel() != null && getModel().getArgs() != null && getModel().getArgs().size() > 0) {
+            MethodSettingModel.MethodArgModel arg = getModel().getArgs().get(0);
+            getArgComboBox().setSelectedItem(arg.getClassModel() != null ? arg.getClassModel().getClassName() : arg.getClassName());
         }
     }
     public void setMethodCfgPaneActionListener(MethodCfgPaneActionListener methodCfgPaneActionListener) {

@@ -74,10 +74,10 @@ methods:
       httpMethod: DELETE
     comment: "删除{entityName}"
     name: remove
-    args:
-      - isPathVar: true
-        className: "Long"
-        refName: "id"
+    args: []
+#      - isPathVar: true
+#        className: "Long"
+#        refName: "id"
   - type: SVC
     name: remove
     args:
@@ -103,9 +103,9 @@ methods:
     comment: "更新{entityName}"
     name: update
     args:
-      - isPathVar: true
-        className: "Long"
-        refName: "id"
+#      - isPathVar: true
+#        className: "Long"
+#        refName: "id"
       - className: "{clsPrefix}UpdateArg"
   - type: SVC
     name: update
@@ -130,10 +130,10 @@ methods:
       httpMethod: GET
     comment: "获取{entityName}详情"
     name: get
-    args:
-      - isPathVar: true
-        className: "Long"
-        refName: "id"
+    args: []
+#      - isPathVar: true
+#        className: "Long"
+#        refName: "id"
     result:
       className: "{clsPrefix}"
   - type: SVC

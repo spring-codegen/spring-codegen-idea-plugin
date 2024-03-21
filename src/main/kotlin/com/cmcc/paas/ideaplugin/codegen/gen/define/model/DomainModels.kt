@@ -1,6 +1,7 @@
 package com.cmcc.paas.ideaplugin.codegen.gen.define.model
 
 import com.cmcc.paas.ideaplugin.codegen.constants.DomainType
+import com.intellij.util.containers.stream
 
 /**
  *
@@ -33,6 +34,11 @@ object DomainModels {
     }
     fun getModesByType(type: DomainType):List<ClassModel>?{
         return maps[type]
+    }
+    fun getModesByTypes(vararg type: DomainType):List<ClassModel>?{
+        var a = ArrayList<ClassModel>()
+        type.forEach { a.addAll(maps[it]!!) }
+        return a
     }
     fun getClassModelByName(className:String):ClassModel?{
         for( a in maps.values){

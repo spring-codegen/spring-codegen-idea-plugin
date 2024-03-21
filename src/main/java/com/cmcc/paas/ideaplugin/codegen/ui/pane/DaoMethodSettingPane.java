@@ -25,8 +25,9 @@ public class DaoMethodSettingPane extends MethodSettingPane {
     private JButton whereFieldButton;
     private JPanel content;
     private JButton closeBtn;
-    private ArgsSettingPane argsSettingPane;
+//    private ArgsSettingPane argsSettingPane;
     private JComboBox resultComboBox;
+    private JComboBox argComboBox;
 
     private MethodSettingModel model;
 
@@ -106,8 +107,9 @@ public class DaoMethodSettingPane extends MethodSettingPane {
         this.model = model;
         this.clsTextField.setText(model.getClassName());
         this.methodTextField.setText(model.getMethodName());
-        argsSettingPane.setArgs(model.getArgs());
-        resetResultParams();
+//        argsSettingPane.setArgs(model.getArgs());
+        resetArgComboBox();
+        resetReturnComboBox();
     }
 
     @Override
@@ -116,11 +118,16 @@ public class DaoMethodSettingPane extends MethodSettingPane {
     }
 
     @Override
-    public JComboBox getResultParamComboBox() {
+    public JComboBox getReturnComboBox() {
         return resultComboBox;
     }
+//    @Override
+//    public ArgsSettingPane getArgsSettingPane() {
+//        return argsSettingPane;
+//    }
+
     @Override
-    public ArgsSettingPane getArgsSettingPane() {
-        return argsSettingPane;
+    public JComboBox getArgComboBox() {
+        return argComboBox;
     }
 }

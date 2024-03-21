@@ -271,8 +271,8 @@ public class CodeGenPane {
      *选择完表执行
      */
     private void updateClasses(){
-        resetClasses();
         resetModels();
+        resetClasses();
     }
     private void resetClasses(){
         ctrlClassNameTextField.setText(StringUtils.INSTANCE.replacePlaceholders(codeCfg.getCtrlClass().getClassName(), AppCtx.INSTANCE.getENV()));
