@@ -33,6 +33,8 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
     private JButton closeBtn;
     private JComboBox resultComboBox;
     private JComboBox argComboBox;
+    private JLabel methodTypeLabel;
+    private JTextArea textArea1;
 //    private ArgsSettingPane argsSettingPane;
 
     protected MethodSettingModel model;
@@ -106,6 +108,7 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
         this.model = model;
         this.pathTextField.setText(model.getPath());
         this.methodTextField.setText(model.getMethodName());
+        this.methodTypeLabel.setText(model.getHttpMethod());
         if (model.getResult() != null) {
             this.outputListTypeCheckBox.setSelected(model.getResult().getListTypeFlag() == null ? false : model.getResult().getListTypeFlag());
             this.outputPagedCheckBox.setSelected(model.getResult().getOutputPaged());

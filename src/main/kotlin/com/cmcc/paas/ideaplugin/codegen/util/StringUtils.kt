@@ -1,5 +1,6 @@
 package com.cmcc.paas.ideaplugin.codegen.util
 
+import org.apache.commons.lang.StringUtils
 import java.util.regex.Pattern
 
 /**

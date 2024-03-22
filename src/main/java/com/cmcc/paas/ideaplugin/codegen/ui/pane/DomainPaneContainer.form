@@ -58,6 +58,7 @@
           <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0" ipadx="3"/>
         </constraints>
         <properties>
+          <font style="1"/>
           <foreground color="-6974059"/>
           <text value="参数（Args）"/>
         </properties>
@@ -68,6 +69,7 @@
           <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <font style="1"/>
           <foreground color="-6974059"/>
           <text value="实体（Entities）"/>
         </properties>
@@ -78,6 +80,7 @@
           <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <font style="1"/>
           <foreground color="-6974059"/>
           <text value="返回（Results）"/>
         </properties>

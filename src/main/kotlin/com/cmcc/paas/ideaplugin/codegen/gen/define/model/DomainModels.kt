@@ -35,9 +35,14 @@ object DomainModels {
     fun getModesByType(type: DomainType):List<ClassModel>?{
         return maps[type]
     }
-    fun getModesByTypes(vararg type: DomainType):List<ClassModel>?{
+    fun getModesByTypes(vararg type: DomainType):List<ClassModel>{
         var a = ArrayList<ClassModel>()
         type.forEach { a.addAll(maps[it]!!) }
+        return a
+    }
+    fun getAllModels():List<ClassModel>?{
+        var a = ArrayList<ClassModel>()
+        maps.keys.forEach { a.addAll(maps[it]!!) }
         return a
     }
     fun getClassModelByName(className:String):ClassModel?{

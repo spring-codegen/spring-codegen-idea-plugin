@@ -2,7 +2,7 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.cmcc.paas.ideaplugin.codegen.ui.pane.SvcMethodSettingPane">
   <grid id="27dc6" binding="content" layout-manager="GridBagLayout">
     <constraints>
-      <xy x="20" y="20" width="468" height="585"/>
+      <xy x="20" y="20" width="445" height="585"/>
     </constraints>
     <properties>
       <background color="-12828863"/>
@@ -106,34 +106,6 @@
           <minimumSize width="10" height="30"/>
         </properties>
       </component>
-      <component id="b19d7" class="javax.swing.JCheckBox" binding="outputListTypeCheckBox">
-        <constraints>
-          <grid row="4" column="20" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <font size="8"/>
-          <foreground color="-6052957"/>
-          <maximumSize width="50" height="18"/>
-          <minimumSize width="50" height="18"/>
-          <preferredSize width="50" height="18"/>
-          <text value="列表"/>
-        </properties>
-      </component>
-      <component id="fb8de" class="javax.swing.JCheckBox" binding="outputPagedCheckBox">
-        <constraints>
-          <grid row="4" column="22" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag top="0" left="0" bottom="0" right="2" weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <font size="8"/>
-          <foreground color="-6052957"/>
-          <maximumSize width="50" height="18"/>
-          <minimumSize width="50" height="18"/>
-          <preferredSize width="50" height="18"/>
-          <text value="分页"/>
-        </properties>
-      </component>
       <component id="8708" class="javax.swing.JComboBox" binding="argComboBox">
         <constraints>
           <grid row="3" column="2" row-span="1" col-span="18" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
@@ -143,7 +115,7 @@
       </component>
       <component id="baff6" class="javax.swing.JButton" binding="closeBtn">
         <constraints>
-          <grid row="0" column="22" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="5" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="20" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="5" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag top="0" left="0" bottom="0" right="2" weightx="0.0" weighty="0.0" ipadx="5" ipady="5"/>
         </constraints>
         <properties>

@@ -27,9 +27,9 @@ open class CodeCfg{
     open class ModelCfg{
         var type: String? = null
         var className: String? = null
+        var refName: String? = null
         var fieldExcludes: String? =  null
         var fieldIncludes: String? =  null
-        var outputPaged: Boolean? = false
     }
     open class MethodArg{
         var isPathVar:Boolean = false

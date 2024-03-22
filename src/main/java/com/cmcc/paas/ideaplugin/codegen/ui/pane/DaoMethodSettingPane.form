@@ -29,7 +29,7 @@
       </component>
       <vspacer id="891a">
         <constraints>
-          <grid row="6" column="0" row-span="1" col-span="28" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <grid row="5" column="0" row-span="1" col-span="28" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
           <gridbag top="0" left="2" bottom="0" right="2" weightx="0.0" weighty="1.0"/>
         </constraints>
       </vspacer>
@@ -98,36 +98,6 @@
           <minimumSize width="10" height="30"/>
         </properties>
       </component>
-      <component id="7d417" class="javax.swing.JButton" binding="closeBtn">
-        <constraints>
-          <grid row="0" column="24" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="5" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag top="2" left="2" bottom="2" right="2" weightx="0.0" weighty="0.0" ipadx="5" ipady="5"/>
-        </constraints>
-        <properties>
-          <borderPainted value="false"/>
-          <contentAreaFilled value="false"/>
-          <margin top="0" left="0" bottom="3" right="0"/>
-          <maximumSize width="24" height="24"/>
-          <minimumSize width="24" height="24"/>
-          <preferredSize width="24" height="24"/>
-          <text value="x"/>
-        </properties>
-      </component>
-      <component id="1352e" class="javax.swing.JCheckBox" binding="outputListTypeCheckBox">
-        <constraints>
-          <grid row="4" column="24" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <contentAreaFilled value="false"/>
-          <font size="8"/>
-          <foreground color="-6052957"/>
-          <maximumSize width="50" height="18"/>
-          <minimumSize width="50" height="18"/>
-          <preferredSize width="50" height="18"/>
-          <text value="列表"/>
-        </properties>
-      </component>
       <component id="638ec" class="javax.swing.JComboBox" binding="resultComboBox">
         <constraints>
           <grid row="4" column="2" row-span="1" col-span="22" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
@@ -146,53 +116,54 @@
           <minimumSize width="10" height="30"/>
         </properties>
       </component>
-      <component id="37349" class="javax.swing.JCheckBox" binding="outputPagedCheckBox">
-        <constraints>
-          <grid row="4" column="25" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag top="0" left="0" bottom="0" right="2" weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <contentAreaFilled value="false"/>
-          <font size="8"/>
-          <foreground color="-6052957"/>
-          <maximumSize width="50" height="18"/>
-          <minimumSize width="50" height="18"/>
-          <preferredSize width="50" height="18"/>
-          <text value="分页"/>
-        </properties>
-      </component>
-      <component id="aea0b" class="javax.swing.JButton" binding="dataFieldButton">
-        <constraints>
-          <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <font size="8"/>
-          <maximumSize width="80" height="24"/>
-          <minimumSize width="60" height="24"/>
-          <preferredSize width="60" height="24"/>
-          <text value="配置sql字段"/>
-        </properties>
-      </component>
-      <component id="4feb1" class="javax.swing.JButton" binding="whereFieldButton">
-        <constraints>
-          <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <font size="8"/>
-          <maximumSize width="80" height="24"/>
-          <minimumSize width="60" height="24"/>
-          <preferredSize width="60" height="24"/>
-          <text value="配置sql条件"/>
-        </properties>
-      </component>
       <hspacer id="c3378">
         <constraints>
           <grid row="0" column="2" row-span="1" col-span="22" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
+      <component id="aea0b" class="javax.swing.JButton" binding="dataFieldButton">
+        <constraints>
+          <grid row="1" column="24" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <font size="10"/>
+          <maximumSize width="60" height="48"/>
+          <minimumSize width="60" height="48"/>
+          <preferredSize width="60" height="48"/>
+          <text value="&lt;html&gt;&lt;body style=&quot;text-align:center&quot;&gt;配置&lt;br/&gt;sql字段&lt;/body&gt;&lt;/html&gt;"/>
+        </properties>
+      </component>
+      <component id="4feb1" class="javax.swing.JButton" binding="whereFieldButton">
+        <constraints>
+          <grid row="3" column="24" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <font size="10"/>
+          <horizontalTextPosition value="0"/>
+          <maximumSize width="60" height="48"/>
+          <minimumSize width="60" height="48"/>
+          <preferredSize width="60" height="48"/>
+          <text value="&lt;html&gt;&lt;body style=&quot;text-align:center&quot;&gt;配置&lt;br/&gt;sql条件&lt;/body&gt;&lt;/html&gt;"/>
+        </properties>
+      </component>
+      <component id="7d417" class="javax.swing.JButton" binding="closeBtn">
+        <constraints>
+          <grid row="0" column="24" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="5" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag top="2" left="2" bottom="2" right="2" weightx="0.0" weighty="0.0" ipadx="5" ipady="5"/>
+        </constraints>
+        <properties>
+          <borderPainted value="false"/>
+          <contentAreaFilled value="false"/>
+          <margin top="0" left="0" bottom="3" right="0"/>
+          <maximumSize width="24" height="24"/>
+          <minimumSize width="24" height="24"/>
+          <preferredSize width="24" height="24"/>
+          <text value="x"/>
+        </properties>
+      </component>
     </children>
   </grid>
 </form>

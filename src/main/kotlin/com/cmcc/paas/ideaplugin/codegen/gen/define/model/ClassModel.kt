@@ -35,6 +35,18 @@ open class ClassModel(var className: String, var pkg: String?, var comment: Stri
         @JvmStatic fun isInnerClass(className:String):Boolean{
             return arrayOf("Boolean", "Long", "IdArg", "IdResult").stream().filter { it.equals(className, true) }.count() > 0;
         }
+
+        @JvmStatic fun baseTypes(): Array<String> {
+            return arrayOf("Integer", "Long", "Boolean", "String", "Date", "BigDecimal", "List", "Map")
+        }
+
+        @JvmStatic fun isCommonType(clsName: String): Boolean {
+            return arrayOf("ListResult", "IdResult", "IdArg").stream().anyMatch { e -> e.equals(clsName) }
+        }
+
+        @JvmStatic fun isBaseType(clsName: String): Boolean {
+            return baseTypes().stream().anyMatch { e -> e.equals(clsName) }
+        }
     }
 
     var tableName: String? = null
@@ -45,8 +57,8 @@ open class ClassModel(var className: String, var pkg: String?, var comment: Stri
     var implement: ClassModel? = null
     var extend: ClassModel? = null
     var dependency: ClassModel? = null
-    open fun isBaseType(): Boolean {
-        return FieldUtils.isBaseType(className)
+    open fun isInnerClass(): Boolean {
+        return ClassModel.isInnerClass(className)
     }
 
     open fun clone(): ClassModel {
@@ -90,24 +102,34 @@ open class ClassModel(var className: String, var pkg: String?, var comment: Stri
     }
 
     open class Method(
-        var name: String,
-        var inputClass: ClassModel,
-        var outputClass: ClassModel,
-        var resultListFlag: Boolean
+            var name: String,
+            var args:MutableList<MethodArg>,
+            var result: MethodResult?
     ) {
         var dependency: Method? = null
-        var paged: Boolean = false
         var comment: String? = null
         var cls: ClassModel? = null
-        var inputListFlag: Boolean? = false
         var type: String? = null
         open fun clone(): Method {
-            var m = Method(name, inputClass, outputClass, resultListFlag)
+            var m = Method(name, args, result)
             m.dependency = if (dependency != null) dependency!!.clone() else null
-            m.paged = paged
             m.comment = comment
             m.cls = cls
             return m
         }
+    }
+    open class MethodArg(classModel: ClassModel?, refName: String?){
+        constructor(): this(null, null)
+        var classModel: ClassModel? = null
+        var refName: String? = null
+        var isPathVar = false
+        var listTypeFlag = false
+    }
+    open class MethodResult(classModel: ClassModel?, refName: String?){
+        constructor(): this(null, null)
+        var classModel: ClassModel? = null
+        var refName: String? = null
+        var outputPaged = false
+        var listTypeFlag = false
     }
 }

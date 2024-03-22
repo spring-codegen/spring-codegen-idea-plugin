@@ -9,14 +9,15 @@ import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.CodeGenerator;
 import com.cmcc.paas.ideaplugin.codegen.gen.FieldUtils;
 import com.cmcc.paas.ideaplugin.codegen.gen.ModelResult;
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.CtrlClass;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.DaoClass;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.SvcClass;
 import com.cmcc.paas.ideaplugin.codegen.services.ResourceService;
+import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils;
 import com.cmcc.paas.ideaplugin.codegen.ui.pane.DomainPaneContainer;
 import com.cmcc.paas.ideaplugin.codegen.util.StringUtils;
 import com.intellij.uiDesigner.core.GridConstraints;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -53,6 +54,7 @@ public class CodeGenPane {
     private JTextField daoClassNameTextField;
     private JTextField resourceNameTextField;
     private DomainPaneContainer domainContainer;
+    private JLabel pathSuffixLabel;
 
     private DBTable dbTable;
     private List<DBTable> dbTables;
@@ -124,6 +126,11 @@ public class CodeGenPane {
                 refreshDBCtx();
             }
         });
+        Arrays.stream((new JTextField[]{moduleTextField, resourceNameTextField})).forEach( e -> {
+            TextFieldUtils.INSTANCE.addTextChangedEvent(e,  textField -> {
+                pathSuffixLabel.setText(getPathSuffix());
+            });
+        });
         codeCfg = ResourceService.INSTANCE.getCodeCfg();
 //        clsCfgTable.setRowHeight(30);
         methodContainerPane.setCodeCfg(codeCfg);
@@ -138,6 +145,14 @@ public class CodeGenPane {
          * 刷新表格
          */
         refreshDBCtx();
+    }
+    private String getPathSuffix(){
+        String moduleName = moduleTextField.getText();
+        String resourceName = resourceNameTextField.getText();
+        return String.format("/%s/%s",
+                org.apache.commons.lang3.StringUtils.isEmpty(moduleName)?"{module}":moduleName,
+                org.apache.commons.lang3.StringUtils.isEmpty(resourceName)?"resourceName":resourceName
+        );
     }
     public void refreshDBCtx(){
 

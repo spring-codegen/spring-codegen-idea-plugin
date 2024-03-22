@@ -2,9 +2,7 @@ package com.cmcc.paas.ideaplugin.codegen.ui;
 
 import com.cmcc.paas.ideaplugin.codegen.config.CodeCfg;
 import com.cmcc.paas.ideaplugin.codegen.constants.AppCtx;
-import com.cmcc.paas.ideaplugin.codegen.constants.DomainType;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTable;
-import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.FieldUtils;
 import com.cmcc.paas.ideaplugin.codegen.gen.ModelResult;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.*;
@@ -21,7 +19,6 @@ import java.awt.event.ComponentEvent;
 import java.util.*;
 import java.util.List;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * @author zhangyinghui
@@ -35,7 +32,7 @@ public class MethodContainerPane {
     private static int ITEM_MARGIN_H = 50;
     private static int ITEM_MARGIN_V = 20;
     private static int CONTAINER_PADDING_RIGHT = 30;
-    private static int ITEM_HEIGHT = 220;
+    private static int ITEM_HEIGHT = 240;
     private CodeCfg codeCfg;
     private CtrlClass ctrlClass = null;
     private SvcClass svcClass =  null;
@@ -319,32 +316,46 @@ public class MethodContainerPane {
         Map<String, ClassModel> daoArgs = new LinkedHashMap<>();
         Map<String, ClassModel> daoResults = new LinkedHashMap<>();
         List<String> filterResults = new ArrayList<>();
-//        for (Map.Entry<MethodSettingPane.ClassType, Map<String, MethodItemHolder>> m: allMethods.entrySet()){
-//            for (Map.Entry<String, MethodItemHolder> e: m.getValue().entrySet()){
-//                ClassModel.Method method = null;
-//                MethodSettingPane.MethodSettingModel methodSettingModel = e.getValue().panel.getModel();
+        for (Map.Entry<MethodSettingPane.ClassType, Map<String, MethodItemHolder>> m: allMethods.entrySet()){
+            for (Map.Entry<String, MethodItemHolder> e: m.getValue().entrySet()){
+                ClassModel.Method method = null;
+                MethodSettingPane.MethodSettingModel methodSettingModel = e.getValue().panel.getModel();
 //                ClassModel inputClass = new ClassModel(methodSettingModel.getInputClassName());
 //                inputClass.setFields( methodSettingModel.getInputFields() );
 //                inputClass.setRefName(FieldUtils.INSTANCE.getRefName(inputClass.getClassName()));
 //                ClassModel outputClass = new ClassModel(methodSettingModel.getOutputClassName());
 //                outputClass.setFields(methodSettingModel.getOutputFields());
 //                outputClass.setRefName(FieldUtils.INSTANCE.getRefName(outputClass.getClassName()));
+
+                List<ClassModel.MethodArg> methodArgs = new ArrayList<>();
+                if (methodSettingModel.getArgs() != null && methodSettingModel.getArgs().size() > 0){
+                    ClassModel.MethodArg arg = new ClassModel.MethodArg(methodSettingModel.getArgs().get(0).getClassModel(), methodSettingModel.getArgs().get(0).getRefName());
+                    methodArgs.add(arg);
+
+                }
+                ClassModel.MethodResult methodResult = null;
+                if (methodSettingModel.getResult() != null){
+                    methodResult = new ClassModel.MethodResult(methodSettingModel.getResult().getClassModel(), methodSettingModel.getResult().getRefName());
+                    methodResult.setListTypeFlag(methodSettingModel.getResult().getListTypeFlag());
+                    methodResult.setOutputPaged(methodSettingModel.getResult().getOutputPaged());
+                }
 //
-//                if (m.getKey() == MethodSettingPane.ClassType.CTRL){
-//                    method = new CtrlClass.Method(methodSettingModel.getMethodName(), inputClass, outputClass, methodSettingModel.getOutputListTypeFlag() );
+                if (m.getKey() == MethodSettingPane.ClassType.CTRL){
+
+                    method = new CtrlClass.Method(methodSettingModel.getMethodName(), methodArgs, methodResult);
 //                    method.setPaged(method.getPaged());
-//                    ( (CtrlClass.Method)method).setRequest(new CtrlClass.Request(methodSettingModel.getPath(), methodSettingModel.getHttpMethod()));
-//                    ctrlMethods.add(method);
+                    ( (CtrlClass.Method)method).setRequest(new CtrlClass.Request(methodSettingModel.getPath(), methodSettingModel.getHttpMethod()));
+                    ctrlMethods.add(method);
 //                    if ( !args.containsKey(inputClass.getClassName()) ) {
 //                        args.put(inputClass.getClassName(), inputClass);
 //                    }
 //                    if ( !"-".equals(outputClass.getClassName()) && !results.containsKey(outputClass.getClassName()) && !entities.containsKey(outputClass.getClassName())) {
 //                        results.put(outputClass.getClassName(), outputClass);
 //                    }
-//                }
-//                if (m.getKey() == MethodSettingPane.ClassType.SVC){
-//                    method = new SvcClass.Method(methodSettingModel.getMethodName(), inputClass, outputClass, methodSettingModel.getOutputListTypeFlag() );
-//                    svcMethods.add(method);
+                }
+                if (m.getKey() == MethodSettingPane.ClassType.SVC){
+                    method = new SvcClass.Method(methodSettingModel.getMethodName(), methodArgs, methodResult );
+                    svcMethods.add(method);
 //                    if ( !args.containsKey(inputClass.getClassName()) && !entities.containsKey(inputClass.getClassName())) {
 //                        entities.put(inputClass.getClassName(), inputClass);
 //                    }
@@ -355,11 +366,11 @@ public class MethodContainerPane {
 //                        filterResults.add(outputClass.getClassName());
 //
 //                    }
-//                }
-//                if (m.getKey() == MethodSettingPane.ClassType.DAO){
-//                    method = new DaoClass.Method(methodSettingModel.getMethodName(), inputClass, outputClass, methodSettingModel.getOutputListTypeFlag() );
-//                    ((DaoClass.Method) method).setSqlDataFields(methodSettingModel.getSqlDataFields());
-//                    ((DaoClass.Method) method).setSqlCondFields(methodSettingModel.getSqlCondFields());
+                }
+                if (m.getKey() == MethodSettingPane.ClassType.DAO){
+                    method = new DaoClass.Method(methodSettingModel.getMethodName(), methodArgs, methodResult );
+                    ((DaoClass.Method) method).setSqlDataFields(methodSettingModel.getSqlDataFields());
+                    ((DaoClass.Method) method).setSqlCondFields(methodSettingModel.getSqlCondFields());
 //                    daoMethods.add(method);
 //                    if ( !args.containsKey(inputClass.getClassName())
 //                            && !entities.containsKey(inputClass.getClassName())
@@ -370,7 +381,7 @@ public class MethodContainerPane {
 //                            && !entities.containsKey(outputClass.getClassName()) && !daoResults.containsKey(outputClass.getClassName())) {
 //                        daoResults.put(outputClass.getClassName(), outputClass);
 //                    }
-//                }
+                }
 //                //确保results引用统一模型
 //                if ( results.containsKey(outputClass.getClassName()) ) {
 //                    method.setOutputClass(results.get(outputClass.getClassName()));
@@ -385,13 +396,13 @@ public class MethodContainerPane {
 //                if ( entities.containsKey(outputClass.getClassName()) ) {
 //                    method.setOutputClass(entities.get(outputClass.getClassName()));
 //                }
-//                method.setComment(methodSettingModel.getComment());
-//                method.setType(methodSettingModel.getMethodType());
+                method.setComment(methodSettingModel.getComment());
+                method.setType(methodSettingModel.getMethodType());
 //                method.setInputListFlag(methodSettingModel.getInputListTypeFlag());
 //                method.setPaged(methodSettingModel.getOutputPaged());
-//                e.getValue().method = method;
-//            }
-//        }
+                e.getValue().method = method;
+            }
+        }
 //        for (Map.Entry<MethodSettingPane.ClassType, Map<String, MethodItemHolder>> m: allMethods.entrySet()){
 //            for (Map.Entry<String, MethodItemHolder> e: m.getValue().entrySet()){
 //                if (e.getValue().dependency != null) {

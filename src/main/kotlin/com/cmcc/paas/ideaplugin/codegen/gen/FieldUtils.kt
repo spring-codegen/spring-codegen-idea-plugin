@@ -1,5 +1,6 @@
 package com.cmcc.paas.ideaplugin.codegen.gen
 
+import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel
 import com.intellij.util.containers.stream
 import java.util.*
 
@@ -18,17 +19,6 @@ object FieldUtils {
         return s.toString()
     }
 
-    fun baseTypes(): Array<String> {
-        return arrayOf("Integer", "Long", "Boolean", "String", "Date", "BigDecimal", "List", "Map")
-    }
-
-    fun isCommonType(clsName: String): Boolean {
-        return arrayOf("ListResult", "IdResult", "IdArg").stream().anyMatch { e -> e.equals(clsName) }
-    }
-
-    fun isBaseType(clsName: String): Boolean {
-        return baseTypes().stream().anyMatch { e -> e.equals(clsName) }
-    }
 
     fun javaType(dbType: String): String {
         if ("int2".equals(dbType)) {
@@ -59,7 +49,7 @@ object FieldUtils {
     }
 
     fun getRefName(v: String): String {
-        if (isBaseType(v)) {
+        if (ClassModel.isBaseType(v)) {
             return v.substring(0, 1).toLowerCase(Locale.getDefault())
         }
         return v.substring(0, 1).toLowerCase() + v.substring(1)

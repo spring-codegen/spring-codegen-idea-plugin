@@ -13,7 +13,7 @@ class CtrlClass(className:String, pkg:String?, comment:String?, fields:MutableLi
         cls.request = if (request != null) request?.clone() else null
         return cls
     }
-    class Method(name:String, inputClass:ClassModel, outputClass:ClassModel, resultListFlag:Boolean):ClassModel.Method(name, inputClass, outputClass, resultListFlag){
+    class Method(name:String, args:MutableList<MethodArg>, methodResult:MethodResult?):ClassModel.Method(name, args, methodResult){
         var request:Request? = null
         override fun clone():CtrlClass.Method{
             var method:Method = super.clone() as Method

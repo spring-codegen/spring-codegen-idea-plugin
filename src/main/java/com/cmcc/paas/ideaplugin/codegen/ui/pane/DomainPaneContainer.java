@@ -77,6 +77,7 @@ public class DomainPaneContainer {
         Map p = AppCtx.INSTANCE.getENV();
         modelCfgs.forEach(e -> {
             ClassModel cls = new ClassModel(StringUtils.INSTANCE.replacePlaceholders(e.getClassName(), p));
+            cls.setRefName(e.getRefName());
             List<ClassModel.Field> fields = CodeGenUtils.INSTANCE.getDefaultFields(tableFields, e.getFieldIncludes(), e.getFieldExcludes());
             cls.setFields(fields);
             addClassModel(DomainType.valueOf(e.getType()), cls);

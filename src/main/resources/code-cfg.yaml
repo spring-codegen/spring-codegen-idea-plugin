@@ -29,16 +29,17 @@ models:
     fieldIncludes: "id"
     type: ARG
   - className: "IdResult"
-    fieldExcludes: "id"
+    fieldIncludes: "id"
     type: RESULT
   - className: "Long"
-    fieldExcludes: "id"
+    fieldIncludes: "id"
     type: RESULT
   - className: "Long"
-    fieldExcludes: "id"
+    fieldIncludes: "id"
     type: ARG
   - className: "Boolean"
-    fieldExcludes: "t"
+    refName: "t"
+    fieldIncludes: "-"
     type: RESULT
 methods:
   - type: CTRL
