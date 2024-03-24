@@ -371,7 +371,7 @@ public class MethodContainerPane {
                     method = new DaoClass.Method(methodSettingModel.getMethodName(), methodArgs, methodResult );
                     ((DaoClass.Method) method).setSqlDataFields(methodSettingModel.getSqlDataFields());
                     ((DaoClass.Method) method).setSqlCondFields(methodSettingModel.getSqlCondFields());
-//                    daoMethods.add(method);
+                    daoMethods.add(method);
 //                    if ( !args.containsKey(inputClass.getClassName())
 //                            && !entities.containsKey(inputClass.getClassName())
 //                    && !daoArgs.containsKey(inputClass.getClassName())) {
@@ -403,20 +403,20 @@ public class MethodContainerPane {
                 e.getValue().method = method;
             }
         }
-//        for (Map.Entry<MethodSettingPane.ClassType, Map<String, MethodItemHolder>> m: allMethods.entrySet()){
-//            for (Map.Entry<String, MethodItemHolder> e: m.getValue().entrySet()){
-//                if (e.getValue().dependency != null) {
-//                    e.getValue().method.setDependency(e.getValue().dependency.method);
-//                }
-//            }
-//        }
+        for (Map.Entry<MethodSettingPane.ClassType, Map<String, MethodItemHolder>> m: allMethods.entrySet()){
+            for (Map.Entry<String, MethodItemHolder> e: m.getValue().entrySet()){
+                if (e.getValue().dependency != null) {
+                    e.getValue().method.setDependency(e.getValue().dependency.method);
+                }
+            }
+        }
 //        filterResults.forEach(e -> results.remove(e));
 //        result.setArgs(args.values().stream().toList());
 //        result.setResults(results.values().stream().toList());
 //        result.setEntities(entities.values().stream().collect(Collectors.toList()));
-//        ctrlClass.setMethods(ctrlMethods);
-//        svcClass.setMethods(svcMethods);
-//        daoClass.setMethods(daoMethods);
+        ctrlClass.setMethods(ctrlMethods);
+        svcClass.setMethods(svcMethods);
+        daoClass.setMethods(daoMethods);
 
         return result;
     }

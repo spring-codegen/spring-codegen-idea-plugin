@@ -108,8 +108,10 @@ class CodeGenerator() {
         svcClass!!.dependency = daoClass
         svcClass.implement = svcClass
 
+        var svcInterfaceGenerator = SvcInterfaceGenerator(module, svcClass, projectCfg)
         var ctrlClassGenerator = CtrlClassGenerator(module,ctrlClass, projectCfg)
         ctrlClassGenerator.gen()
+        svcInterfaceGenerator.gen()
         return
 
 //        ctrlClass.pkg = projectCfg.basePkg + ".controller."+module;

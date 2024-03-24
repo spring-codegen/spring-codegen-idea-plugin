@@ -135,6 +135,21 @@
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
+      <component id="aed29" class="javax.swing.JCheckBox" binding="outputListTypeCheckBox">
+        <constraints>
+          <grid row="4" column="20" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <contentAreaFilled value="false"/>
+          <font size="8"/>
+          <foreground color="-6052957"/>
+          <maximumSize width="50" height="18"/>
+          <minimumSize width="50" height="18"/>
+          <preferredSize width="50" height="18"/>
+          <text value="列表"/>
+        </properties>
+      </component>
     </children>
   </grid>
 </form>

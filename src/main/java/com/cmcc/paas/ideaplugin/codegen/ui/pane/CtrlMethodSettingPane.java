@@ -9,8 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import static java.awt.Font.BOLD;
@@ -34,7 +32,7 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
     private JComboBox resultComboBox;
     private JComboBox argComboBox;
     private JLabel methodTypeLabel;
-    private JTextArea textArea1;
+    private JTextArea commentTextArea;
 //    private ArgsSettingPane argsSettingPane;
 
     protected MethodSettingModel model;
@@ -102,6 +100,7 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
     }
 
     public MethodSettingModel getModel(){
+        model.setComment(commentTextArea.getText());
         return model;
     }
     public void setModel(MethodSettingModel model) {
@@ -109,6 +108,7 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
         this.pathTextField.setText(model.getPath());
         this.methodTextField.setText(model.getMethodName());
         this.methodTypeLabel.setText(model.getHttpMethod());
+        this.commentTextArea.setText(model.getComment());
         if (model.getResult() != null) {
             this.outputListTypeCheckBox.setSelected(model.getResult().getListTypeFlag() == null ? false : model.getResult().getListTypeFlag());
             this.outputPagedCheckBox.setSelected(model.getResult().getOutputPaged());

@@ -118,17 +118,14 @@ open class ClassModel(var className: String, var pkg: String?, var comment: Stri
             return m
         }
     }
-    open class MethodArg(classModel: ClassModel?, refName: String?){
+    open class MethodArg(var classModel: ClassModel?,var refName: String?){
         constructor(): this(null, null)
-        var classModel: ClassModel? = null
-        var refName: String? = null
         var isPathVar = false
         var listTypeFlag = false
+        var comment:String? = null
     }
-    open class MethodResult(classModel: ClassModel?, refName: String?){
+    open class MethodResult(var classModel: ClassModel?, var refName: String?){
         constructor(): this(null, null)
-        var classModel: ClassModel? = null
-        var refName: String? = null
         var outputPaged = false
         var listTypeFlag = false
     }

@@ -11,7 +11,7 @@ import java.util.HashSet
  */
 open class ClassGenerator (var module: String, var projectCfg: ProjectCfg){
     fun setClassModelRefName(classModel: ClassModel){
-        if(FieldUtils.isBaseType(classModel.className)){
+        if(ClassModel.isBaseType(classModel.className)){
             if (classModel.fields!= null && classModel.fields!!.size > 0) {
                 classModel.refName = classModel.fields!![0].name;
             }
@@ -25,7 +25,7 @@ open class ClassGenerator (var module: String, var projectCfg: ProjectCfg){
             cls.fields!!.forEach{f ->
                 if ( f.javaType == "Date" ){
                     imports.add("java.util." + f.javaType)
-                }else if (f.pkg != null && !FieldUtils.isBaseType(f.javaType)) {
+                }else if (f.pkg != null && !ClassModel.isBaseType(f.javaType)) {
                     imports.add(f.pkg + "." + f.javaType)
                 }
             }
