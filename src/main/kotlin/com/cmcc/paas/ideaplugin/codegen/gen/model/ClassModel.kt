@@ -1,6 +1,5 @@
-package com.cmcc.paas.ideaplugin.codegen.gen.define.model
+package com.cmcc.paas.ideaplugin.codegen.gen.model
 
-import com.cmcc.paas.ideaplugin.codegen.gen.FieldUtils
 import com.intellij.util.containers.stream
 import java.util.stream.Collectors
 
@@ -17,19 +16,19 @@ open class ClassModel(var className: String, var pkg: String?, var comment: Stri
         val CLASS_BOOL_RESULT = ClassModel("Boolean")
         val CLASS_LONG_RESULT = ClassModel("Long")
         val CLASS_INTEGER_RESULT = ClassModel("Integer")
-        @JvmStatic fun idArgClass():ClassModel{
+        @JvmStatic fun idArgClass(): ClassModel {
             return CLASS_ID_ARG
         }
-        @JvmStatic fun idResultClass():ClassModel{
+        @JvmStatic fun idResultClass(): ClassModel {
             return CLASS_ID_RESULT
         }
-        @JvmStatic fun booleanClass():ClassModel{
+        @JvmStatic fun booleanClass(): ClassModel {
             return CLASS_BOOL_RESULT
         }
-        @JvmStatic fun longClass():ClassModel{
+        @JvmStatic fun longClass(): ClassModel {
             return CLASS_LONG_RESULT
         }
-        @JvmStatic fun integerClass():ClassModel{
+        @JvmStatic fun integerClass(): ClassModel {
             return CLASS_INTEGER_RESULT
         }
         @JvmStatic fun isInnerClass(className:String):Boolean{
@@ -58,7 +57,7 @@ open class ClassModel(var className: String, var pkg: String?, var comment: Stri
     var extend: ClassModel? = null
     var dependency: ClassModel? = null
     open fun isInnerClass(): Boolean {
-        return ClassModel.isInnerClass(className)
+        return isInnerClass(className)
     }
 
     open fun clone(): ClassModel {
@@ -97,37 +96,57 @@ open class ClassModel(var className: String, var pkg: String?, var comment: Stri
             f.column = column
             f.classType = if (classType != null) classType!!.clone() else null
             f.baseType = baseType
+            f.maxLen = maxLen
+            f.minLen = minLen
             return f
         }
     }
 
     open class Method(
-            var name: String,
-            var args:MutableList<MethodArg>,
-            var result: MethodResult?
+        var name: String,
+        var args: MutableList<MethodArg>,
+        var result: MethodResult?
     ) {
         var dependency: Method? = null
         var comment: String? = null
         var cls: ClassModel? = null
         var type: String? = null
         open fun clone(): Method {
-            var m = Method(name, args, result)
+            var m = Method(
+                name,
+                 args!!.stream().map { e -> e.clone() }.toList(),
+                if (result == null) null else result?.clone())
             m.dependency = if (dependency != null) dependency!!.clone() else null
             m.comment = comment
             m.cls = cls
+            m.type = type
             return m
         }
     }
-    open class MethodArg(var classModel: ClassModel?,var refName: String?){
+    open class MethodArg(var classModel: ClassModel?, var refName: String?){
         constructor(): this(null, null)
         var isPathVar = false
         var listTypeFlag = false
         var comment:String? = null
+        open fun clone():MethodArg{
+            var result = MethodArg(classModel, refName)
+            result.isPathVar = isPathVar
+            result.listTypeFlag = listTypeFlag
+            result.comment = comment
+            return result
+        }
     }
     open class MethodResult(var classModel: ClassModel?, var refName: String?){
         constructor(): this(null, null)
         var outputPaged = false
         var listTypeFlag = false
         var comment:String? = null
+        open fun clone():MethodResult{
+            var result = MethodResult(classModel, refName)
+            result.outputPaged = outputPaged
+            result.listTypeFlag = listTypeFlag
+            result.comment = comment
+            return result
+        }
     }
 }

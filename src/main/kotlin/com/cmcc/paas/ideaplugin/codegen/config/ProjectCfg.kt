@@ -2,7 +2,7 @@ package com.cmcc.paas.ideaplugin.codegen.config
 
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx.project
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel
+import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
 import com.cmcc.paas.ideaplugin.codegen.util.JsonUtils
 import org.apache.commons.beanutils.BeanUtils
 import org.apache.commons.io.FileUtils
@@ -23,6 +23,7 @@ class ProjectCfg {
     var ctrlSourceDir:String? = null
     var svcBaseCls: String? = null
     var svcSourceDir:String? = null
+    var daoBaseCls: String? = null
     var mybatisMapperDir:String? = null
     var apiPrefix:String? = "/api/v1"
 

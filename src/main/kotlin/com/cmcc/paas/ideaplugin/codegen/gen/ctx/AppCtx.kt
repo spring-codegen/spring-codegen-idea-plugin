@@ -3,7 +3,7 @@ package com.cmcc.paas.ideaplugin.codegen.gen.ctx
 import com.cmcc.paas.ideaplugin.codegen.config.ProjectCfg
 import com.cmcc.paas.ideaplugin.codegen.constants.DomainType
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTable
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel
+import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
 import com.cmcc.paas.ideaplugin.codegen.util.JsonUtils
 import com.intellij.openapi.project.Project
 import org.apache.commons.beanutils.BeanUtils

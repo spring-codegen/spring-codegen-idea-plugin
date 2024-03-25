@@ -4,7 +4,7 @@ import com.cmcc.paas.ideaplugin.codegen.config.CodeCfg;
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx;
 import com.cmcc.paas.ideaplugin.codegen.constants.DomainType;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
+import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.DomainModelCtx;
 import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
 import com.cmcc.paas.ideaplugin.codegen.ui.BeanFieldSelectionDialog;

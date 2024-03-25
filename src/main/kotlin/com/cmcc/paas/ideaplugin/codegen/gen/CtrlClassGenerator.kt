@@ -2,8 +2,8 @@ package com.cmcc.paas.ideaplugin.codegen.gen
 
 import com.cmcc.paas.ideaplugin.codegen.config.ProjectCfg
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.CtrlClass
+import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
+import com.cmcc.paas.ideaplugin.codegen.gen.model.CtrlClass
 import com.cmcc.paas.ideaplugin.codegen.gen.template.TempRender
 import com.github.javaparser.ParserConfiguration
 import com.github.javaparser.StaticJavaParser
@@ -28,7 +28,7 @@ import java.nio.charset.StandardCharsets
  * @author zhangyinghui
  * @date 2024/3/14
  */
-class CtrlClassGenerator (module:String, var classModel:CtrlClass):ClassGenerator(module){
+class CtrlClassGenerator (module:String, var classModel: CtrlClass):ClassGenerator(module){
     private var cls: ClassOrInterfaceDeclaration? = null
     init {
 
@@ -75,7 +75,7 @@ class CtrlClassGenerator (module:String, var classModel:CtrlClass):ClassGenerato
         }
         processImports(classModel)
     }
-    fun addMethod(cls:ClassOrInterfaceDeclaration, m:CtrlClass.Method):MethodDeclaration{
+    fun addMethod(cls:ClassOrInterfaceDeclaration, m: CtrlClass.Method):MethodDeclaration{
 
         var method = cls.addMethod(m.name, Modifier.Keyword.PUBLIC)
         var methodDoc = Javadoc(JavadocDescription.parseText(if (m.comment == null) "" else m.comment))
@@ -161,7 +161,7 @@ class CtrlClassGenerator (module:String, var classModel:CtrlClass):ClassGenerato
             }
         }
         method.setJavadocComment(methodDoc)
-        var callArg:ClassModel.MethodArg? = null
+        var callArg: ClassModel.MethodArg? = null
         if (m.dependency != null && m.dependency?.args != null && m.dependency?.args!!.size > 0){
             callArg = m.dependency?.args!![0]
         }

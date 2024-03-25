@@ -1,7 +1,7 @@
 package com.cmcc.paas.ideaplugin.codegen.ui.dialog;
 
 import com.cmcc.paas.ideaplugin.codegen.constants.DomainType;
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
+import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.DomainModelCtx;
 
 import javax.swing.*;

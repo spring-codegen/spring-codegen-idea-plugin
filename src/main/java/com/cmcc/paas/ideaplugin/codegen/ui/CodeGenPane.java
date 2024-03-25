@@ -11,7 +11,7 @@ import com.cmcc.paas.ideaplugin.codegen.gen.CodeGenerator;
 import com.cmcc.paas.ideaplugin.codegen.gen.FieldUtils;
 import com.cmcc.paas.ideaplugin.codegen.gen.ModelResult;
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.MvcClassCtx;
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.CtrlClass;
+import com.cmcc.paas.ideaplugin.codegen.gen.model.CtrlClass;
 import com.cmcc.paas.ideaplugin.codegen.services.ResourceService;
 import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils;
 import com.cmcc.paas.ideaplugin.codegen.ui.pane.DomainPaneContainer;
@@ -206,6 +206,7 @@ public class CodeGenPane {
     private void selectTable(DBTable dbTable){
         this.dbTable = dbTable;
         AppCtx.INSTANCE.setCurrentTable(dbTable);
+        AppCtx.INSTANCE.getENV().put("entityName", dbTable.getComment() == null ? dbTable.getName() : dbTable.getComment());
         SwingWorker<List<DBTableField>, Object> swingWorker = new SwingWorker<List<DBTableField>, Object>(){
 
             @Override

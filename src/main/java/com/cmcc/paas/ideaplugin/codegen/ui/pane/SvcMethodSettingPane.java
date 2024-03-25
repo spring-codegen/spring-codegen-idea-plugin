@@ -1,7 +1,7 @@
 package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
 import com.cmcc.paas.ideaplugin.codegen.constants.MvcClassType;
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
+import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils;
 import org.jetbrains.annotations.NotNull;
 

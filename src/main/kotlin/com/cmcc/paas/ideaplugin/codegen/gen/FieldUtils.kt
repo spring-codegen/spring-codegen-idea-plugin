@@ -1,6 +1,6 @@
 package com.cmcc.paas.ideaplugin.codegen.gen
 
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel
+import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
 import com.intellij.util.containers.stream
 import java.util.*
 

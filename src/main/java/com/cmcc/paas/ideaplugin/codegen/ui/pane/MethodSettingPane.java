@@ -3,7 +3,7 @@ package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 import com.cmcc.paas.ideaplugin.codegen.constants.DomainType;
 import com.cmcc.paas.ideaplugin.codegen.constants.MvcClassType;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
+import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.DomainModelCtx;
 import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
 import org.jetbrains.annotations.NotNull;

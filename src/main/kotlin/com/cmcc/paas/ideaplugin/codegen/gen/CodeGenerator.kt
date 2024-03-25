@@ -1,7 +1,7 @@
 package com.cmcc.paas.ideaplugin.codegen.gen
 
 import com.cmcc.paas.ideaplugin.codegen.config.ProjectCfg
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel
+import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
 import kotlin.collections.ArrayList
 
 /**
@@ -11,11 +11,11 @@ import kotlin.collections.ArrayList
  */
 class CodeGenerator() {
     private var classes:MutableList<ClassModel> = ArrayList()
-    private var CLS_MODEL:ClassModel = ClassModel("Model", "com.cmit.paas.common.web.model", null, null)
-    private var CLS_ID_ARG:ClassModel = ClassModel("IdArg", "com.cmit.paas.common.web.model", null, null)
-    private var CLS_ID_RESULT:ClassModel = ClassModel("IdResult", "com.cmit.paas.common.web.model", null, null)
-    private var CLS_LIST_RESULT:ClassModel = ClassModel("ListResult", "com.cmit.paas.common.web.model", null, null)
-    private var CLS_SEARCH_MODEL:ClassModel = ClassModel("PagedSearchArg", "com.cmit.paas.common.web.model", null, null)
+    private var CLS_MODEL: ClassModel = ClassModel("Model", "com.cmit.paas.common.web.model", null, null)
+    private var CLS_ID_ARG: ClassModel = ClassModel("IdArg", "com.cmit.paas.common.web.model", null, null)
+    private var CLS_ID_RESULT: ClassModel = ClassModel("IdResult", "com.cmit.paas.common.web.model", null, null)
+    private var CLS_LIST_RESULT: ClassModel = ClassModel("ListResult", "com.cmit.paas.common.web.model", null, null)
+    private var CLS_SEARCH_MODEL: ClassModel = ClassModel("PagedSearchArg", "com.cmit.paas.common.web.model", null, null)
 
     init {
         var a:MutableList<ClassModel.Field> = ArrayList()
@@ -103,10 +103,12 @@ class CodeGenerator() {
         svcClass!!.dependency = daoClass
         svcClass.implement = svcClass
 
-        var svcInterfaceGenerator = SvcInterfaceGenerator(module, svcClass)
-        var ctrlClassGenerator = CtrlClassGenerator(module,ctrlClass)
+        var daoInterfaceGenerator = DaoInterfaceGenerator(module, daoClass!!)
+        var svcInterfaceGenerator = SvcInterfaceGenerator(module, svcClass.clone())
+        var ctrlClassGenerator = CtrlClassGenerator(module, ctrlClass)
         ctrlClassGenerator.gen()
         svcInterfaceGenerator.gen()
+        daoInterfaceGenerator.gen()
         return
 
 //        ctrlClass.pkg = projectCfg.basePkg + ".controller."+module;

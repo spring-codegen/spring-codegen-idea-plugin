@@ -1,8 +1,8 @@
 package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
 import com.cmcc.paas.ideaplugin.codegen.constants.MvcClassType;
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.CtrlClass;
+import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel;
+import com.cmcc.paas.ideaplugin.codegen.gen.model.CtrlClass;
 import com.cmcc.paas.ideaplugin.codegen.setting.CtrlSetting;
 import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils;
 import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils.TextChangedEvent;

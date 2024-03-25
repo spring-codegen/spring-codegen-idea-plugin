@@ -1,6 +1,6 @@
 package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
+import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
 import com.cmcc.paas.ideaplugin.codegen.ui.dialog.DomainSelectionDialog;
 import com.intellij.uiDesigner.core.GridConstraints;
