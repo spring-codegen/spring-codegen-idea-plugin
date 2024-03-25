@@ -1,12 +1,11 @@
 package com.cmcc.paas.ideaplugin.codegen.util
 
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField
-import com.cmcc.paas.ideaplugin.codegen.gen.FieldUtils.javaType
-import com.cmcc.paas.ideaplugin.codegen.gen.FieldUtils.propertyName
+import com.cmcc.paas.ideaplugin.codegen.util.FieldUtils.javaType
+import com.cmcc.paas.ideaplugin.codegen.util.FieldUtils.propertyName
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
 import org.apache.commons.lang3.StringUtils
 import java.util.*
-import java.util.function.Consumer
 import java.util.regex.Pattern
 
 /**

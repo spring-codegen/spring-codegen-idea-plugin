@@ -2,11 +2,7 @@ package com.cmcc.paas.ideaplugin.codegen.ui;
 
 import com.cmcc.paas.ideaplugin.codegen.config.CodeCfg;
 import com.cmcc.paas.ideaplugin.codegen.constants.MvcClassType;
-import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx;
-import com.cmcc.paas.ideaplugin.codegen.db.model.DBTable;
-import com.cmcc.paas.ideaplugin.codegen.gen.FieldUtils;
 import com.cmcc.paas.ideaplugin.codegen.gen.ModelResult;
-import com.cmcc.paas.ideaplugin.codegen.gen.ctx.DomainModelCtx;
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.MethodFactory;
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.MvcClassCtx;
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel;
@@ -17,7 +13,6 @@ import com.cmcc.paas.ideaplugin.codegen.ui.pane.CtrlMethodSettingPane;
 import com.cmcc.paas.ideaplugin.codegen.ui.pane.DaoMethodSettingPane;
 import com.cmcc.paas.ideaplugin.codegen.ui.pane.MethodSettingPane;
 import com.cmcc.paas.ideaplugin.codegen.ui.pane.SvcMethodSettingPane;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +20,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.*;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * @author zhangyinghui

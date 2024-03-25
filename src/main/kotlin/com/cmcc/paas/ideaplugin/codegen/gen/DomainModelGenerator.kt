@@ -1,11 +1,11 @@
 package com.cmcc.paas.ideaplugin.codegen.gen
 
-import com.cmcc.paas.ideaplugin.codegen.config.ProjectCfg
 import com.cmcc.paas.ideaplugin.codegen.constants.DomainType
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.DomainModelCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.template.TempRender
+import com.cmcc.paas.ideaplugin.codegen.util.FieldUtils
 import java.util.HashMap
 
 /**

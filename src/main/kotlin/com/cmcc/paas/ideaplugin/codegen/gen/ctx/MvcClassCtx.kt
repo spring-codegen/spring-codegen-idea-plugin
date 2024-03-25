@@ -1,14 +1,11 @@
 package com.cmcc.paas.ideaplugin.codegen.gen.ctx
 
 import com.cmcc.paas.ideaplugin.codegen.constants.MvcClassType
-import com.cmcc.paas.ideaplugin.codegen.notify.NotificationType
-import com.cmcc.paas.ideaplugin.codegen.gen.FieldUtils
+import com.cmcc.paas.ideaplugin.codegen.util.FieldUtils
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
 import com.cmcc.paas.ideaplugin.codegen.gen.model.CtrlClass
 import com.cmcc.paas.ideaplugin.codegen.gen.model.DaoClass
 import com.cmcc.paas.ideaplugin.codegen.gen.model.SvcClass
-import com.cmcc.paas.ideaplugin.codegen.notify.Messages
-import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter
 
 /**
  *

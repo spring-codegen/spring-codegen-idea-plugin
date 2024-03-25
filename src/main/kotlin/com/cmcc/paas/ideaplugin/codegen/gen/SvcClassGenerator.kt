@@ -3,6 +3,7 @@ package com.cmcc.paas.ideaplugin.codegen.gen
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
 import com.cmcc.paas.ideaplugin.codegen.gen.model.CtrlClass
+import com.cmcc.paas.ideaplugin.codegen.gen.model.SvcClass
 import com.cmcc.paas.ideaplugin.codegen.gen.template.TempRender
 import com.github.javaparser.ParserConfiguration
 import com.github.javaparser.StaticJavaParser
@@ -27,96 +28,25 @@ import java.nio.charset.StandardCharsets
  * @author zhangyinghui
  * @date 2024/3/14
  */
-class CtrlClassGenerator (module:String, var classModel: CtrlClass):ClassGenerator(module){
+class SvcClassGenerator (module:String, var classModel: SvcClass):ClassGenerator(module){
     private var cls: ClassOrInterfaceDeclaration? = null
     init {
 
-        /**
-         * 处理ctrl base class
-         */
-        if (AppCtx.projectCfg?.ctrlBaseCls != null) {
-            var i = AppCtx.projectCfg?.ctrlBaseCls!!.lastIndexOf(".")
-            if (i > 0) {
-                var baseCtrlCls = ClassModel(AppCtx.projectCfg?.ctrlBaseCls!!.substring(i + 1))
-                baseCtrlCls.pkg = AppCtx.projectCfg?.ctrlBaseCls!!.substring(0, i)
-                classModel.extend = baseCtrlCls
-            }
-        }
-
-        classModel.pkg = AppCtx.projectCfg?.basePkg + ".controller."+module;
-        cls = ClassOrInterfaceDeclaration()
-        cls!!.setName(classModel.className)
-        /**
-         * 处理路径参数
-         */
-        classModel.methods!!.forEach {
-            var m = it as CtrlClass.Method
-            if (!StringUtils.isEmpty(m.request!!.path)){
-                var phs = com.cmcc.paas.ideaplugin.codegen.util.StringUtils.parsePlaceholders(m.request!!.path)
-                if( phs != null) {
-                    for (ph in phs){
-                        if (m.dependency != null && m.dependency!!.args != null){
-                            for (arg in m.dependency!!.args ){
-                                var field = arg.classModel!!.fields!!.find { e2 -> e2.name.equals(ph, true) }
-                                if (field != null){
-                                    var c = ClassModel(field.javaType)
-                                    c.refName = ph
-                                    var phArg = ClassModel.MethodArg(c, ph)
-                                    phArg.isPathVar = true
-                                    phArg.comment = field.comment
-                                    m.args.add(0, phArg)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        classModel.pkg = AppCtx.projectCfg?.basePkg + ".svc."+module;
         processImports(classModel)
     }
-    fun createMethod(m: CtrlClass.Method):MethodDeclaration{
+    fun createMethod(m: ClassModel.Method):MethodDeclaration{
 
         var method = MethodDeclaration().setName(m.name).addModifier( Modifier.Keyword.PUBLIC)
         var methodDoc = Javadoc(JavadocDescription.parseText(if (m.comment == null) "" else m.comment))
         var blockStmt = BlockStmt()
-        var resultType = ClassOrInterfaceType(null,"HttpResponse")
-        if (m.result == null ){
-            resultType.setTypeArguments(WildcardType())
+        var resultType:ClassOrInterfaceType = ClassOrInterfaceType(null, m.result?.classModel?.className)
+        if (m.result?.listTypeFlag != null && m.result?.listTypeFlag!!){
+            resultType = ClassOrInterfaceType(null, "List").setTypeArguments(resultType)
         }
-        else if (m.result?.listTypeFlag != null && m.result?.listTypeFlag!!){
-            resultType.setTypeArguments(
-                    ClassOrInterfaceType(null, "ListResult")
-                            .setTypeArguments(ClassOrInterfaceType(null, m.result?.classModel?.className))
-            )
-        }else{
-            resultType.setTypeArguments(ClassOrInterfaceType(null, m.result?.classModel?.className))
-        }
-
         method?.setType(resultType)
-        var methodAnno = NormalAnnotationExpr(
-            Name("RequestMapping"),
-            NodeList(
-                MemberValuePair("path",StringLiteralExpr(m.request?.path)),
-                MemberValuePair("method",FieldAccessExpr(ThisExpr(Name("HttpMethod")), m.request?.httpMethod))
-            )
-        )
-        method?.addAnnotation(methodAnno)
-
-        //加路径参数
-//        var params = ArrayList<Parameter>()
-//        if (m.request?.pathVars != null){
-//            m.request?.pathVars?.forEach {
-//                var p = Parameter()
-//                    .setType(it.javaType)
-//                    .setName(it.name)
-//                    .addSingleMemberAnnotation("PathVariable", "\""+it.name+"\"")
-//                method?.addParameter(p)
-//                params.add(p)
-//             }
-//        }
         //加绑定参数
         if (m.args != null){
-            var br:Parameter? = null
             m.args.forEach {
                 var varName = if (StringUtils.isEmpty(it.refName)) it.classModel?.refName else it.refName
                 var p = Parameter()
@@ -133,30 +63,7 @@ class CtrlClassGenerator (module:String, var classModel: CtrlClass):ClassGenerat
                         )
                     )
                 )
-                if (it.isPathVar){
-                    p.addSingleMemberAnnotation("PathVariable", "\""+varName+"\"")
-                }
-                //如果是对象参数，需要加br
-                if ( !ClassModel.isBaseType(it.classModel?.className!!)){
-                    br = Parameter().setType("BindingResult").setName("br")
-                    var brIfStmt = IfStmt(
-                        MethodCallExpr(NameExpr("br"), "hasErrors"),
-                        BlockStmt( ).addStatement(
-                            ThrowStmt(
-                                ObjectCreationExpr(
-                                    null,
-                                    ClassOrInterfaceType(null, "ParamException" ),
-                                    NodeList<Expression>(NameExpr("br.getFieldError().getField() + br.getFieldError().getDefaultMessage()"))
-                                )
-                            )
-                        ),
-                        null)
-                    blockStmt.addStatement(brIfStmt)
-                }
                 method?.addParameter(p)
-            }
-            if (br != null){
-                method?.addParameter(br)
             }
         }
         method.setJavadocComment(methodDoc)
@@ -225,11 +132,9 @@ class CtrlClassGenerator (module:String, var classModel: CtrlClass):ClassGenerat
         var dependencyCallExpr = MethodCallExpr(NameExpr(classModel.dependency?.refName), m.dependency?.name);
         dependencyCallExpr.addArgument(callArgExpr);
         var callReturn = m.dependency?.result
-        var resType = ClassOrInterfaceType(null, "HttpResponse")
         var resultDataVarName:String? = null
         if (callReturn == null){
             blockStmt.addStatement(dependencyCallExpr);
-            resType.setTypeArguments(WildcardType())
         }else{
             var resultDeclar:VariableDeclarator? = null
             resultDataVarName = callReturn.classModel?.refName!!
@@ -244,14 +149,12 @@ class CtrlClassGenerator (module:String, var classModel: CtrlClass):ClassGenerat
                     resultDataVarName,
                     dependencyCallExpr
                 )
-                resType.setTypeArguments(dataType)
             }else {
                 resultDeclar = VariableDeclarator(
                     ClassOrInterfaceType(null, callReturn.classModel?.className),
                     resultDataVarName,
                     dependencyCallExpr
                 )
-                resType.setTypeArguments(itemType)
             }
             blockStmt.addStatement(VariableDeclarationExpr(resultDeclar))
             if (m.result != null && m.result?.outputPaged!!){

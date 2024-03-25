@@ -1,7 +1,7 @@
 package com.cmcc.paas.ideaplugin.codegen.gen
 
-import com.cmcc.paas.ideaplugin.codegen.config.ProjectCfg
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
+import com.cmcc.paas.ideaplugin.codegen.util.FieldUtils
 import java.util.HashSet
 
 /**

@@ -1,7 +1,7 @@
 package com.cmcc.paas.ideaplugin.codegen.ui;
 
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
-import com.cmcc.paas.ideaplugin.codegen.gen.FieldUtils;
+import com.cmcc.paas.ideaplugin.codegen.util.FieldUtils;
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel;
 
 import javax.swing.*;

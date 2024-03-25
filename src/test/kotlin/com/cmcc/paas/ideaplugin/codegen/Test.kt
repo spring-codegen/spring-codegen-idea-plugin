@@ -1,6 +1,6 @@
 package com.cmcc.paas.ideaplugin.codegen
 
-import com.cmcc.paas.ideaplugin.codegen.gen.FieldUtils
+import com.cmcc.paas.ideaplugin.codegen.util.FieldUtils
 
 /**
  *

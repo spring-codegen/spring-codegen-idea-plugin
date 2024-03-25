@@ -8,7 +8,7 @@ import com.cmcc.paas.ideaplugin.codegen.db.DBCtx;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTable;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.CodeGenerator;
-import com.cmcc.paas.ideaplugin.codegen.gen.FieldUtils;
+import com.cmcc.paas.ideaplugin.codegen.util.FieldUtils;
 import com.cmcc.paas.ideaplugin.codegen.gen.ModelResult;
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.MvcClassCtx;
 import com.cmcc.paas.ideaplugin.codegen.gen.model.CtrlClass;
