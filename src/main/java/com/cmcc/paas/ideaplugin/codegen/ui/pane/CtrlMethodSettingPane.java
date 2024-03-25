@@ -1,5 +1,9 @@
 package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
+import com.cmcc.paas.ideaplugin.codegen.constants.MvcClassType;
+import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
+import com.cmcc.paas.ideaplugin.codegen.gen.define.model.CtrlClass;
+import com.cmcc.paas.ideaplugin.codegen.setting.CtrlSetting;
 import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils;
 import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils.TextChangedEvent;
 import com.cmcc.paas.ideaplugin.codegen.util.StringUtils;
@@ -9,6 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.awt.Font.BOLD;
@@ -33,11 +38,12 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
     private JComboBox argComboBox;
     private JLabel methodTypeLabel;
     private JTextArea commentTextArea;
-//    private ArgsSettingPane argsSettingPane;
 
-    protected MethodSettingModel model;
+//    protected MethodSettingModel model;
     private Color PATH_TEXT_FIELD_COLOR = Color.decode("#BBBBBB");
     private Color PATH_TEXT_FIELD_COLOR_HL = Color.decode("#BB9E1B");
+    protected CtrlClass.Method method = new CtrlClass.Method("", new ArrayList<ClassModel.MethodArg>(), null);
+
 
     public CtrlMethodSettingPane(){
         init();
@@ -50,31 +56,22 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
         outputPagedCheckBox.setBackground(null);
         for (Component component : content.getComponents()) {
             if (component instanceof JTextField){
-                TextFieldUtils.INSTANCE.addTextChangedEvent((JTextField) component, new TextChangedEvent() {
-                    @Override
-                    public void onTextChanged(@NotNull JTextField textField) {
-                        if (textField == pathTextField) {
-                            model.setPath(pathTextField.getText());
-                        }
-                        if (textField == methodTextField) {
-                            model.setMethodName(methodTextField.getText());
-                        }
+                TextFieldUtils.INSTANCE.addTextChangedEvent((JTextField) component, textField -> {
+                    if (textField == pathTextField) {
+                        method.getRequest().setPath(pathTextField.getText());
+                    }
+                    if (textField == methodTextField) {
+                        method.setName(methodTextField.getText());
                     }
                 });
             }
             if (component instanceof JCheckBox){
-                ((JCheckBox)component).addItemListener(new ItemListener() {
-                    @Override
-                    public void itemStateChanged(ItemEvent itemEvent) {
-//                        if (itemEvent.getSource() == inputListTypeCheckBox) {
-//                            model.setInputListTypeFlag(inputListTypeCheckBox.isSelected());
-//                        }
-                        if (itemEvent.getSource() == outputListTypeCheckBox) {
-                            model.getResult().setListTypeFlag(outputListTypeCheckBox.isSelected());
-                        }
-                        if (itemEvent.getSource() == outputPagedCheckBox) {
-                            model.getResult().setOutputPaged(outputPagedCheckBox.isSelected());
-                        }
+                ((JCheckBox)component).addItemListener(itemEvent->{
+                    if (itemEvent.getSource() == outputListTypeCheckBox) {
+                        method.getResult().setListTypeFlag(outputListTypeCheckBox.isSelected());
+                    }
+                    if (itemEvent.getSource() == outputPagedCheckBox) {
+                        method.getResult().setOutputPaged(outputPagedCheckBox.isSelected());
                     }
                 });
             }
@@ -99,26 +96,51 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
         return content;
     }
 
-    public MethodSettingModel getModel(){
-        model.setComment(commentTextArea.getText());
-        return model;
+//    public MethodSettingModel getModel(){
+//        model.setComment(commentTextArea.getText());
+//        return model;
+//    }
+
+    public CtrlClass.Method getMethod() {
+        return method;
     }
-    public void setModel(MethodSettingModel model) {
-        this.model = model;
-        this.pathTextField.setText(model.getPath());
-        this.methodTextField.setText(model.getMethodName());
-        this.methodTypeLabel.setText(model.getHttpMethod());
-        this.commentTextArea.setText(model.getComment());
-        if (model.getResult() != null) {
-            this.outputListTypeCheckBox.setSelected(model.getResult().getListTypeFlag() == null ? false : model.getResult().getListTypeFlag());
-            this.outputPagedCheckBox.setSelected(model.getResult().getOutputPaged());
+
+    @Override
+    public void setMethod(ClassModel.Method method) {
+        this.method = (CtrlClass.Method) method;
+        this.pathTextField.setText(this.method.getRequest().getPath());
+        this.methodTextField.setText(this.method.getName());
+        this.methodTypeLabel.setText(this.method.getRequest().getHttpMethod());
+        this.commentTextArea.setText(this.method.getComment());
+        if (this.method.getResult() != null) {
+            this.outputListTypeCheckBox.setSelected(this.method.getResult().getListTypeFlag());
+            this.outputPagedCheckBox.setSelected(this.method.getResult().getOutputPaged());
         }
-//        argsSettingPane.setArgs(model.getArgs());
         resetArgComboBox();
         resetReturnComboBox();
         updatePathTextFieldUI();
     }
 
+    @Override
+    public MvcClassType getClassType() {
+        return MvcClassType.CTRL;
+    }
+
+    //    public void setModel(MethodSettingModel model) {
+//        this.model = model;
+//        this.pathTextField.setText(model.getPath());
+//        this.methodTextField.setText(model.getMethodName());
+//        this.methodTypeLabel.setText(model.getHttpMethod());
+//        this.commentTextArea.setText(model.getComment());
+//        if (model.getResult() != null) {
+//            this.outputListTypeCheckBox.setSelected(model.getResult().getListTypeFlag() == null ? false : model.getResult().getListTypeFlag());
+//            this.outputPagedCheckBox.setSelected(model.getResult().getOutputPaged());
+//        }
+//        resetArgComboBox();
+//        resetReturnComboBox();
+//        updatePathTextFieldUI();
+//        refreshMethod();
+//    }
     @Override
     public JComboBox getReturnComboBox() {
         return resultComboBox;

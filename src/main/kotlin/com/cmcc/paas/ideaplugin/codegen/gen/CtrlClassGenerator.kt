@@ -1,15 +1,15 @@
 package com.cmcc.paas.ideaplugin.codegen.gen
 
 import com.cmcc.paas.ideaplugin.codegen.config.ProjectCfg
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.CtrlClass
 import com.cmcc.paas.ideaplugin.codegen.gen.template.TempRender
+import com.github.javaparser.ParserConfiguration
 import com.github.javaparser.StaticJavaParser
 import com.github.javaparser.ast.Modifier
 import com.github.javaparser.ast.NodeList
 import com.github.javaparser.ast.body.*
-import com.github.javaparser.ast.comments.BlockComment
-import com.github.javaparser.ast.comments.JavadocComment
 import com.github.javaparser.ast.expr.*
 import com.github.javaparser.ast.stmt.BlockStmt
 import com.github.javaparser.ast.stmt.IfStmt
@@ -21,30 +21,30 @@ import com.github.javaparser.javadoc.Javadoc
 import com.github.javaparser.javadoc.JavadocBlockTag
 import com.github.javaparser.javadoc.description.JavadocDescription
 import org.apache.commons.lang.StringUtils
-import java.util.HashMap
+import java.nio.charset.StandardCharsets
 
 /**
  *
  * @author zhangyinghui
  * @date 2024/3/14
  */
-class CtrlClassGenerator (module:String, var classModel:CtrlClass, projectCfg:ProjectCfg):ClassGenerator(module, projectCfg){
+class CtrlClassGenerator (module:String, var classModel:CtrlClass):ClassGenerator(module){
     private var cls: ClassOrInterfaceDeclaration? = null
     init {
 
         /**
          * 处理ctrl base class
          */
-        if (projectCfg.ctrlBaseCls != null) {
-            var i = projectCfg.ctrlBaseCls!!.lastIndexOf(".")
+        if (AppCtx.projectCfg?.ctrlBaseCls != null) {
+            var i = AppCtx.projectCfg?.ctrlBaseCls!!.lastIndexOf(".")
             if (i > 0) {
-                var baseCtrlCls = ClassModel(projectCfg.ctrlBaseCls!!.substring(i + 1))
-                baseCtrlCls.pkg = projectCfg.ctrlBaseCls!!.substring(0, i)
+                var baseCtrlCls = ClassModel(AppCtx.projectCfg?.ctrlBaseCls!!.substring(i + 1))
+                baseCtrlCls.pkg = AppCtx.projectCfg?.ctrlBaseCls!!.substring(0, i)
                 classModel.extend = baseCtrlCls
             }
         }
 
-        classModel.pkg = projectCfg.basePkg + ".controller."+module;
+        classModel.pkg = AppCtx.projectCfg?.basePkg + ".controller."+module;
         cls = ClassOrInterfaceDeclaration()
         cls!!.setName(classModel.className)
         /**
@@ -284,12 +284,15 @@ class CtrlClassGenerator (module:String, var classModel:CtrlClass, projectCfg:Pr
     }
     fun gen(){
         var data = HashMap<String, Any?>();
-        data["project"] = projectCfg
+        data["project"] = AppCtx.projectCfg
         data["ctrlClass"] = classModel
 
         var c = TempRender.render("ctrl-class.ftl", data)
         System.out.println(c)
         System.out.println("====================")
+        val parserConfiguration = ParserConfiguration()
+        parserConfiguration.characterEncoding = StandardCharsets.UTF_8
+        StaticJavaParser.setConfiguration(parserConfiguration)
         var cu = StaticJavaParser.parse(c)
         cls = cu.getClassByName(classModel.className).get()
         classModel.methods?.forEach {

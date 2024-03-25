@@ -1,7 +1,7 @@
 package com.cmcc.paas.ideaplugin.codegen.ui;
 
 import com.cmcc.paas.ideaplugin.codegen.config.ProjectCfg;
-import com.cmcc.paas.ideaplugin.codegen.constants.AppCtx;
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx;
 import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,6 +32,7 @@ public class CodeSettingPane {
     private JTextField modelDirTextField;
     private JButton domainSourceFileButton;
     private JTextField svcBaseClsTextField;
+    private JTextField apiPrefixTextField;
     private ProjectCfg model;
 
     public CodeSettingPane(){
@@ -130,7 +131,7 @@ public class CodeSettingPane {
         return model;
     }
 
-    public void setModel(ProjectCfg model) {
+    public void setModel(ProjectCfg model){
         this.model = model;
         basePkgTextField.setText(model.getBasePkg());
         authorTextField.setText(model.getAuthor());

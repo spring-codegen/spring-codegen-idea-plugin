@@ -2,11 +2,6 @@ package com.cmcc.paas.ideaplugin.codegen.gen
 
 import com.cmcc.paas.ideaplugin.codegen.config.ProjectCfg
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.CtrlClass
-import com.cmcc.paas.ideaplugin.codegen.gen.template.TempRender.renderToFile
-import com.cmcc.paas.ideaplugin.codegen.util.StringUtils
-import com.intellij.util.containers.stream
-import java.util.*
 import kotlin.collections.ArrayList
 
 /**
@@ -76,7 +71,7 @@ class CodeGenerator() {
 //        renderModel(module, true, modelResult.args!!, projectCfg)
 //        renderModel(module, false, modelResult.results!!, projectCfg)
 //        renderModel(module, false, modelResult.entities!!, projectCfg)
-        DomainModelGenerator(module, projectCfg).gen()
+        DomainModelGenerator(module).gen()
         /**
          * 处理refName
          */
@@ -108,8 +103,8 @@ class CodeGenerator() {
         svcClass!!.dependency = daoClass
         svcClass.implement = svcClass
 
-        var svcInterfaceGenerator = SvcInterfaceGenerator(module, svcClass, projectCfg)
-        var ctrlClassGenerator = CtrlClassGenerator(module,ctrlClass, projectCfg)
+        var svcInterfaceGenerator = SvcInterfaceGenerator(module, svcClass)
+        var ctrlClassGenerator = CtrlClassGenerator(module,ctrlClass)
         ctrlClassGenerator.gen()
         svcInterfaceGenerator.gen()
         return

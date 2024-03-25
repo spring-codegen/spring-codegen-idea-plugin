@@ -1,14 +1,14 @@
 package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
 import com.cmcc.paas.ideaplugin.codegen.config.CodeCfg;
-import com.cmcc.paas.ideaplugin.codegen.constants.AppCtx;
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx;
 import com.cmcc.paas.ideaplugin.codegen.constants.DomainType;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.DomainModels;
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.DomainModelCtx;
 import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
 import com.cmcc.paas.ideaplugin.codegen.ui.BeanFieldSelectionDialog;
-import com.cmcc.paas.ideaplugin.codegen.ui.consts.NotificationType;
+import com.cmcc.paas.ideaplugin.codegen.notify.NotificationType;
 import com.cmcc.paas.ideaplugin.codegen.util.CodeGenUtils;
 import com.cmcc.paas.ideaplugin.codegen.util.StringUtils;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -69,7 +69,7 @@ public class DomainPaneContainer {
         addResultButton.addActionListener(listener);
     }
     public void reset(){
-        DomainModels.INSTANCE.clear();
+        DomainModelCtx.INSTANCE.clear();
         Arrays.stream(new JComponent[]{argDomainContainer, entityDomainContainer, resultDomainContainer}).forEach(e->e.removeAll());
 
 
@@ -101,7 +101,7 @@ public class DomainPaneContainer {
     }
 
     public void addClassModel(DomainType domainType, ClassModel classModel){
-        DomainModels.INSTANCE.addModel(domainType, classModel);
+        DomainModelCtx.INSTANCE.addModel(domainType, classModel);
         if (ClassModel.isInnerClass(classModel.getClassName())){
             return;
         }

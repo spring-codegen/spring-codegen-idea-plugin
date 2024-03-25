@@ -1,6 +1,7 @@
 package com.cmcc.paas.ideaplugin.codegen.gen
 
 import com.cmcc.paas.ideaplugin.codegen.config.ProjectCfg
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.CtrlClass
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.SvcClass
@@ -23,22 +24,22 @@ import java.util.HashMap
  * @author zhangyinghui
  * @date 2024/3/14
  */
-class SvcInterfaceGenerator (module:String, var classModel:SvcClass, projectCfg:ProjectCfg):ClassGenerator(module, projectCfg){
+class SvcInterfaceGenerator (module:String, var classModel:SvcClass):ClassGenerator(module){
     private var cls: ClassOrInterfaceDeclaration? = null
     init {
         /**
          * 处理ctrl base class
          */
-        if (projectCfg.svcBaseCls != null) {
-            var i = projectCfg.svcBaseCls!!.lastIndexOf(".")
+        if (AppCtx.projectCfg?.svcBaseCls != null) {
+            var i = AppCtx.projectCfg?.svcBaseCls!!.lastIndexOf(".")
             if (i > 0) {
-                var baseSvcCls = ClassModel(projectCfg.svcBaseCls!!.substring(i + 1))
-                baseSvcCls.pkg = projectCfg.svcBaseCls!!.substring(0, i)
+                var baseSvcCls = ClassModel(AppCtx.projectCfg?.svcBaseCls!!.substring(i + 1))
+                baseSvcCls.pkg = AppCtx.projectCfg?.svcBaseCls!!.substring(0, i)
                 classModel.extend = baseSvcCls
             }
         }
 
-        classModel.pkg = projectCfg.basePkg + ".svc."+module;
+        classModel.pkg = AppCtx.projectCfg?.basePkg + ".svc."+module;
         cls = ClassOrInterfaceDeclaration()
         cls!!.setName(classModel.className)
         processImports(classModel)

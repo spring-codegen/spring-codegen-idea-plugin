@@ -1,14 +1,14 @@
-package com.cmcc.paas.ideaplugin.codegen.gen.define.model
+package com.cmcc.paas.ideaplugin.codegen.gen.ctx
 
 import com.cmcc.paas.ideaplugin.codegen.constants.DomainType
-import com.intellij.util.containers.stream
+import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel
 
 /**
  *
  * @author zhangyinghui
  * @date 2024/3/20
  */
-object DomainModels {
+object DomainModelCtx {
     private var maps:MutableMap<DomainType, MutableList<ClassModel>> = HashMap()
     fun addModel(type:DomainType, classModel: ClassModel){
         if (!maps.containsKey(type)){
@@ -45,7 +45,7 @@ object DomainModels {
         maps.keys.forEach { a.addAll(maps[it]!!) }
         return a
     }
-    fun getClassModelByName(className:String):ClassModel?{
+    fun getClassModelByName(className:String): ClassModel?{
         for( a in maps.values){
             for(e in a){
                 if (e.className.equals(className, true)){

@@ -1,21 +1,17 @@
 package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
-import com.cmcc.paas.ideaplugin.codegen.constants.DomainType;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
 import com.cmcc.paas.ideaplugin.codegen.ui.dialog.DomainSelectionDialog;
 import com.intellij.uiDesigner.core.GridConstraints;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import static com.cmcc.paas.ideaplugin.codegen.ui.consts.NotificationType.MODEL_ADDED;
-import static com.cmcc.paas.ideaplugin.codegen.ui.consts.NotificationType.MODEL_UPDATED;
+import static com.cmcc.paas.ideaplugin.codegen.notify.NotificationType.MODEL_UPDATED;
 
 public class ArgsSettingPane {
     private JPanel content;

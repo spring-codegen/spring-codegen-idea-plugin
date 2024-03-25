@@ -1,7 +1,8 @@
 package com.cmcc.paas.ideaplugin.codegen.ui;
 
 import com.cmcc.paas.ideaplugin.codegen.config.*;
-import com.cmcc.paas.ideaplugin.codegen.constants.AppCtx;
+import com.cmcc.paas.ideaplugin.codegen.constants.MvcClassType;
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx;
 import com.cmcc.paas.ideaplugin.codegen.constants.EnvKey;
 import com.cmcc.paas.ideaplugin.codegen.db.DBCtx;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTable;
@@ -9,15 +10,13 @@ import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.CodeGenerator;
 import com.cmcc.paas.ideaplugin.codegen.gen.FieldUtils;
 import com.cmcc.paas.ideaplugin.codegen.gen.ModelResult;
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.MvcClassCtx;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.CtrlClass;
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.DaoClass;
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.SvcClass;
 import com.cmcc.paas.ideaplugin.codegen.services.ResourceService;
 import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils;
 import com.cmcc.paas.ideaplugin.codegen.ui.pane.DomainPaneContainer;
 import com.cmcc.paas.ideaplugin.codegen.util.StringUtils;
 import com.intellij.uiDesigner.core.GridConstraints;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -47,35 +46,31 @@ public class CodeGenPane {
 //    private JScrollPane clsTableScrollView;
     private JButton addMethodButton;
     private CodeSettingPane codeSettingPane;
-    private DBSettingPane dbSettingPanel;
+    private DBSettingPane dbSettingPane;
     private MethodContainerPane methodContainerPane;
     private JTextField ctrlClassNameTextField;
     private JTextField svcClassNameTextField;
     private JTextField daoClassNameTextField;
     private JTextField resourceNameTextField;
     private DomainPaneContainer domainContainer;
-    private JLabel pathSuffixLabel;
+    private JLabel pathPrefixLabel;
 
     private DBTable dbTable;
     private List<DBTable> dbTables;
 
     private CodeCfg codeCfg;
-    private final CodeCfg codeSetting = new CodeCfg();
     private final ProjectCfg projectCfg = new ProjectCfg();
     private final DBCfg dbCfg = new DBCfg();
-    private CtrlClass ctrlClass = null;
-    private SvcClass svcClass =  null;
-    private DaoClass daoClass =  null;
     private MethodSelectionPopupMenu methodSelectionPopupMenu;
     public CodeGenPane() {
         rootScrollPanel.setBorder(null);
 //        clsTableScrollView.setBorder(null);
 //        clsTableScrollView.setViewportBorder(null);
 
-        projectCfg.load();
+        ProjectCfg.load();
         dbCfg.load();
-        codeSettingPane.setModel(projectCfg);
-        dbSettingPanel.setModel(dbCfg);
+        dbSettingPane.setModel(dbCfg);
+        codeSettingPane.setModel(AppCtx.INSTANCE.getProjectCfg());
 
         tableComboBox.addItemListener(new ItemListener() {
             @Override
@@ -119,7 +114,7 @@ public class CodeGenPane {
                 }
             }
         });
-        dbSettingPanel.setValueChangedListener(new DBSettingPane.ValueChangedListener() {
+        dbSettingPane.setValueChangedListener(new DBSettingPane.ValueChangedListener() {
             @Override
             public void onValueChanged(DBSettingPane dbSettingPanel) {
                 DBCtx.INSTANCE.refresh();
@@ -128,7 +123,7 @@ public class CodeGenPane {
         });
         Arrays.stream((new JTextField[]{moduleTextField, resourceNameTextField})).forEach( e -> {
             TextFieldUtils.INSTANCE.addTextChangedEvent(e,  textField -> {
-                pathSuffixLabel.setText(getPathSuffix());
+                pathPrefixLabel.setText(getPathSuffix());
             });
         });
         codeCfg = ResourceService.INSTANCE.getCodeCfg();
@@ -149,7 +144,8 @@ public class CodeGenPane {
     private String getPathSuffix(){
         String moduleName = moduleTextField.getText();
         String resourceName = resourceNameTextField.getText();
-        return String.format("/%s/%s",
+        return String.format("%s/%s/%s",
+                AppCtx.INSTANCE.getProjectCfg().getApiPrefix(),
                 org.apache.commons.lang3.StringUtils.isEmpty(moduleName)?"{module}":moduleName,
                 org.apache.commons.lang3.StringUtils.isEmpty(resourceName)?"resourceName":resourceName
         );
@@ -206,10 +202,6 @@ public class CodeGenPane {
             methodSelectionPopupMenu.setItems(menuItems);
         }
         methodSelectionPopupMenu.show(addMethodButton,0, addMethodButton.getHeight());
-    }
-    private void ctrlDirUpdated(){
-        codeSetting.getCtrlClass().setBaseURI(String.format("/api/v1/%s", codeSetting.getCtrlClass().getDir()));
-        baseUriTextField.setText(codeSetting.getCtrlClass().getBaseURI());
     }
     private void selectTable(DBTable dbTable){
         this.dbTable = dbTable;
@@ -293,23 +285,25 @@ public class CodeGenPane {
         ctrlClassNameTextField.setText(StringUtils.INSTANCE.replacePlaceholders(codeCfg.getCtrlClass().getClassName(), AppCtx.INSTANCE.getENV()));
         svcClassNameTextField.setText(StringUtils.INSTANCE.replacePlaceholders(codeCfg.getSvcClass().getClassName(),  AppCtx.INSTANCE.getENV()));
         daoClassNameTextField.setText(StringUtils.INSTANCE.replacePlaceholders(codeCfg.getDaoClass().getClassName(), AppCtx.INSTANCE.getENV()));
-        ctrlClass = new CtrlClass(ctrlClassNameTextField.getText());
-        ctrlClass.setComment(dbTable.getComment());
-        svcClass = new SvcClass(svcClassNameTextField.getText());
-        daoClass = new DaoClass(daoClassNameTextField.getText());
-        ctrlClass.setTableName(dbTable.getName());
-        svcClass.setTableName(dbTable.getName());
-        svcClass.setComment(dbTable.getComment());
-        daoClass.setTableName(dbTable.getName());
-        daoClass.setComment(dbTable.getComment());
+
+        MvcClassCtx.INSTANCE.setClassName(MvcClassType.CTRL, ctrlClassNameTextField.getText());
+        MvcClassCtx.INSTANCE.setClassName(MvcClassType.SVC,svcClassNameTextField.getText());
+        MvcClassCtx.INSTANCE.setClassName(MvcClassType.DAO,daoClassNameTextField.getText());
+
+        MvcClassCtx.INSTANCE.getCtrlClass().setComment(dbTable.getComment());
+        MvcClassCtx.INSTANCE.getCtrlClass().setTableName(dbTable.getName());
+        MvcClassCtx.INSTANCE.getSvcClass().setTableName(dbTable.getName());
+        MvcClassCtx.INSTANCE.getSvcClass().setComment(dbTable.getComment());
+        MvcClassCtx.INSTANCE.getDaoClass().setTableName(dbTable.getName());
+        MvcClassCtx.INSTANCE.getDaoClass().setComment(dbTable.getComment());
     }
     private void resetModels(){
         domainContainer.reset();
     }
     private void updateClassCfg(){
-        ctrlClass.setClassName(ctrlClassNameTextField.getText());
-        svcClass.setClassName(svcClassNameTextField.getText());
-        daoClass.setClassName(daoClassNameTextField.getText());
+        MvcClassCtx.INSTANCE.setClassName(MvcClassType.CTRL, ctrlClassNameTextField.getText());
+        MvcClassCtx.INSTANCE.setClassName(MvcClassType.SVC, svcClassNameTextField.getText());
+        MvcClassCtx.INSTANCE.setClassName(MvcClassType.DAO, daoClassNameTextField.getText());
     }
 
     /**
@@ -317,9 +311,6 @@ public class CodeGenPane {
      */
     private void updateMethods(){
         methodContainerPane.reset();
-        methodContainerPane.setCtrlClass(ctrlClass);
-        methodContainerPane.setSvcClass(svcClass);
-        methodContainerPane.setDaoClass(daoClass);
 
         methodContainerPane.createMethod("add", "add", true, true, true);
         methodContainerPane.createMethod("update", "update", true, true, true);
@@ -337,7 +328,7 @@ public class CodeGenPane {
         if (resourceName != null){
             resourceName = resourceName.toLowerCase();
         }
-        ctrlClass.setRequest(new CtrlClass.Request(baseUriTextField.getText() +"/" + resourceName, null));
+        MvcClassCtx.INSTANCE.getCtrlClass().setRequest(new CtrlClass.Request(getPathSuffix(), null));
         ModelResult modelResult = methodContainerPane.getCfgResult();
         System.out.println("generate 3");
         new CodeGenerator().gen(moduleTextField.getText(), modelResult, projectCfg);

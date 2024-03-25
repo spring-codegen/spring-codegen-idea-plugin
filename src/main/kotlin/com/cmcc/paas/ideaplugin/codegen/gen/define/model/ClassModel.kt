@@ -128,5 +128,6 @@ open class ClassModel(var className: String, var pkg: String?, var comment: Stri
         constructor(): this(null, null)
         var outputPaged = false
         var listTypeFlag = false
+        var comment:String? = null
     }
 }

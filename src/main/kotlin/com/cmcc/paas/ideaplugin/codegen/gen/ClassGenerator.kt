@@ -9,7 +9,7 @@ import java.util.HashSet
  * @author zhangyinghui
  * @date 2024/3/22
  */
-open class ClassGenerator (var module: String, var projectCfg: ProjectCfg){
+open class ClassGenerator (var module: String){
     fun setClassModelRefName(classModel: ClassModel){
         if(ClassModel.isBaseType(classModel.className)){
             if (classModel.fields!= null && classModel.fields!!.size > 0) {

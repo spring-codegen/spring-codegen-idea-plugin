@@ -373,18 +373,7 @@
                           <font/>
                           <foreground color="-7960954"/>
                           <horizontalAlignment value="4"/>
-                          <text value="URI前缀:"/>
-                        </properties>
-                      </component>
-                      <component id="28f96" class="javax.swing.JTextField" binding="baseUriTextField">
-                        <constraints>
-                          <grid row="5" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                            <preferred-size width="150" height="-1"/>
-                          </grid>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <text value=""/>
+                          <text value="api前缀："/>
                         </properties>
                       </component>
                       <component id="f10d6" class="javax.swing.JTextField" binding="ctrlClassNameTextField">
@@ -515,15 +504,15 @@
                           <toolTipText value="资源名称，可设置成表名"/>
                         </properties>
                       </component>
-                      <component id="a5ea2" class="javax.swing.JLabel" binding="pathSuffixLabel">
+                      <component id="a5ea2" class="javax.swing.JLabel" binding="pathPrefixLabel">
                         <constraints>
-                          <grid row="5" column="3" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="5" column="1" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <font style="1"/>
                           <foreground color="-4496373"/>
-                          <text value="/{module}/{resourceName}"/>
+                          <text value="{apiPrefix}/{module}/{resourceName}"/>
                         </properties>
                       </component>
                     </children>
@@ -554,7 +543,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <nested-form id="7aaa9" form-file="com/cmcc/paas/ideaplugin/codegen/ui/DBSettingPane.form" binding="dbSettingPanel">
+              <nested-form id="7aaa9" form-file="com/cmcc/paas/ideaplugin/codegen/ui/DBSettingPane.form" binding="dbSettingPane">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                   <gridbag weightx="1.0" weighty="1.0"/>

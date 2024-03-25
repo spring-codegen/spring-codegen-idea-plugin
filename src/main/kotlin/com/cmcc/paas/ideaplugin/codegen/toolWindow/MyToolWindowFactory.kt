@@ -1,7 +1,7 @@
 package com.cmcc.paas.ideaplugin.codegen.toolWindow
 
 import com.cmcc.paas.ideaplugin.codegen.MyBundle
-import com.cmcc.paas.ideaplugin.codegen.constants.AppCtx
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx
 import com.cmcc.paas.ideaplugin.codegen.services.MyProjectService
 import com.cmcc.paas.ideaplugin.codegen.ui.CodeGenPane
 import com.intellij.openapi.components.service

@@ -2,12 +2,11 @@ package com.cmcc.paas.ideaplugin.codegen.ui.dialog;
 
 import com.cmcc.paas.ideaplugin.codegen.constants.DomainType;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.DomainModels;
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.DomainModelCtx;
 
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.List;
-import java.util.Map;
 
 public class DomainSelectionDialog extends JDialog implements ActionListener{
     private JPanel contentPane;
@@ -36,7 +35,7 @@ public class DomainSelectionDialog extends JDialog implements ActionListener{
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (listener != null){
-                    List<ClassModel> clses = DomainModels.INSTANCE.getModesByType(getSelectedType());
+                    List<ClassModel> clses = DomainModelCtx.INSTANCE.getModesByType(getSelectedType());
                     clses.forEach( cls -> {
                         if (cls.getClassName().equalsIgnoreCase((String)modelComboBox.getSelectedItem())){
                             listener.onSelectedDomain(cls);
@@ -76,7 +75,7 @@ public class DomainSelectionDialog extends JDialog implements ActionListener{
                 entitiesRadioButton.isSelected() ? DomainType.ENTITY : DomainType.RESULT;
     }
     private void selectWithType(DomainType type){
-        List<ClassModel> clses = DomainModels.INSTANCE.getModesByType(type);
+        List<ClassModel> clses = DomainModelCtx.INSTANCE.getModesByType(type);
         DefaultComboBoxModel<String>  methodTypeModel = new DefaultComboBoxModel<>();
         clses.forEach(e -> methodTypeModel.addElement(e.getClassName()));
         modelComboBox.setModel(methodTypeModel);

@@ -1,5 +1,9 @@
 package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
+import com.cmcc.paas.ideaplugin.codegen.constants.MvcClassType;
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx;
+import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
+import com.cmcc.paas.ideaplugin.codegen.gen.define.model.DaoClass;
 import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils;
 import com.cmcc.paas.ideaplugin.codegen.ui.BeanFieldSelectionDialog;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +33,8 @@ public class DaoMethodSettingPane extends MethodSettingPane {
     private JComboBox resultComboBox;
     private JComboBox argComboBox;
 
-    private MethodSettingModel model;
+//    private MethodSettingModel model;
+    private DaoClass.Method method = null;
 
     public DaoMethodSettingPane(){
         init();
@@ -39,59 +44,47 @@ public class DaoMethodSettingPane extends MethodSettingPane {
         super.init();
         for (Component component : content.getComponents()) {
             if (component instanceof JTextField){
-                TextFieldUtils.INSTANCE.addTextChangedEvent((JTextField) component, new TextFieldUtils.TextChangedEvent() {
-                    @Override
-                    public void onTextChanged(@NotNull JTextField textField) {
-                        if (textField == methodTextField) {
-                            model.setMethodName(methodTextField.getText());
-                        }
+                TextFieldUtils.INSTANCE.addTextChangedEvent((JTextField) component, textField -> {
+                    if (textField == methodTextField) {
+                        method.setName(methodTextField.getText());
                     }
                 });
             }
             if (component instanceof JCheckBox){
-                ((JCheckBox)component).addItemListener(new ItemListener() {
-                    @Override
-                    public void itemStateChanged(ItemEvent itemEvent) {
-                        if (itemEvent.getSource() == outputListTypeCheckBox) {
-                            model.getResult().setListTypeFlag(outputListTypeCheckBox.isSelected());
-                        }
-                        if (itemEvent.getSource() == outputPagedCheckBox) {
-                            model.getResult().setOutputPaged(outputPagedCheckBox.isSelected());
-                        }
+                ((JCheckBox)component).addItemListener( itemEvent ->{
+                    if (itemEvent.getSource() == outputListTypeCheckBox) {
+                        method.getResult().setListTypeFlag(outputListTypeCheckBox.isSelected());
+                    }
+                    if (itemEvent.getSource() == outputPagedCheckBox) {
+                        method.getResult().setOutputPaged(outputPagedCheckBox.isSelected());
                     }
                 });
             }
         }
-        dataFieldButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        dataFieldButton.addActionListener(e -> {
                 BeanFieldSelectionDialog dialog = BeanFieldSelectionDialog.create();
-                dialog.setFields(model.getDbTableFields());
-                dialog.setSelectedFields(model.getSqlDataFields());
+                dialog.setFields(AppCtx.INSTANCE.getCurrentTable().getFields());
+                dialog.setSelectedFields(method.getSqlDataFields());
                 dialog.setActionListener(new BeanFieldSelectionDialog.BeanFieldSelectionActionListener() {
                     @Override
                     public void onFieldSelected(BeanFieldSelectionDialog dialog) {
-                        model.setSqlDataFields(dialog.getSelectedFields());
+                        method.setSqlDataFields(dialog.getSelectedFields());
                     }
                 });
                 dialog.setVisible(true);
-            }
-        });
-        whereFieldButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+            });
+        whereFieldButton.addActionListener(e -> {
                 BeanFieldSelectionDialog dialog = BeanFieldSelectionDialog.create();
-                dialog.setFields(model.getDbTableFields());
-                dialog.setSelectedFields(model.getSqlCondFields());
+                dialog.setFields(AppCtx.INSTANCE.getCurrentTable().getFields());
+                dialog.setSelectedFields(method.getSqlCondFields());
                 dialog.setActionListener(new BeanFieldSelectionDialog.BeanFieldSelectionActionListener() {
                     @Override
                     public void onFieldSelected(BeanFieldSelectionDialog dialog) {
-                        model.setSqlCondFields(dialog.getSelectedFields());
+                        method.setSqlCondFields(dialog.getSelectedFields());
                     }
                 });
                 dialog.setVisible(true);
-            }
-        });
+            });
 
 
         setCloseBtnAction(closeBtn);
@@ -102,19 +95,38 @@ public class DaoMethodSettingPane extends MethodSettingPane {
         return content;
     }
 
+//    @Override
+//    public void setModel(MethodSettingModel model) {
+//        this.model = model;
+//        this.clsTextField.setText(model.getClassName());
+//        this.methodTextField.setText(model.getMethodName());
+////        argsSettingPane.setArgs(model.getArgs());
+//        resetArgComboBox();
+//        resetReturnComboBox();
+//    }
+//
+//    @Override
+//    public MethodSettingModel getModel() {
+//        return this.model;
+//    }
+
     @Override
-    public void setModel(MethodSettingModel model) {
-        this.model = model;
-        this.clsTextField.setText(model.getClassName());
-        this.methodTextField.setText(model.getMethodName());
-//        argsSettingPane.setArgs(model.getArgs());
+    public DaoClass.Method getMethod() {
+        return method;
+    }
+
+    @Override
+    public void setMethod(ClassModel.Method method) {
+        this.method = (DaoClass.Method)method;
+        this.methodTextField.setText(method.getName());
+        this.outputListTypeCheckBox.setSelected(method.getResult().getListTypeFlag());
         resetArgComboBox();
         resetReturnComboBox();
     }
 
     @Override
-    public MethodSettingModel getModel() {
-        return this.model;
+    public MvcClassType getClassType() {
+        return MvcClassType.DAO;
     }
 
     @Override

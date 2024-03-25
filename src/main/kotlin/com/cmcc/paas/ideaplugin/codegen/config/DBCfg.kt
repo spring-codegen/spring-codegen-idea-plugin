@@ -1,6 +1,6 @@
 package com.cmcc.paas.ideaplugin.codegen.config
 
-import com.cmcc.paas.ideaplugin.codegen.constants.AppCtx
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx
 import com.cmcc.paas.ideaplugin.codegen.util.JsonUtils
 import org.apache.commons.beanutils.BeanUtils
 import org.apache.commons.io.FileUtils

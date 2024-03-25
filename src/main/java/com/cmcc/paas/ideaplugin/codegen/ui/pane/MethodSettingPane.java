@@ -1,21 +1,20 @@
 package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
 import com.cmcc.paas.ideaplugin.codegen.constants.DomainType;
+import com.cmcc.paas.ideaplugin.codegen.constants.MvcClassType;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
-import com.cmcc.paas.ideaplugin.codegen.gen.define.model.DomainModels;
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.DomainModelCtx;
 import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
-import org.apache.commons.collections.ListUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.cmcc.paas.ideaplugin.codegen.ui.consts.NotificationType.MODEL_ADDED;
-import static com.cmcc.paas.ideaplugin.codegen.ui.consts.NotificationType.MODEL_UPDATED;
+import static com.cmcc.paas.ideaplugin.codegen.notify.NotificationType.MODEL_ADDED;
+import static com.cmcc.paas.ideaplugin.codegen.notify.NotificationType.MODEL_UPDATED;
 
 
 /**
@@ -24,11 +23,14 @@ import static com.cmcc.paas.ideaplugin.codegen.ui.consts.NotificationType.MODEL_
  */
 public abstract class MethodSettingPane {
     public abstract JPanel getContent();
-    public abstract void setModel(MethodSettingModel model);
+//    public abstract void setModel(MethodSettingModel model);
     public abstract JComboBox getReturnComboBox();
     public abstract JComboBox getArgComboBox();
 //    public abstract  ArgsSettingPane getArgsSettingPane();
-    public abstract MethodSettingModel getModel();
+//    public abstract MethodSettingModel getModel();
+    public abstract ClassModel.Method getMethod();
+    public abstract void setMethod(ClassModel.Method method);
+    public abstract MvcClassType getClassType();
     public void init(){
         NotificationCenter.Handler modelUpdateHandler = new NotificationCenter.Handler() {
             @Override
@@ -52,7 +54,7 @@ public abstract class MethodSettingPane {
     }
 
     private void resetComboBoxWithDomainTypes(JComboBox comboBox, DomainType... type){
-        List<ClassModel> classModels = DomainModels.INSTANCE.getModesByTypes(type);
+        List<ClassModel> classModels = DomainModelCtx.INSTANCE.getModesByTypes(type);
         DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
         comboBoxModel.addElement("-");
         classModels.forEach( e -> comboBoxModel.addElement(e.getClassName()) );
@@ -60,16 +62,16 @@ public abstract class MethodSettingPane {
     }
     public void resetReturnComboBox(){
         resetComboBoxWithDomainTypes(getReturnComboBox(), DomainType.ENTITY, DomainType.RESULT);
-        if (getModel() != null && getModel().getResult() != null) {
-            ClassModel classModel = getModel().getResult().getClassModel();
-            getReturnComboBox().setSelectedItem( classModel != null ? classModel.getClassName() : getModel().getResult().className);
+        if (getMethod() != null && getMethod().getResult() != null) {
+            ClassModel classModel = getMethod().getResult().getClassModel();
+            getReturnComboBox().setSelectedItem( classModel != null ? classModel.getClassName() : getMethod().getResult().getClassModel().getClassName());
         }
     }
     public void resetArgComboBox(){
         resetComboBoxWithDomainTypes(getArgComboBox(), DomainType.ARG, DomainType.ENTITY);
-        if (getModel() != null && getModel().getArgs() != null && getModel().getArgs().size() > 0) {
-            MethodSettingModel.MethodArgModel arg = getModel().getArgs().get(0);
-            getArgComboBox().setSelectedItem(arg.getClassModel() != null ? arg.getClassModel().getClassName() : arg.getClassName());
+        if (getMethod() != null && getMethod().getArgs() != null && getMethod().getArgs().size() > 0) {
+            ClassModel.MethodArg arg = getMethod().getArgs().get(0);
+            getArgComboBox().setSelectedItem(arg.getClassModel() != null ? arg.getClassModel().getClassName() : arg.getClassModel().getClassName());
         }
     }
     public void setMethodCfgPaneActionListener(MethodCfgPaneActionListener methodCfgPaneActionListener) {
@@ -88,11 +90,6 @@ public abstract class MethodSettingPane {
         });
     }
 
-    public static enum ClassType {
-        CTRL,
-        SVC,
-        DAO;
-    }
     public static interface MethodCfgPaneActionListener{
         void onClose(MethodSettingPane methodSettingPane);
     }
@@ -107,7 +104,7 @@ public abstract class MethodSettingPane {
         private String httpMethod;
         private String comment;
         private List<DBTableField> dbTableFields;
-        private ClassType classType;
+        private MvcClassType classType;
         private List<MethodArgModel> args;
         private MethodResultModel result;
 
@@ -178,11 +175,11 @@ public abstract class MethodSettingPane {
             this.dbTableFields = dbTableFields;
         }
 
-        public ClassType getClassType() {
+        public MvcClassType getClassType() {
             return classType;
         }
 
-        public void setClassType(ClassType classType) {
+        public void setClassType(MvcClassType classType) {
             this.classType = classType;
         }
 
@@ -211,11 +208,20 @@ public abstract class MethodSettingPane {
         }
 
         public static class MethodArgModel{
+            private String comment;
             private ClassModel classModel;
             private String className;
             private String refName;
             private Boolean isPathVar = false;
             private Boolean listTypeFlag = false;
+
+            public String getComment() {
+                return comment;
+            }
+
+            public void setComment(String comment) {
+                this.comment = comment;
+            }
 
             public ClassModel getClassModel() {
                 return classModel;
@@ -273,8 +279,17 @@ public abstract class MethodSettingPane {
             private ClassModel classModel;
             private String className;
             private String refName;
+            private String comment;
             private Boolean outputPaged = false;
             private Boolean listTypeFlag = false;
+
+            public String getComment() {
+                return comment;
+            }
+
+            public void setComment(String comment) {
+                this.comment = comment;
+            }
 
             public ClassModel getClassModel() {
                 return classModel;

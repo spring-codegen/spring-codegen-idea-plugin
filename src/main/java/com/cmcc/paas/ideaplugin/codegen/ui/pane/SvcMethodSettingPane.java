@@ -1,5 +1,7 @@
 package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
+import com.cmcc.paas.ideaplugin.codegen.constants.MvcClassType;
+import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,7 +26,8 @@ public class SvcMethodSettingPane extends MethodSettingPane {
     private JComboBox resultComboBox;
     private JComboBox argComboBox;
 
-    protected MethodSettingModel model;
+//    protected MethodSettingModel model;
+    private ClassModel.Method method = null;
 
     public SvcMethodSettingPane(){
         init();
@@ -33,26 +36,20 @@ public class SvcMethodSettingPane extends MethodSettingPane {
         super.init();
         for (Component component : content.getComponents()) {
             if (component instanceof JTextField){
-                TextFieldUtils.INSTANCE.addTextChangedEvent((JTextField) component, new TextFieldUtils.TextChangedEvent() {
-                    @Override
-                    public void onTextChanged(@NotNull JTextField textField) {
+                TextFieldUtils.INSTANCE.addTextChangedEvent((JTextField) component, textField -> {
                         if (textField == methodTextField) {
-                            model.setMethodName(methodTextField.getText());
+                            method.setName(methodTextField.getText());
                         }
-                    }
                 });
             }
             if (component instanceof JCheckBox){
-                ((JCheckBox)component).addItemListener(new ItemListener() {
-                    @Override
-                    public void itemStateChanged(ItemEvent itemEvent) {
+                ((JCheckBox)component).addItemListener(itemEvent -> {
                         if (itemEvent.getSource() == outputListTypeCheckBox) {
-                            model.getResult().setListTypeFlag(outputListTypeCheckBox.isSelected());
+                            method.getResult().setListTypeFlag(outputListTypeCheckBox.isSelected());
                         }
                         if (itemEvent.getSource() == outputPagedCheckBox) {
-                            model.getResult().setOutputPaged(outputPagedCheckBox.isSelected());
+                            method.getResult().setOutputPaged(outputPagedCheckBox.isSelected());
                         }
-                    }
                 });
             }
         }
@@ -64,16 +61,33 @@ public class SvcMethodSettingPane extends MethodSettingPane {
         return content;
     }
 
-    public MethodSettingModel getModel(){
-        return model;
+//    public MethodSettingModel getModel(){
+//        return model;
+//    }
+//    public void setModel(MethodSettingModel model) {
+//        this.model = model;
+//        this.clsTextField.setText(model.getClassName());
+//        this.methodTextField.setText(model.getMethodName());
+////        argsSettingPane.setArgs(model.getArgs());
+//        resetArgComboBox();
+//        resetReturnComboBox();
+//    }
+
+    @Override
+    public ClassModel.Method getMethod() {
+        return method;
     }
-    public void setModel(MethodSettingModel model) {
-        this.model = model;
-        this.clsTextField.setText(model.getClassName());
-        this.methodTextField.setText(model.getMethodName());
-//        argsSettingPane.setArgs(model.getArgs());
+
+    public void setMethod(ClassModel.Method method) {
+        this.method = method;
+        methodTextField.setText(method.getName());
         resetArgComboBox();
         resetReturnComboBox();
+    }
+
+    @Override
+    public MvcClassType getClassType() {
+        return MvcClassType.SVC;
     }
 
     @Override

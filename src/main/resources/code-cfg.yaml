@@ -50,6 +50,7 @@ methods:
     name: add
     args:
       - className: "{clsPrefix}AddArg"
+        comment: 新增参数
     result:
       className: IdResult
   - type: SVC
@@ -108,6 +109,7 @@ methods:
 #        className: "Long"
 #        refName: "id"
       - className: "{clsPrefix}UpdateArg"
+        comment: 更新参数
   - type: SVC
     name: update
     args:
@@ -161,6 +163,7 @@ methods:
     name: search
     args:
       - className: "{clsPrefix}SearchArg"
+        comment: 检索参数
     result:
       className: "{clsPrefix}"
       listTypeFlag: true

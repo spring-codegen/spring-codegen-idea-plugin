@@ -1,17 +1,15 @@
 package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
-import com.cmcc.paas.ideaplugin.codegen.constants.AppCtx;
-import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx;
 import com.cmcc.paas.ideaplugin.codegen.gen.define.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
 import com.cmcc.paas.ideaplugin.codegen.ui.BeanFieldSelectionDialog;
-import com.cmcc.paas.ideaplugin.codegen.ui.consts.NotificationType;
+import com.cmcc.paas.ideaplugin.codegen.notify.NotificationType;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author zhangyinghui
