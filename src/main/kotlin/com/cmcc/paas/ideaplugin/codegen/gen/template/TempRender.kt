@@ -30,7 +30,7 @@ object TempRender {
         var t:Template = getConfiguration().getTemplate(rs);
         t.process(data, sw)
 
-        System.out.println(sw.toString())
+//        System.out.println(sw.toString())
         return sw.toString();
     }
     fun renderToFile(sourceDir:String, pkg:String, clsName: String, rs:String, data:Map<String, Any?>){

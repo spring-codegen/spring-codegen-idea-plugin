@@ -18,6 +18,7 @@ import java.nio.charset.Charset
 object AppCtx {
     var ENV:Map<String, Any> = HashMap()
     var projectCfg:ProjectCfg? = null
+    var module:String? = ""
     var project:Project? = null
     var modelMaps:Map<DomainType, List<ClassModel>>? = null
     var currentTable:DBTable ? = null

@@ -13,7 +13,7 @@ import java.util.HashMap
  * @author zhangyinghui
  * @date 2024/3/22
  */
-class DomainModelGenerator( module: String): ClassGenerator(module) {
+class DomainModelGenerator(): ClassGenerator() {
     init {
         DomainModelCtx.getAllModels()!!.forEach {
             setClassModelRefName(it)
@@ -35,13 +35,13 @@ class DomainModelGenerator( module: String): ClassGenerator(module) {
     }
     fun gen(){
         DomainModelCtx.getModesByTypes(DomainType.ARG)!!.forEach {
-            it.pkg = AppCtx.projectCfg?.basePkg + ".domain.arg." + module
+            it.pkg = AppCtx.projectCfg?.basePkg + ".domain.arg." + AppCtx.module
         }
         DomainModelCtx.getModesByTypes(DomainType.ENTITY)!!.forEach {
-            it.pkg = AppCtx.projectCfg?.basePkg + ".domain.entity." + module
+            it.pkg = AppCtx.projectCfg?.basePkg + ".domain.entity." + AppCtx.module
         }
         DomainModelCtx.getModesByTypes(DomainType.RESULT)!!.forEach {
-            it.pkg = AppCtx.projectCfg?.basePkg + ".domain.result." + module
+            it.pkg = AppCtx.projectCfg?.basePkg + ".domain.result." + AppCtx.module
         }
         DomainModelCtx.getModesByTypes(DomainType.ARG)!!.forEach {
             if (!it.isInnerClass()){

@@ -184,7 +184,7 @@ methods:
       listTypeFlag: true
     sqlDataFieldIncludes: ".*"
     sqlConditionFieldIncludes: ".*"
-    sqlConditionFieldExcludes: ".*time,.*_uid"
+    sqlConditionFieldExcludes: ".*time,.*_uid,id"
 renderItems:
   - title: 方法名
     field: name

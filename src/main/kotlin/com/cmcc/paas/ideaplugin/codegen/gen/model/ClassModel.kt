@@ -49,7 +49,7 @@ open class ClassModel(var className: String, var pkg: String?, var comment: Stri
     }
 
     var tableName: String? = null
-    var methods: MutableList<Method>? = ArrayList()
+    var methods: MutableList<Method> = ArrayList()
     var imports: MutableSet<String>? = HashSet()
     var baseType: Boolean = false
     var refName: String? = null
@@ -67,7 +67,7 @@ open class ClassModel(var className: String, var pkg: String?, var comment: Stri
             comment,
             if (fields != null) fields!!.stream().map { e -> e.clone() }.toList() else null
         ) as ClassModel
-        cls.methods = if (methods != null) methods!!.stream().map { e -> e.clone() }.toList() else null
+        cls.methods = methods.stream().map { e -> e.clone() }.toList()
         cls.imports = if (imports != null) imports!!.stream().map { e -> e }.collect(Collectors.toSet()) else null
         cls.baseType = baseType
         cls.refName = refName

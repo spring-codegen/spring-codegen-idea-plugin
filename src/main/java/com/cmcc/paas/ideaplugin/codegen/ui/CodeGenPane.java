@@ -8,6 +8,8 @@ import com.cmcc.paas.ideaplugin.codegen.db.DBCtx;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTable;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.CodeGenerator;
+import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
+import com.cmcc.paas.ideaplugin.codegen.notify.NotificationType;
 import com.cmcc.paas.ideaplugin.codegen.util.FieldUtils;
 import com.cmcc.paas.ideaplugin.codegen.gen.ModelResult;
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.MvcClassCtx;
@@ -124,6 +126,10 @@ public class CodeGenPane {
         Arrays.stream((new JTextField[]{moduleTextField, resourceNameTextField})).forEach( e -> {
             TextFieldUtils.INSTANCE.addTextChangedEvent(e,  textField -> {
                 pathPrefixLabel.setText(getPathSuffix());
+                if (textField == moduleTextField) {
+                    AppCtx.INSTANCE.setModule(moduleTextField.getText());
+                    NotificationCenter.INSTANCE.sendMessage(NotificationType.CODE_SETTING_UPDATED, AppCtx.INSTANCE.getProjectCfg());
+                }
             });
         });
         codeCfg = ResourceService.INSTANCE.getCodeCfg();
@@ -332,7 +338,7 @@ public class CodeGenPane {
         MvcClassCtx.INSTANCE.getCtrlClass().setRequest(new CtrlClass.Request(getPathSuffix(), null));
         ModelResult modelResult = methodContainerPane.getCfgResult();
         System.out.println("generate 3");
-        new CodeGenerator().gen(moduleTextField.getText(), modelResult, projectCfg);
+        new CodeGenerator().gen( );
         System.out.println("generate 4");
         MessageBox.showMessageAndFadeout("代码生成完成！");
 //        String module = moduleTextField.getText();

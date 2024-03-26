@@ -15,6 +15,9 @@ import java.util.regex.Pattern
  */
 object CodeGenUtils {
 
+    /**
+     * 根据配置获取默认字段
+     */
     fun getDefaultFields(fields: List<DBTableField>, includes: String?, excludes: String?): List<ClassModel.Field>? {
         val allowFields: MutableList<ClassModel.Field> = ArrayList()
         for (field in fields){

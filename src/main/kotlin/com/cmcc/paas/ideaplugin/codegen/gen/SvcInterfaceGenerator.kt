@@ -30,23 +30,23 @@ import java.util.HashMap
  * @author zhangyinghui
  * @date 2024/3/14
  */
-class SvcInterfaceGenerator (module:String, var classModel: ClassModel):ClassGenerator(module){
+class SvcInterfaceGenerator ( var classModel: ClassModel):ClassGenerator(){
     private var cls: ClassOrInterfaceDeclaration? = null
     init {
         /**
          * 处理ctrl base class
          */
-        if (AppCtx.projectCfg?.svcBaseCls != null) {
-            var i = AppCtx.projectCfg?.svcBaseCls!!.lastIndexOf(".")
-            if (i > 0) {
-                var baseSvcCls = ClassModel(AppCtx.projectCfg?.svcBaseCls!!.substring(i + 1))
-                baseSvcCls.pkg = AppCtx.projectCfg?.svcBaseCls!!.substring(0, i)
-                classModel.extend = baseSvcCls
-            }
-        }
+//        if (AppCtx.projectCfg?.svcBaseCls != null) {
+//            var i = AppCtx.projectCfg?.svcBaseCls!!.lastIndexOf(".")
+//            if (i > 0) {
+//                var baseSvcCls = ClassModel(AppCtx.projectCfg?.svcBaseCls!!.substring(i + 1))
+//                baseSvcCls.pkg = AppCtx.projectCfg?.svcBaseCls!!.substring(0, i)
+//                classModel.extend = baseSvcCls
+//            }
+//        }
 
-        classModel.pkg = AppCtx.projectCfg?.basePkg + ".svc."+module;
-        classModel.dependency = null
+//        classModel.pkg = AppCtx.projectCfg?.basePkg + ".svc."+module;
+//        classModel.dependency = null
         processImports(classModel)
     }
 
@@ -83,6 +83,10 @@ class SvcInterfaceGenerator (module:String, var classModel: ClassModel):ClassGen
         method.setJavadocComment(methodDoc)
         return method
     }
+    fun getFilePath():String{
+        var fp = AppCtx.projectCfg?.svcSourceDir!! + "/"+ classModel.pkg?.replace(".", "/") + "/" + classModel.className+".java"
+        return fp
+    }
     fun gen(){
         var data = HashMap<String, Any?>();
         data["project"] = AppCtx.projectCfg
@@ -102,6 +106,6 @@ class SvcInterfaceGenerator (module:String, var classModel: ClassModel):ClassGen
             cls?.addMember(m)
         }
         System.out.println(cu);
-
+        writeFile(getFilePath(), cu.toString())
     }
 }

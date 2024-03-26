@@ -2,6 +2,7 @@ package com.cmcc.paas.ideaplugin.codegen.ui;
 
 import com.cmcc.paas.ideaplugin.codegen.config.ProjectCfg;
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx;
+import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
 import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,6 +11,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+
+import static com.cmcc.paas.ideaplugin.codegen.notify.NotificationType.CODE_SETTING_UPDATED;
 
 /**
  * @author zhangyinghui
@@ -51,6 +54,7 @@ public class CodeSettingPane {
             public void actionPerformed(ActionEvent e) {
                 getModel().save();
                 MessageBox.showMessageAndFadeout("保存成功！");
+                NotificationCenter.INSTANCE.sendMessage(CODE_SETTING_UPDATED, AppCtx.INSTANCE.getProjectCfg());
             }
         });
         ctrlSourceFileButton.addActionListener(new ActionListener() {

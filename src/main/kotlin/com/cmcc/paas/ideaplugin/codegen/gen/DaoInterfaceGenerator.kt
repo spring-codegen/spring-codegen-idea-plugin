@@ -36,58 +36,51 @@ import java.util.HashMap
  * @author zhangyinghui
  * @date 2024/3/14
  */
-class DaoInterfaceGenerator (module:String, var classModel: DaoClass):ClassGenerator(module){
+class DaoInterfaceGenerator ( var classModel: DaoClass):ClassGenerator(){
     private var cls: ClassOrInterfaceDeclaration? = null
+    private var ignoreMethodNames = arrayOf("add", "get", "remove","update","search")
     init {
-        /**
-         * 处理ctrl base class
-         */
-        if (AppCtx.projectCfg?.svcBaseCls != null) {
-            var i = AppCtx.projectCfg?.svcBaseCls!!.lastIndexOf(".")
-            if (i > 0) {
-                var baseSvcCls = ClassModel(AppCtx.projectCfg?.svcBaseCls!!.substring(i + 1))
-                baseSvcCls.pkg = AppCtx.projectCfg?.svcBaseCls!!.substring(0, i)
-                classModel.extend = baseSvcCls
-            }
-        }
-
-        classModel.pkg = AppCtx.projectCfg?.basePkg + ".dao."+module;
+//        classModel.pkg = AppCtx.projectCfg?.basePkg + ".dao."+module;
         processImports(classModel)
     }
 
-//    fun addMethod(cls:ClassOrInterfaceDeclaration, m: ClassModel.Method):MethodDeclaration{
-//
-//        var method = cls.addMethod(m.name, Modifier.Keyword.PUBLIC)
-//        var methodDoc = Javadoc(JavadocDescription.parseText(if (m.comment == null) "" else m.comment))
-//        var resultType:ClassOrInterfaceType = ClassOrInterfaceType(null, m.result?.classModel?.className)
-//        if (m.result?.listTypeFlag != null && m.result?.listTypeFlag!!){
-//            resultType = ClassOrInterfaceType(null, "List").setTypeArguments(resultType)
-//        }
-//        method?.setType(resultType)
-//        //加绑定参数
-//        if (m.args != null){
-//            m.args.forEach {
-//                var varName = if (StringUtils.isEmpty(it.refName)) it.classModel?.refName else it.refName
-//                var p = Parameter()
-//                    .setType(it.classModel?.className)
-//                    .setName(varName)
-//
-//                methodDoc.addBlockTag(
-//                    JavadocBlockTag(
-//                        JavadocBlockTag.Type.PARAM,
-//                        String.format(
-//                            "%s %s",
-//                            varName,
-//                            if (it.comment != null) it.comment else ""
-//                        )
-//                    )
-//                )
-//                method?.addParameter(p)
-//            }
-//        }
-//        method.setJavadocComment(methodDoc)
-//        return method
-//    }
+
+    fun createMethod(m: ClassModel.Method):MethodDeclaration{
+        var method = MethodDeclaration().setName(m.name).addModifier( Modifier.Keyword.PUBLIC)
+        var methodDoc = Javadoc(JavadocDescription.parseText(if (m.comment == null) "" else m.comment))
+        var resultType = ClassOrInterfaceType(null, m.result?.classModel?.className)
+        if (m.result?.listTypeFlag != null && m.result?.listTypeFlag!!){
+            resultType = ClassOrInterfaceType(null, "List").setTypeArguments(resultType)
+        }
+        method?.setType(resultType)
+        //加绑定参数
+        if (m.args != null){
+            m.args.forEach {
+                var varName = if (StringUtils.isEmpty(it.refName)) it.classModel?.refName else it.refName
+                var p = Parameter()
+                        .setType(it.classModel?.className)
+                        .setName(varName)
+
+                methodDoc.addBlockTag(
+                        JavadocBlockTag(
+                                JavadocBlockTag.Type.PARAM,
+                                String.format(
+                                        "%s %s",
+                                        varName,
+                                        if (it.comment != null) it.comment else ""
+                                )
+                        )
+                )
+                method?.addParameter(p)
+            }
+        }
+        method.setJavadocComment(methodDoc)
+        return method
+    }
+    fun getFilePath():String{
+        var fp = AppCtx.projectCfg?.svcSourceDir!! + "/"+ classModel.pkg?.replace(".", "/") + "/" + classModel.className+".java"
+        return fp
+    }
     fun gen(){
         var data = HashMap<String, Any?>();
         data["project"] = AppCtx.projectCfg
@@ -108,17 +101,21 @@ class DaoInterfaceGenerator (module:String, var classModel: DaoClass):ClassGener
         }
 
         var c = TempRender.render("dao-interface-class.ftl", data)
-        System.out.println(c)
-        System.out.println("====================")
         val parserConfiguration = ParserConfiguration()
         parserConfiguration.characterEncoding = StandardCharsets.UTF_8
         StaticJavaParser.setConfiguration(parserConfiguration)
         var cu = StaticJavaParser.parse(c)
         cls = cu.getInterfaceByName(classModel.className).get()
-//        classModel.methods?.forEach {
-//            addMethod(cls!!, it as ClassModel.Method)
-//        }
-        System.out.println(cu);
+        for (m in classModel.methods!!){
+            var dups = ignoreMethodNames.find { e -> e.equals(m.name, true) }
+            if (!dups.isNullOrEmpty()){
+                continue
+            }
+            var method = createMethod( m as ClassModel.Method)
+            method.setBody(null)
+            cls!!.addMember(method)
+        }
+        writeFile(getFilePath(), cu.toString())
 
     }
 }

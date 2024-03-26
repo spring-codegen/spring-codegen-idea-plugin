@@ -1,11 +1,15 @@
 package com.cmcc.paas.ideaplugin.codegen.gen.ctx
 
+import com.cmcc.paas.ideaplugin.codegen.config.ProjectCfg
 import com.cmcc.paas.ideaplugin.codegen.constants.MvcClassType
 import com.cmcc.paas.ideaplugin.codegen.util.FieldUtils
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
 import com.cmcc.paas.ideaplugin.codegen.gen.model.CtrlClass
 import com.cmcc.paas.ideaplugin.codegen.gen.model.DaoClass
 import com.cmcc.paas.ideaplugin.codegen.gen.model.SvcClass
+import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter
+import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter.Handler
+import com.cmcc.paas.ideaplugin.codegen.notify.NotificationType
 
 /**
  *
@@ -14,23 +18,51 @@ import com.cmcc.paas.ideaplugin.codegen.gen.model.SvcClass
  */
 object MvcClassCtx {
     private var ctrlClass: CtrlClass = CtrlClass("{tableName}Controller")
-    private var svcClass: SvcClass = SvcClass("{tableName}Service")
-    private var daoClass: DaoClass = DaoClass("{tableName}Dao")
+    private var svcClass: SvcClass = SvcClass("{tableName}ServiceImpl")
+    private var svcInterface: SvcClass = SvcClass("{tableName}Service")
+    private var daoInterface: DaoClass = DaoClass("{tableName}Dao")
     init {
-//        NotificationCenter.register(NotificationType.METHOD_UPDATED, object: NotificationCenter.Handler {
-//            override fun handleMessage(msg: NotificationCenter.Message) {
-//                var d = msg.data as Messages.MethodUpdateData
-//                updateMethod(d.classType, d.method)
-//            }
-//        })
-
+        println("MvcClassCtx init....")
+        svcInterface.methods = svcClass.methods
+        ctrlClass.dependency = svcClass
+        svcClass.dependency = daoInterface
+        svcClass.implement = svcInterface
+        NotificationCenter.register(NotificationType.CODE_SETTING_UPDATED, object : Handler {
+            override fun handleMessage(msg: NotificationCenter.Message) {
+                println("MvcClassCtx CODE_SETTING_UPDATED....")
+                refreshSettings(msg.data as ProjectCfg)
+            }
+        })
+        if (AppCtx.projectCfg != null) {
+            refreshSettings(AppCtx.projectCfg!!)
+        }
+    }
+    fun refreshSettings(projectCfg: ProjectCfg){
+        if (projectCfg.ctrlBaseCls.isNullOrEmpty()){
+            ctrlClass.extend = null
+        }
+        if (!projectCfg.ctrlBaseCls.isNullOrEmpty()){
+            var i = AppCtx.projectCfg?.ctrlBaseCls!!.lastIndexOf(".")
+            if (i > 0) {
+                var baseCtrlCls = ClassModel(AppCtx.projectCfg?.ctrlBaseCls!!.substring(i + 1))
+                baseCtrlCls.pkg = AppCtx.projectCfg?.ctrlBaseCls!!.substring(0, i)
+                ctrlClass.extend = baseCtrlCls
+            }
+        }
+        ctrlClass.pkg = AppCtx.projectCfg?.basePkg + ".controller." + AppCtx.module;
+        svcClass.pkg = AppCtx.projectCfg?.basePkg + ".svc.impl." + AppCtx.module;
+        svcInterface.pkg = AppCtx.projectCfg?.basePkg + ".svc." + AppCtx.module;
+        daoInterface.pkg = AppCtx.projectCfg?.basePkg + ".dao." + AppCtx.module;
     }
 
     fun setClassName(classType: MvcClassType, className:String){
         when (classType){
             MvcClassType.CTRL -> ctrlClass.className = className
-            MvcClassType.SVC -> svcClass.className = className
-            MvcClassType.DAO -> daoClass.className = className
+            MvcClassType.SVC -> {
+                svcClass.className = "${className}Impl"
+                svcInterface.className = className
+            }
+            MvcClassType.DAO -> daoInterface.className = className
         }
         getClassByType(classType).refName = FieldUtils.getRefName(className)
     }
@@ -60,7 +92,7 @@ object MvcClassCtx {
         return when (classType){
             MvcClassType.CTRL -> ctrlClass
             MvcClassType.SVC -> svcClass
-            MvcClassType.DAO -> daoClass
+            MvcClassType.DAO -> daoInterface
         }
     }
     fun getCtrlClass(): CtrlClass {
@@ -69,7 +101,10 @@ object MvcClassCtx {
     fun getSvcClass(): SvcClass {
         return svcClass
     }
+    fun getSvcInterface(): SvcClass {
+        return svcInterface
+    }
     fun getDaoClass(): DaoClass {
-        return daoClass
+        return daoInterface
     }
 }

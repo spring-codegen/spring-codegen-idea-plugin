@@ -1,6 +1,7 @@
 package com.cmcc.paas.ideaplugin.codegen.gen
 
 import com.cmcc.paas.ideaplugin.codegen.config.ProjectCfg
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.MvcClassCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
 import kotlin.collections.ArrayList
 
@@ -45,7 +46,7 @@ class CodeGenerator() {
 
         }
     }
-    fun gen(module:String, modelResult:ModelResult, projectCfg: ProjectCfg){
+    fun gen(){
 
 //        var f:(List<ClassModel>) -> Unit = { a:List<ClassModel> ->
 //            a.forEach{cls ->
@@ -71,7 +72,7 @@ class CodeGenerator() {
 //        renderModel(module, true, modelResult.args!!, projectCfg)
 //        renderModel(module, false, modelResult.results!!, projectCfg)
 //        renderModel(module, false, modelResult.entities!!, projectCfg)
-        DomainModelGenerator(module).gen()
+        DomainModelGenerator().gen()
         /**
          * 处理refName
          */
@@ -95,20 +96,26 @@ class CodeGenerator() {
 //                }
 //            }
 //        };
-        var ctrlClass = modelResult.ctrlClass
-        var svcClass = modelResult.svcClass
-        var daoClass = modelResult.daoClass
+//        var ctrlClass = modelResult.ctrlClass
+//        var svcClass = modelResult.svcClass
+//        var daoClass = modelResult.daoClass
 
-        ctrlClass!!.dependency = svcClass
-        svcClass!!.dependency = daoClass
-        svcClass.implement = svcClass
+//        ctrlClass!!.dependency = svcClass
+//        svcClass!!.dependency = daoClass
+//        svcClass.implement = svcClass
+//        var svcInterface = svcClass.clone()
+//        svcClass.implement = svcInterface
 
-        var daoInterfaceGenerator = DaoInterfaceGenerator(module, daoClass!!)
-        var svcInterfaceGenerator = SvcInterfaceGenerator(module, svcClass.clone())
-        var ctrlClassGenerator = CtrlClassGenerator(module, ctrlClass)
+        var daoMapperGenerator = DaoMapperGenerator( MvcClassCtx.getDaoClass())
+        var daoInterfaceGenerator = DaoInterfaceGenerator(MvcClassCtx.getDaoClass())
+        var svcGenerator = SvcClassGenerator(MvcClassCtx.getSvcClass())
+        var svcInterfaceGenerator = SvcInterfaceGenerator(MvcClassCtx.getSvcInterface())
+        var ctrlClassGenerator = CtrlClassGenerator(MvcClassCtx.getCtrlClass())
+        daoMapperGenerator.gen()
+        daoInterfaceGenerator.gen()
         ctrlClassGenerator.gen()
         svcInterfaceGenerator.gen()
-        daoInterfaceGenerator.gen()
+        svcGenerator.gen()
         return
 
 //        ctrlClass.pkg = projectCfg.basePkg + ".controller."+module;
@@ -116,14 +123,14 @@ class CodeGenerator() {
 //        daoClass!!.pkg = projectCfg.basePkg + ".dao."+module;
 
 
-        if (projectCfg.svcBaseCls != null) {
-            var i = projectCfg.svcBaseCls!!.lastIndexOf(".")
-            if (i > 0) {
-                var baseSvcCls = ClassModel(projectCfg.svcBaseCls!!.substring(i + 1))
-                baseSvcCls.pkg = projectCfg.svcBaseCls!!.substring(0, i)
-                svcClass.extend = baseSvcCls
-            }
-        }
+//        if (projectCfg.svcBaseCls != null) {
+//            var i = projectCfg.svcBaseCls!!.lastIndexOf(".")
+//            if (i > 0) {
+//                var baseSvcCls = ClassModel(projectCfg.svcBaseCls!!.substring(i + 1))
+//                baseSvcCls.pkg = projectCfg.svcBaseCls!!.substring(0, i)
+//                svcClass.extend = baseSvcCls
+//            }
+//        }
 //        processImports(ctrlClass)
 //        processImports(svcClass)
 //        processImports(daoClass)

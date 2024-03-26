@@ -18,6 +18,7 @@ object NotificationCenter {
         events[event]!!.remove(handler)
     }
     fun sendMessage(event:String, data:Any){
+        println("sendMessage:$event")
         if ( events[event] == null ){
             return
         }

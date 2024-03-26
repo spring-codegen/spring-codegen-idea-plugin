@@ -49,6 +49,7 @@ object MethodFactory {
             (method as CtrlClass.Method).request = CtrlClass.Request(methodCfg.request?.path!!, methodCfg.request!!.httpMethod)
         }
         method.comment = formatText(methodCfg.comment)
+        method.type = methodCfg.name
         if (classType == MvcClassType.DAO) {
             (method as DaoClass.Method).sqlDataFields = CodeGenUtils.getDefaultFields(AppCtx.currentTable?.fields!!, methodCfg.sqlDataFieldIncludes, methodCfg.sqlDataFieldExcludes)
             method.sqlCondFields = CodeGenUtils.getDefaultFields(AppCtx.currentTable?.fields!!, methodCfg.sqlConditionFieldIncludes, methodCfg.sqlConditionFieldExcludes)

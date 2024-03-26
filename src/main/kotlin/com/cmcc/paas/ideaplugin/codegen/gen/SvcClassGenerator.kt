@@ -2,21 +2,16 @@ package com.cmcc.paas.ideaplugin.codegen.gen
 
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
-import com.cmcc.paas.ideaplugin.codegen.gen.model.CtrlClass
 import com.cmcc.paas.ideaplugin.codegen.gen.model.SvcClass
 import com.cmcc.paas.ideaplugin.codegen.gen.template.TempRender
 import com.github.javaparser.ParserConfiguration
 import com.github.javaparser.StaticJavaParser
 import com.github.javaparser.ast.Modifier
-import com.github.javaparser.ast.NodeList
 import com.github.javaparser.ast.body.*
 import com.github.javaparser.ast.expr.*
 import com.github.javaparser.ast.stmt.BlockStmt
-import com.github.javaparser.ast.stmt.IfStmt
 import com.github.javaparser.ast.stmt.ReturnStmt
-import com.github.javaparser.ast.stmt.ThrowStmt
 import com.github.javaparser.ast.type.ClassOrInterfaceType
-import com.github.javaparser.ast.type.WildcardType
 import com.github.javaparser.javadoc.Javadoc
 import com.github.javaparser.javadoc.JavadocBlockTag
 import com.github.javaparser.javadoc.description.JavadocDescription
@@ -28,11 +23,11 @@ import java.nio.charset.StandardCharsets
  * @author zhangyinghui
  * @date 2024/3/14
  */
-class SvcClassGenerator (module:String, var classModel: SvcClass):ClassGenerator(module){
+class SvcClassGenerator (var classModel: SvcClass):ClassGenerator(){
     private var cls: ClassOrInterfaceDeclaration? = null
     init {
 
-        classModel.pkg = AppCtx.projectCfg?.basePkg + ".svc."+module;
+//        classModel.pkg = AppCtx.projectCfg?.basePkg + ".svc."+module;
         processImports(classModel)
     }
     fun createMethod(m: ClassModel.Method):MethodDeclaration{
@@ -140,7 +135,6 @@ class SvcClassGenerator (module:String, var classModel: SvcClass):ClassGenerator
             resultDataVarName = callReturn.classModel?.refName!!
             var itemType = ClassOrInterfaceType(null,callReturn.classModel?.className)
             if (m.result?.listTypeFlag != null && m.result?.listTypeFlag!!){
-                blockStmt.addStatement( MethodCallExpr(NameExpr("PageHelper"), "startPage"))
                 resultDataVarName = "items"
                 var dataType = ClassOrInterfaceType(null, "List")
                     .setTypeArguments(itemType)
@@ -157,51 +151,37 @@ class SvcClassGenerator (module:String, var classModel: SvcClass):ClassGenerator
                 )
             }
             blockStmt.addStatement(VariableDeclarationExpr(resultDeclar))
-            if (m.result != null && m.result?.outputPaged!!){
-                var listResultDeclar =  VariableDeclarator(
-                    ClassOrInterfaceType(null, "ListResult")
-                        .setTypeArguments(ClassOrInterfaceType(null, callReturn.classModel?.className)),
-                    resultDataVarName
-                )
-                listResultDeclar.setInitializer("new ListResult(((Page) "+resultDataVarName+").totalCount,((Page) "+resultDataVarName+").pageNum), "+resultDataVarName+")")
-                blockStmt.addStatement(VariableDeclarationExpr(listResultDeclar))
-            }
         }
-
-        var resDeclar =  VariableDeclarator( resType,"res" )
-        resDeclar.setInitializer("HttpResponse.success()")
-        blockStmt.addStatement(VariableDeclarationExpr(resDeclar))
-        if (resultDataVarName != null && m.result != null) {
-            blockStmt.addStatement(
-                MethodCallExpr(
-                    NameExpr("res"),
-                    "setData"
-                ).addArgument(NameExpr(resultDataVarName))
-            )
+        if (resultDataVarName != null){
+            blockStmt.addStatement(ReturnStmt(resultDataVarName))
         }
-        blockStmt.addStatement(ReturnStmt("res"))
 
         method?.setBody(blockStmt)
         return method
     }
+    fun getFilePath():String{
+        var fp = AppCtx.projectCfg?.svcSourceDir!! + "/"+ classModel.pkg?.replace(".", "/") + "/" + classModel.className+".java"
+        return fp
+    }
     fun gen(){
         var data = HashMap<String, Any?>();
         data["project"] = AppCtx.projectCfg
-        data["ctrlClass"] = classModel
+        data["svcClass"] = classModel
 
-        var c = TempRender.render("ctrl-class.ftl", data)
-        System.out.println(c)
-        System.out.println("====================")
+        var c = TempRender.render("svc-class-impl.ftl", data)
+//        System.out.println(c)
+//        System.out.println("====================")
         val parserConfiguration = ParserConfiguration()
         parserConfiguration.characterEncoding = StandardCharsets.UTF_8
         StaticJavaParser.setConfiguration(parserConfiguration)
         var cu = StaticJavaParser.parse(c)
         cls = cu.getClassByName(classModel.className).get()
         classModel.methods?.forEach {
-            var method = createMethod( it as CtrlClass.Method)
+            var method = createMethod( it as ClassModel.Method)
             cls?.addMember(method)
         }
         println(cu);
+        writeFile(getFilePath(), cu.toString())
 
     }
 }

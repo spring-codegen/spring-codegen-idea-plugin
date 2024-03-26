@@ -13,5 +13,6 @@ class NotificationType {
         const val MODEL_REMOVED = "model-removed"
         const val REQUEST_PATH_UPDATED = "request-path-updated"
         const val METHOD_UPDATED = "request-path-updated"
+        const val CODE_SETTING_UPDATED = "code-setting-updated"
     }
 }

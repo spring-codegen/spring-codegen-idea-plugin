@@ -2,9 +2,10 @@ package com.cmcc.paas.ideaplugin.codegen.config
 
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx.project
-import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx.projectCfg
+import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter.sendMessage
+import com.cmcc.paas.ideaplugin.codegen.notify.NotificationType
 import com.cmcc.paas.ideaplugin.codegen.util.JsonUtils
-import org.apache.commons.beanutils.BeanUtils
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.nio.charset.Charset
@@ -49,6 +50,7 @@ class ProjectCfg {
                 cfg = ProjectCfg()
             }
             AppCtx.projectCfg = cfg
+            sendMessage(NotificationType.CODE_SETTING_UPDATED, cfg)
         }
     }
 }

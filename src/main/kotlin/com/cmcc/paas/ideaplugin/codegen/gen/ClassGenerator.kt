@@ -1,7 +1,11 @@
 package com.cmcc.paas.ideaplugin.codegen.gen
 
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
+import com.cmcc.paas.ideaplugin.codegen.ui.MessageBox
 import com.cmcc.paas.ideaplugin.codegen.util.FieldUtils
+import org.apache.commons.io.FileUtils
+import java.io.File
+import java.nio.charset.Charset
 import java.util.HashSet
 
 /**
@@ -9,7 +13,7 @@ import java.util.HashSet
  * @author zhangyinghui
  * @date 2024/3/22
  */
-open class ClassGenerator (var module: String){
+open class ClassGenerator {
     fun setClassModelRefName(classModel: ClassModel){
         if(ClassModel.isBaseType(classModel.className)){
             if (classModel.fields!= null && classModel.fields!!.size > 0) {
@@ -76,5 +80,13 @@ open class ClassGenerator (var module: String){
             addImport(imports,cls.dependency!!.pkg, cls.dependency!!.className)
         }
         cls.imports = imports
+    }
+    fun writeFile(fp:String, content:String){
+        try {
+            FileUtils.writeStringToFile(File(fp), content, Charset.forName("UTF-8"))
+        }catch (e:Exception){
+            MessageBox.showMessageAndFadeout(e.message)
+            throw e
+        }
     }
 }

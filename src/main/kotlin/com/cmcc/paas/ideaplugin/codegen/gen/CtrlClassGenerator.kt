@@ -4,6 +4,7 @@ import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
 import com.cmcc.paas.ideaplugin.codegen.gen.model.CtrlClass
 import com.cmcc.paas.ideaplugin.codegen.gen.template.TempRender
+import com.cmcc.paas.ideaplugin.codegen.ui.MessageBox
 import com.github.javaparser.ParserConfiguration
 import com.github.javaparser.StaticJavaParser
 import com.github.javaparser.ast.Modifier
@@ -19,7 +20,10 @@ import com.github.javaparser.ast.type.WildcardType
 import com.github.javaparser.javadoc.Javadoc
 import com.github.javaparser.javadoc.JavadocBlockTag
 import com.github.javaparser.javadoc.description.JavadocDescription
+import org.apache.commons.io.FileUtils
 import org.apache.commons.lang.StringUtils
+import java.io.File
+import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 
 /**
@@ -27,25 +31,10 @@ import java.nio.charset.StandardCharsets
  * @author zhangyinghui
  * @date 2024/3/14
  */
-class CtrlClassGenerator (module:String, var classModel: CtrlClass):ClassGenerator(module){
+class CtrlClassGenerator (var classModel: CtrlClass): ClassGenerator() {
     private var cls: ClassOrInterfaceDeclaration? = null
     init {
 
-        /**
-         * 处理ctrl base class
-         */
-        if (AppCtx.projectCfg?.ctrlBaseCls != null) {
-            var i = AppCtx.projectCfg?.ctrlBaseCls!!.lastIndexOf(".")
-            if (i > 0) {
-                var baseCtrlCls = ClassModel(AppCtx.projectCfg?.ctrlBaseCls!!.substring(i + 1))
-                baseCtrlCls.pkg = AppCtx.projectCfg?.ctrlBaseCls!!.substring(0, i)
-                classModel.extend = baseCtrlCls
-            }
-        }
-
-        classModel.pkg = AppCtx.projectCfg?.basePkg + ".controller."+module;
-        cls = ClassOrInterfaceDeclaration()
-        cls!!.setName(classModel.className)
         /**
          * 处理路径参数
          */
@@ -102,18 +91,7 @@ class CtrlClassGenerator (module:String, var classModel: CtrlClass):ClassGenerat
         )
         method?.addAnnotation(methodAnno)
 
-        //加路径参数
-//        var params = ArrayList<Parameter>()
-//        if (m.request?.pathVars != null){
-//            m.request?.pathVars?.forEach {
-//                var p = Parameter()
-//                    .setType(it.javaType)
-//                    .setName(it.name)
-//                    .addSingleMemberAnnotation("PathVariable", "\""+it.name+"\"")
-//                method?.addParameter(p)
-//                params.add(p)
-//             }
-//        }
+
         //加绑定参数
         if (m.args != null){
             var br:Parameter? = null
@@ -281,6 +259,10 @@ class CtrlClassGenerator (module:String, var classModel: CtrlClass):ClassGenerat
         method?.setBody(blockStmt)
         return method
     }
+    fun getFilePath():String{
+        var fp = AppCtx.projectCfg?.ctrlSourceDir!! + "/"+ classModel.pkg?.replace(".", "/") + "/" + classModel.className+".java"
+        return fp
+    }
     fun gen(){
         var data = HashMap<String, Any?>();
         data["project"] = AppCtx.projectCfg
@@ -299,6 +281,6 @@ class CtrlClassGenerator (module:String, var classModel: CtrlClass):ClassGenerat
             cls?.addMember(method)
         }
         println(cu);
-
+        writeFile(getFilePath(), cu.toString())
     }
 }
