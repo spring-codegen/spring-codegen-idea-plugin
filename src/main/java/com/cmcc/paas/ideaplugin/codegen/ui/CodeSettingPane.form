@@ -2,7 +2,7 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.cmcc.paas.ideaplugin.codegen.ui.CodeSettingPane">
   <grid id="27dc6" binding="content" layout-manager="GridBagLayout">
     <constraints>
-      <xy x="20" y="20" width="627" height="441"/>
+      <xy x="20" y="20" width="627" height="478"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -219,7 +219,7 @@
       </component>
       <component id="af518" class="javax.swing.JLabel">
         <constraints>
-          <grid row="6" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="7" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
         </constraints>
         <properties>
@@ -230,7 +230,7 @@
       </component>
       <component id="e3cd6" class="javax.swing.JTextField" binding="ctrlBaseClsTextField">
         <constraints>
-          <grid row="6" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="7" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
           <gridbag weightx="0.0" weighty="0.0"/>
@@ -241,13 +241,13 @@
       </component>
       <vspacer id="56f83">
         <constraints>
-          <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="1.0"/>
         </constraints>
       </vspacer>
       <grid id="95570" layout-manager="GridBagLayout">
         <constraints>
-          <grid row="12" column="0" row-span="1" col-span="24" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="13" column="0" row-span="1" col-span="24" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties/>
@@ -272,7 +272,7 @@
       </grid>
       <component id="e38cc" class="javax.swing.JLabel">
         <constraints>
-          <grid row="7" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="8" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
         </constraints>
         <properties>
@@ -283,7 +283,7 @@
       </component>
       <component id="f3406" class="javax.swing.JTextField" binding="ctrlDirTextField">
         <constraints>
-          <grid row="7" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="8" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
           <gridbag weightx="0.0" weighty="0.0"/>
@@ -295,7 +295,7 @@
       </component>
       <component id="656d3" class="javax.swing.JButton" binding="ctrlSourceFileButton">
         <constraints>
-          <grid row="7" column="13" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="8" column="13" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0" ipadx="2"/>
         </constraints>
         <properties>
@@ -306,7 +306,7 @@
       </component>
       <component id="d801c" class="javax.swing.JLabel">
         <constraints>
-          <grid row="10" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="11" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
         </constraints>
         <properties>
@@ -317,7 +317,7 @@
       </component>
       <component id="a7f50" class="javax.swing.JTextField" binding="mybatisMapperDirTextField">
         <constraints>
-          <grid row="10" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="11" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
           <gridbag weightx="0.0" weighty="0.0"/>
@@ -329,7 +329,7 @@
       </component>
       <component id="423f" class="javax.swing.JButton" binding="resourceFileBtn">
         <constraints>
-          <grid row="10" column="13" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="11" column="13" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0" ipadx="2"/>
         </constraints>
         <properties>
@@ -340,7 +340,7 @@
       </component>
       <component id="b968d" class="javax.swing.JLabel">
         <constraints>
-          <grid row="9" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="10" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
         </constraints>
         <properties>
@@ -351,7 +351,7 @@
       </component>
       <component id="1fc6a" class="javax.swing.JTextField" binding="svcDirTextField">
         <constraints>
-          <grid row="9" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="10" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
           <gridbag weightx="0.0" weighty="0.0"/>
@@ -363,7 +363,7 @@
       </component>
       <component id="30942" class="javax.swing.JButton" binding="svcSourceFileButton">
         <constraints>
-          <grid row="9" column="13" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="10" column="13" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0" ipadx="2"/>
         </constraints>
         <properties>
@@ -374,7 +374,7 @@
       </component>
       <component id="bb59a" class="javax.swing.JLabel">
         <constraints>
-          <grid row="8" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="9" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
         </constraints>
         <properties>
@@ -385,7 +385,7 @@
       </component>
       <component id="aa78d" class="javax.swing.JTextField" binding="svcBaseClsTextField">
         <constraints>
-          <grid row="8" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="9" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
           <gridbag weightx="0.0" weighty="0.0"/>
@@ -396,7 +396,7 @@
       </component>
       <component id="43c91" class="javax.swing.JLabel">
         <constraints>
-          <grid row="5" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
         </constraints>
         <properties>
@@ -407,7 +407,7 @@
       </component>
       <component id="683a6" class="javax.swing.JTextField" binding="modelDirTextField">
         <constraints>
-          <grid row="5" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="6" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
           <gridbag weightx="0.0" weighty="0.0"/>
@@ -419,7 +419,7 @@
       </component>
       <component id="d975a" class="javax.swing.JButton" binding="domainSourceFileButton">
         <constraints>
-          <grid row="5" column="13" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="13" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0" ipadx="2"/>
         </constraints>
         <properties>
@@ -448,6 +448,28 @@
         </constraints>
         <properties>
           <text value="/api/v1"/>
+        </properties>
+      </component>
+      <component id="d6ab2" class="javax.swing.JTextField" binding="searchArgBaseClsTextField">
+        <constraints>
+          <grid row="5" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <text value="com.cmit.paas.common.web.model.PagedSearchArg"/>
+        </properties>
+      </component>
+      <component id="911cb" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
+        </constraints>
+        <properties>
+          <foreground color="-7960954"/>
+          <horizontalAlignment value="4"/>
+          <text value="列表检索基类："/>
         </properties>
       </component>
     </children>

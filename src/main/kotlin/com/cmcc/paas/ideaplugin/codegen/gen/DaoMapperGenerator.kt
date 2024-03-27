@@ -4,6 +4,7 @@ import com.cmcc.paas.ideaplugin.codegen.config.ProjectCfg
 import com.cmcc.paas.ideaplugin.codegen.constants.DomainType
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.DomainModelCtx
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.MvcClassCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
 import com.cmcc.paas.ideaplugin.codegen.gen.model.CtrlClass
 import com.cmcc.paas.ideaplugin.codegen.gen.model.DaoClass
@@ -36,64 +37,33 @@ import java.util.HashMap
  * @author zhangyinghui
  * @date 2024/3/14
  */
-class DaoMapperGenerator ( var classModel: DaoClass):ClassGenerator(){
-    private var cls: ClassOrInterfaceDeclaration? = null
-    init {
-//        classModel.pkg = AppCtx.projectCfg?.basePkg + ".dao."+module;
-        processImports(classModel)
-    }
-
-//    fun addMethod(cls:ClassOrInterfaceDeclaration, m: ClassModel.Method):MethodDeclaration{
-//
-//        var method = cls.addMethod(m.name, Modifier.Keyword.PUBLIC)
-//        var methodDoc = Javadoc(JavadocDescription.parseText(if (m.comment == null) "" else m.comment))
-//        var resultType:ClassOrInterfaceType = ClassOrInterfaceType(null, m.result?.classModel?.className)
-//        if (m.result?.listTypeFlag != null && m.result?.listTypeFlag!!){
-//            resultType = ClassOrInterfaceType(null, "List").setTypeArguments(resultType)
-//        }
-//        method?.setType(resultType)
-//        //加绑定参数
-//        if (m.args != null){
-//            m.args.forEach {
-//                var varName = if (StringUtils.isEmpty(it.refName)) it.classModel?.refName else it.refName
-//                var p = Parameter()
-//                    .setType(it.classModel?.className)
-//                    .setName(varName)
-//
-//                methodDoc.addBlockTag(
-//                    JavadocBlockTag(
-//                        JavadocBlockTag.Type.PARAM,
-//                        String.format(
-//                            "%s %s",
-//                            varName,
-//                            if (it.comment != null) it.comment else ""
-//                        )
-//                    )
-//                )
-//                method?.addParameter(p)
-//            }
-//        }
-//        method.setJavadocComment(methodDoc)
-//        return method
-//    }
-    fun getFilePath():String{
-        var fp = AppCtx.projectCfg?.mybatisMapperDir!!+"/mappers/"+AppCtx.module+"/"+classModel.className+"Mapper.xml"
-        return fp
-    }
-    fun gen(){
-        var data = HashMap<String, Any?>();
-        data["project"] = AppCtx.projectCfg
-        data["daoClass"] = classModel
-        var a = DomainModelCtx.getModesByType(DomainType.ENTITY)
-        val resultMaps: MutableMap<String, ClassModel> = HashMap()
-        if(a != null){
-            for (x in a){
-                data["entityClass"] = x
-                resultMaps[x.className] = x
-            }
+class DaoMapperGenerator :ClassGenerator(){
+    companion object {
+        init {
+//            processImports(MvcClassCtx.getDaoClass())
         }
-        data["resultMaps"] = resultMaps
-        TempRender.renderToFile( getFilePath(), "dao-mapper.ftl", data)
 
+        fun getFilePath(): String {
+            var fp = AppCtx.projectCfg?.mybatisMapperDir!! + "/mappers/" + AppCtx.projectCfg!!.module + "/" + MvcClassCtx.getDaoClass().className + "Mapper.xml"
+            return fp
+        }
+
+        fun gen() {
+            var classModel = MvcClassCtx.getDaoClass()
+            processImports(classModel)
+            var data = HashMap<String, Any?>();
+            data["project"] = AppCtx.projectCfg
+            data["daoClass"] = classModel
+            var a = DomainModelCtx.getModesByType(DomainType.ENTITY)
+            val resultMaps: MutableMap<String, ClassModel> = HashMap()
+            if (a != null) {
+                for (x in a) {
+                    data["entityClass"] = x
+                    resultMaps[x.className] = x
+                }
+            }
+            data["resultMaps"] = resultMaps
+            TempRender.renderToFile(getFilePath(), "dao-mapper.ftl", data)
+        }
     }
 }

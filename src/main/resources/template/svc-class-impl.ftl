@@ -1,5 +1,5 @@
 <#include "./common.ftl">
-<@pkgDeclare pkg=svcClass.pkg+".impl"/>
+<@pkgDeclare pkg=svcClass.pkg/>
 <@imports items=svcClass.imports/>
 
 import org.springframework.stereotype.Service;
@@ -10,7 +10,7 @@ public class ${svcClass.className}<#if svcClass.implement??> implements ${svcCla
 <#if svcClass.dependency??>
 
     private final ${svcClass.dependency.className} ${svcClass.dependency.refName};
-    public ${svcClass.className}Impl(${svcClass.dependency.className} ${svcClass.dependency.refName}) {
+    public ${svcClass.className}(${svcClass.dependency.className} ${svcClass.dependency.refName}) {
         this.${svcClass.dependency.refName} = ${svcClass.dependency.refName};
     }
 

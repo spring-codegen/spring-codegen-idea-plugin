@@ -36,6 +36,7 @@ public class CodeSettingPane {
     private JButton domainSourceFileButton;
     private JTextField svcBaseClsTextField;
     private JTextField apiPrefixTextField;
+    private JTextField searchArgBaseClsTextField;
     private ProjectCfg model;
 
     public CodeSettingPane(){
@@ -124,6 +125,7 @@ public class CodeSettingPane {
         model.setAuthor(authorTextField.getText());
         model.setBasePkg(basePkgTextField.getText());
         model.setModelBaseCls(modelBaseClsTextField.getText());
+        model.setSearchArgBaseCls(searchArgBaseClsTextField.getText());
         model.setModelSourceDir(modelDirTextField.getText());
 
         model.setCtrlBaseCls(ctrlBaseClsTextField.getText());
@@ -141,6 +143,7 @@ public class CodeSettingPane {
         authorTextField.setText(model.getAuthor());
 
         modelBaseClsTextField.setText(model.getModelBaseCls());
+        searchArgBaseClsTextField.setText(model.getSearchArgBaseCls());
         modelDirTextField.setText(model.getModelSourceDir());
 
         ctrlBaseClsTextField.setText(model.getCtrlBaseCls());

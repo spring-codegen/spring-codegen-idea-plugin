@@ -72,7 +72,7 @@ class CodeGenerator() {
 //        renderModel(module, true, modelResult.args!!, projectCfg)
 //        renderModel(module, false, modelResult.results!!, projectCfg)
 //        renderModel(module, false, modelResult.entities!!, projectCfg)
-        DomainModelGenerator().gen()
+        DomainModelGenerator.gen()
         /**
          * 处理refName
          */
@@ -105,17 +105,17 @@ class CodeGenerator() {
 //        svcClass.implement = svcClass
 //        var svcInterface = svcClass.clone()
 //        svcClass.implement = svcInterface
-
-        var daoMapperGenerator = DaoMapperGenerator( MvcClassCtx.getDaoClass())
-        var daoInterfaceGenerator = DaoInterfaceGenerator(MvcClassCtx.getDaoClass())
-        var svcGenerator = SvcClassGenerator(MvcClassCtx.getSvcClass())
-        var svcInterfaceGenerator = SvcInterfaceGenerator(MvcClassCtx.getSvcInterface())
-        var ctrlClassGenerator = CtrlClassGenerator(MvcClassCtx.getCtrlClass())
-        daoMapperGenerator.gen()
-        daoInterfaceGenerator.gen()
-        ctrlClassGenerator.gen()
-        svcInterfaceGenerator.gen()
-        svcGenerator.gen()
+//
+//        var daoMapperGenerator = DaoMapperGenerator( MvcClassCtx.getDaoClass())
+//        var daoInterfaceGenerator = DaoInterfaceGenerator(MvcClassCtx.getDaoClass())
+//        var svcGenerator = SvcClassGenerator(MvcClassCtx.getSvcClass())
+//        var svcInterfaceGenerator = SvcInterfaceGenerator(MvcClassCtx.getSvcInterface())
+//        var ctrlClassGenerator = CtrlClassGenerator(MvcClassCtx.getCtrlClass())
+        DaoMapperGenerator.gen()
+        DaoInterfaceGenerator.gen()
+        CtrlClassGenerator.gen()
+        SvcInterfaceGenerator.gen()
+        SvcClassGenerator.gen()
         return
 
 //        ctrlClass.pkg = projectCfg.basePkg + ".controller."+module;

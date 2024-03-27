@@ -127,7 +127,7 @@ public class CodeGenPane {
             TextFieldUtils.INSTANCE.addTextChangedEvent(e,  textField -> {
                 pathPrefixLabel.setText(getPathSuffix());
                 if (textField == moduleTextField) {
-                    AppCtx.INSTANCE.setModule(moduleTextField.getText());
+                    AppCtx.INSTANCE.getProjectCfg().setModule(moduleTextField.getText());
                     NotificationCenter.INSTANCE.sendMessage(NotificationType.CODE_SETTING_UPDATED, AppCtx.INSTANCE.getProjectCfg());
                 }
             });

@@ -1,5 +1,5 @@
 <#include "./common.ftl">
-<@pkgDeclare pkg=svcClass.pkg+".impl"/>
+<@pkgDeclare pkg=svcClass.pkg/>
 <@imports items=svcClass.imports/>
 
 import org.springframework.stereotype.Service;

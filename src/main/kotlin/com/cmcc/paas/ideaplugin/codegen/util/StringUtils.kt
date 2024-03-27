@@ -12,16 +12,12 @@ object StringUtils {
     fun parsePlaceholders(s: String): List<String>? {
         var result:MutableList<String> = ArrayList()
         try {
-            if (s != null) {
-                val re = "\\{([^\\{\\}]+)\\}"
-                val p = Pattern.compile(re)
-                var ph: String
-                var v: String
-                val m = p.matcher(s)
-                while (m.find()) {
-                    val ph = m.group(1)
-                    result.add(ph)
-                }
+            val re = "\\{([^\\{\\}]+)\\}"
+            val p = Pattern.compile(re)
+            val m = p.matcher(s)
+            while (m.find()) {
+                val ph = m.group(1)
+                result.add(ph)
             }
         } catch (e: Exception) {
             e.printStackTrace()

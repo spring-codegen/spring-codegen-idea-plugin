@@ -31,20 +31,20 @@ public abstract class MethodSettingPane {
     public abstract ClassModel.Method getMethod();
     public abstract void setMethod(ClassModel.Method method);
     public abstract MvcClassType getClassType();
+//    private NotificationCenter.Handler modelUpdateHandler = new NotificationCenter.Handler() {
+//        @Override
+//        public void handleMessage(@NotNull NotificationCenter.Message msg) {
+//            resetReturnComboBox();
+//            if (msg.getEnvent().equalsIgnoreCase(MODEL_UPDATED)){
+////                    getArgsSettingPane().updateClassModel((ClassModel) msg.getData());
+//                resetArgComboBox();
+//                resetReturnComboBox();
+//            }
+//        }
+//    };
     public void init(){
-        NotificationCenter.Handler modelUpdateHandler = new NotificationCenter.Handler() {
-            @Override
-            public void handleMessage(@NotNull NotificationCenter.Message msg) {
-                resetReturnComboBox();
-                if (msg.getEnvent().equalsIgnoreCase(MODEL_UPDATED)){
-//                    getArgsSettingPane().updateClassModel((ClassModel) msg.getData());
-                    resetArgComboBox();
-                    resetReturnComboBox();
-                }
-            }
-        };
-        NotificationCenter.INSTANCE.register(MODEL_ADDED, modelUpdateHandler);
-        NotificationCenter.INSTANCE.register(MODEL_UPDATED, modelUpdateHandler);
+//        NotificationCenter.INSTANCE.register(MODEL_ADDED, modelUpdateHandler);
+//        NotificationCenter.INSTANCE.register(MODEL_UPDATED, modelUpdateHandler);
     }
 
     private MethodCfgPaneActionListener methodCfgPaneActionListener;

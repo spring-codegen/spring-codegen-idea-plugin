@@ -1,10 +1,10 @@
 package com.cmcc.paas.ideaplugin.codegen.gen
 
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.MvcClassCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
 import com.cmcc.paas.ideaplugin.codegen.gen.model.CtrlClass
 import com.cmcc.paas.ideaplugin.codegen.gen.template.TempRender
-import com.cmcc.paas.ideaplugin.codegen.ui.MessageBox
 import com.github.javaparser.ParserConfiguration
 import com.github.javaparser.StaticJavaParser
 import com.github.javaparser.ast.Modifier
@@ -12,18 +12,18 @@ import com.github.javaparser.ast.NodeList
 import com.github.javaparser.ast.body.*
 import com.github.javaparser.ast.expr.*
 import com.github.javaparser.ast.stmt.BlockStmt
+import com.github.javaparser.ast.stmt.ForEachStmt
 import com.github.javaparser.ast.stmt.IfStmt
 import com.github.javaparser.ast.stmt.ReturnStmt
 import com.github.javaparser.ast.stmt.ThrowStmt
 import com.github.javaparser.ast.type.ClassOrInterfaceType
+import com.github.javaparser.ast.type.Type
 import com.github.javaparser.ast.type.WildcardType
 import com.github.javaparser.javadoc.Javadoc
 import com.github.javaparser.javadoc.JavadocBlockTag
 import com.github.javaparser.javadoc.description.JavadocDescription
-import org.apache.commons.io.FileUtils
 import org.apache.commons.lang.StringUtils
-import java.io.File
-import java.nio.charset.Charset
+import org.joni.NameEntry
 import java.nio.charset.StandardCharsets
 
 /**
@@ -31,256 +31,321 @@ import java.nio.charset.StandardCharsets
  * @author zhangyinghui
  * @date 2024/3/14
  */
-class CtrlClassGenerator (var classModel: CtrlClass): ClassGenerator() {
-    private var cls: ClassOrInterfaceDeclaration? = null
-    init {
-
-        /**
-         * 处理路径参数
-         */
-        classModel.methods!!.forEach {
-            var m = it as CtrlClass.Method
-            if (!StringUtils.isEmpty(m.request!!.path)){
-                var phs = com.cmcc.paas.ideaplugin.codegen.util.StringUtils.parsePlaceholders(m.request!!.path)
-                if( phs != null) {
-                    for (ph in phs){
-                        if (m.dependency != null && m.dependency!!.args != null){
-                            for (arg in m.dependency!!.args ){
-                                var field = arg.classModel!!.fields!!.find { e2 -> e2.name.equals(ph, true) }
-                                if (field != null){
-                                    var c = ClassModel(field.javaType)
-                                    c.refName = ph
-                                    var phArg = ClassModel.MethodArg(c, ph)
-                                    phArg.isPathVar = true
-                                    phArg.comment = field.comment
-                                    m.args.add(0, phArg)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        processImports(classModel)
-    }
-    fun createMethod(m: CtrlClass.Method):MethodDeclaration{
-
-        var method = MethodDeclaration().setName(m.name).addModifier( Modifier.Keyword.PUBLIC)
-        var methodDoc = Javadoc(JavadocDescription.parseText(if (m.comment == null) "" else m.comment))
-        var blockStmt = BlockStmt()
-        var resultType = ClassOrInterfaceType(null,"HttpResponse")
-        if (m.result == null ){
-            resultType.setTypeArguments(WildcardType())
-        }
-        else if (m.result?.listTypeFlag != null && m.result?.listTypeFlag!!){
-            resultType.setTypeArguments(
-                    ClassOrInterfaceType(null, "ListResult")
-                            .setTypeArguments(ClassOrInterfaceType(null, m.result?.classModel?.className))
-            )
-        }else{
-            resultType.setTypeArguments(ClassOrInterfaceType(null, m.result?.classModel?.className))
-        }
-
-        method?.setType(resultType)
-        var methodAnno = NormalAnnotationExpr(
-            Name("RequestMapping"),
-            NodeList(
-                MemberValuePair("path",StringLiteralExpr(m.request?.path)),
-                MemberValuePair("method",FieldAccessExpr(ThisExpr(Name("HttpMethod")), m.request?.httpMethod))
-            )
-        )
-        method?.addAnnotation(methodAnno)
-
-
-        //加绑定参数
-        if (m.args != null){
-            var br:Parameter? = null
-            m.args.forEach {
-                var varName = if (StringUtils.isEmpty(it.refName)) it.classModel?.refName else it.refName
-                var p = Parameter()
-                        .setType(it.classModel?.className)
-                        .setName(varName)
-                
-                methodDoc.addBlockTag(
-                    JavadocBlockTag(
-                        JavadocBlockTag.Type.PARAM,
-                        String.format(
-                            "%s %s",
-                            varName,
-                            if (it.comment != null) it.comment else ""
-                        )
-                    )
-                )
-                if (it.isPathVar){
-                    p.addSingleMemberAnnotation("PathVariable", "\""+varName+"\"")
-                }
-                //如果是对象参数，需要加br
-                if ( !ClassModel.isBaseType(it.classModel?.className!!)){
-                    br = Parameter().setType("BindingResult").setName("br")
-                    var brIfStmt = IfStmt(
-                        MethodCallExpr(NameExpr("br"), "hasErrors"),
-                        BlockStmt( ).addStatement(
-                            ThrowStmt(
-                                ObjectCreationExpr(
-                                    null,
-                                    ClassOrInterfaceType(null, "ParamException" ),
-                                    NodeList<Expression>(NameExpr("br.getFieldError().getField() + br.getFieldError().getDefaultMessage()"))
-                                )
-                            )
-                        ),
-                        null)
-                    blockStmt.addStatement(brIfStmt)
-                }
-                method?.addParameter(p)
-            }
-            if (br != null){
-                method?.addParameter(br)
-            }
-        }
-        method.setJavadocComment(methodDoc)
-        var callArg: ClassModel.MethodArg? = null
-        if (m.dependency != null && m.dependency?.args != null && m.dependency?.args!!.size > 0){
-            callArg = m.dependency?.args!![0]
-        }
-        var callArgExpr: Expression? = null
-        if (callArg != null){
-            callArgExpr = NameExpr( callArg.classModel?.refName )
-        }
-
-        if ( callArg != null ){
-            //如果目标类型是基本类型，
-            if ( ClassModel.isBaseType( callArg!!.classModel?.className!!  )){
-
-                //目标类型
-                for (inputArg in m.args){
-                    //都是基本类型
-                    if (inputArg.classModel?.className.equals(callArg.classModel?.className)){
-                        callArgExpr = NameExpr( inputArg.classModel?.refName )
-                        break;
-                    }
-                    //需要调用getter
-                    if (!ClassModel.isBaseType(inputArg.classModel?.className!!)){
-                        for (f in inputArg?.classModel?.fields!!){
-                            if (f.name.equals(callArg.classModel?.refName)){
-                                //调用get方法
-                                callArgExpr = MethodCallExpr(NameExpr(inputArg.classModel!!.refName), f.getter)
-                            }
-                        }
-                    }
-                }
-            }else{
-                //往复合类型转换
-                for (inputArg in m.args){
-                    //类型相同
-                    if (inputArg.classModel?.className.equals(callArg.classModel?.className)){
-                        callArgExpr = NameExpr( inputArg.classModel?.refName )
-                        break;
-                    }
-                    //需要调用转换
-                    if (!ClassModel.isBaseType(inputArg.classModel?.className!!)){
-                        //调用copyTo
-                        var callExp = MethodCallExpr(NameExpr(inputArg.classModel!!.refName), "copyTo");
-                        callExp.addArgument(FieldAccessExpr(NameExpr(callArg.classModel?.className), "class"));
-                        var varDeclarator = VariableDeclarator(ClassOrInterfaceType(null,callArg.classModel?.className), callArg.classModel?.refName, callExp)
-                        blockStmt.addStatement(VariableDeclarationExpr(varDeclarator))
-                        callArgExpr =  NameExpr( callArg.classModel?.refName )
-                        for (x in m.args){
-                            if (ClassModel.isBaseType(x.classModel?.className!!)){
-                                for (f in inputArg.classModel?.fields!!){
-                                    if (f.name.equals(x.classModel?.refName, true)){
-                                        callExp = MethodCallExpr(NameExpr(callArg.classModel?.refName), f.setter);
-                                        callExp.addArgument(NameExpr(x.classModel?.refName))
-                                        blockStmt.addStatement(callExp)
+class CtrlClassGenerator (): ClassGenerator() {
+    companion object {
+        init {
+            /**
+             * 处理路径参数
+             */
+            MvcClassCtx.getCtrlClass().methods.forEach {
+                var m = it as CtrlClass.Method
+                if (!StringUtils.isEmpty(m.request!!.path)) {
+                    var phs = com.cmcc.paas.ideaplugin.codegen.util.StringUtils.parsePlaceholders(m.request!!.path)
+                    if (phs != null) {
+                        for (ph in phs) {
+                            if (m.dependency != null) {
+                                for (arg in m.dependency!!.args) {
+                                    var field = arg.classModel!!.fields!!.find { e2 -> e2.name.equals(ph, true) }
+                                    if (field != null) {
+                                        var c = ClassModel(field.javaType)
+                                        c.refName = ph
+                                        var phArg = ClassModel.MethodArg(c, ph)
+                                        phArg.isPathVar = true
+                                        phArg.comment = field.comment
+                                        m.args.add(0, phArg)
                                     }
                                 }
                             }
                         }
-
                     }
                 }
             }
         }
-        var dependencyCallExpr = MethodCallExpr(NameExpr(classModel.dependency?.refName), m.dependency?.name);
-        dependencyCallExpr.addArgument(callArgExpr);
-        var callReturn = m.dependency?.result
-        var resType = ClassOrInterfaceType(null, "HttpResponse")
-        var resultDataVarName:String? = null
-        if (callReturn == null){
-            blockStmt.addStatement(dependencyCallExpr);
-            resType.setTypeArguments(WildcardType())
-        }else{
-            var resultDeclar:VariableDeclarator? = null
-            resultDataVarName = callReturn.classModel?.refName!!
-            var itemType = ClassOrInterfaceType(null,callReturn.classModel?.className)
-            if (m.result?.listTypeFlag != null && m.result?.listTypeFlag!!){
-                blockStmt.addStatement( MethodCallExpr(NameExpr("PageHelper"), "startPage"))
-                resultDataVarName = "items"
-                var dataType = ClassOrInterfaceType(null, "List")
-                    .setTypeArguments(itemType)
-                resultDeclar = VariableDeclarator(
-                    dataType,
-                    resultDataVarName,
-                    dependencyCallExpr
+
+        @JvmStatic fun createMethod(m: CtrlClass.Method): MethodDeclaration {
+
+            var method = MethodDeclaration().setName(m.name).addModifier(Modifier.Keyword.PUBLIC)
+            var methodDoc = Javadoc(JavadocDescription.parseText(if (m.comment == null) "" else m.comment))
+            var blockStmt = BlockStmt()
+            var resultType = ClassOrInterfaceType(null, "HttpResponse")
+            if (m.result == null) {
+                resultType.setTypeArguments(WildcardType())
+            } else if (m.result?.outputPaged == true) {
+                resultType.setTypeArguments(
+                        ClassOrInterfaceType(null, "ListResult")
+                                .setTypeArguments(ClassOrInterfaceType(null, m.result?.classModel?.className))
                 )
-                resType.setTypeArguments(dataType)
+            } else if (m.result?.listTypeFlag == true){
+                resultType.setTypeArguments(
+                        ClassOrInterfaceType(null, "List")
+                                .setTypeArguments(ClassOrInterfaceType(null, m.result?.classModel?.className))
+                )
             }else {
-                resultDeclar = VariableDeclarator(
-                    ClassOrInterfaceType(null, callReturn.classModel?.className),
-                    resultDataVarName,
-                    dependencyCallExpr
-                )
-                resType.setTypeArguments(itemType)
+                resultType.setTypeArguments(ClassOrInterfaceType(null, m.result?.classModel?.className))
             }
-            blockStmt.addStatement(VariableDeclarationExpr(resultDeclar))
-            if (m.result != null && m.result?.outputPaged!!){
-                var listResultDeclar =  VariableDeclarator(
-                    ClassOrInterfaceType(null, "ListResult")
-                        .setTypeArguments(ClassOrInterfaceType(null, callReturn.classModel?.className)),
-                    resultDataVarName
-                )
-                listResultDeclar.setInitializer("new ListResult(((Page) "+resultDataVarName+").totalCount,((Page) "+resultDataVarName+").pageNum), "+resultDataVarName+")")
-                blockStmt.addStatement(VariableDeclarationExpr(listResultDeclar))
-            }
-        }
 
-        var resDeclar =  VariableDeclarator( resType,"res" )
-        resDeclar.setInitializer("HttpResponse.success()")
-        blockStmt.addStatement(VariableDeclarationExpr(resDeclar))
-        if (resultDataVarName != null && m.result != null) {
-            blockStmt.addStatement(
-                MethodCallExpr(
-                    NameExpr("res"),
-                    "setData"
-                ).addArgument(NameExpr(resultDataVarName))
+            method?.setType(resultType)
+            var methodAnno = NormalAnnotationExpr(
+                    Name("RequestMapping"),
+                    NodeList(
+                            MemberValuePair("path", StringLiteralExpr(m.request?.path)),
+                            MemberValuePair("method", FieldAccessExpr(NameExpr("RequestMethod"), m.request?.httpMethod))
+                    )
             )
-        }
-        blockStmt.addStatement(ReturnStmt("res"))
+            method?.addAnnotation(methodAnno)
 
-        method?.setBody(blockStmt)
-        return method
-    }
-    fun getFilePath():String{
-        var fp = AppCtx.projectCfg?.ctrlSourceDir!! + "/"+ classModel.pkg?.replace(".", "/") + "/" + classModel.className+".java"
-        return fp
-    }
-    fun gen(){
-        var data = HashMap<String, Any?>();
-        data["project"] = AppCtx.projectCfg
-        data["ctrlClass"] = classModel
 
-        var c = TempRender.render("ctrl-class.ftl", data)
-        System.out.println(c)
-        System.out.println("====================")
-        val parserConfiguration = ParserConfiguration()
-        parserConfiguration.characterEncoding = StandardCharsets.UTF_8
-        StaticJavaParser.setConfiguration(parserConfiguration)
-        var cu = StaticJavaParser.parse(c)
-        cls = cu.getClassByName(classModel.className).get()
-        classModel.methods?.forEach {
-            var method = createMethod( it as CtrlClass.Method)
-            cls?.addMember(method)
+            //加绑定参数
+
+                var br: Parameter? = null
+                m.args.forEach {
+                    var varName = if (StringUtils.isEmpty(it.refName)) it.classModel?.refName else it.refName
+                    var p = Parameter()
+                            .setType(it.classModel?.className)
+                            .setName(varName)
+
+                    methodDoc.addBlockTag(
+                            JavadocBlockTag(
+                                    JavadocBlockTag.Type.PARAM,
+                                    String.format(
+                                            "%s %s",
+                                            varName,
+                                            if (it.comment != null) it.comment else ""
+                                    )
+                            )
+                    )
+                    if (it.isPathVar) {
+                        p.addSingleMemberAnnotation("PathVariable", "\"" + varName + "\"")
+                    }
+                    //如果是对象参数，需要加br
+                    if (!ClassModel.isBaseType(it.classModel?.className!!)) {
+                        br = Parameter().setType("BindingResult").setName("br")
+                        var brIfStmt = IfStmt(
+                                MethodCallExpr(NameExpr("br"), "hasErrors"),
+                                BlockStmt().addStatement(
+                                        ThrowStmt(
+                                                ObjectCreationExpr(
+                                                        null,
+                                                        ClassOrInterfaceType(null, "ParamException"),
+                                                        NodeList<Expression>(NameExpr("br.getFieldError().getField() + br.getFieldError().getDefaultMessage()"))
+                                                )
+                                        )
+                                ),
+                                null)
+                        blockStmt.addStatement(brIfStmt)
+                        p.addAnnotation(MarkerAnnotationExpr("Validated"))
+                    }
+                    method?.addParameter(p)
+                }
+                if (br != null) {
+                    method?.addParameter(br)
+                }
+
+            method.setJavadocComment(methodDoc)
+            var callArg: ClassModel.MethodArg? = null
+            if (m.dependency != null && m.dependency?.args != null && m.dependency?.args!!.size > 0) {
+                callArg = m.dependency?.args!![0]
+            }
+            var callArgExpr: Expression? = null
+            if (callArg != null) {
+                callArgExpr = NameExpr(callArg.classModel?.refName)
+            }
+
+            if (callArg != null) {
+                //如果目标类型是基本类型，
+                if (ClassModel.isBaseType(callArg.classModel?.className!!)) {
+
+                    //目标类型
+                    for (inputArg in m.args) {
+                        //都是基本类型
+                        if (inputArg.classModel?.className.equals(callArg.classModel?.className)) {
+                            callArgExpr = NameExpr(inputArg.classModel?.refName)
+                            break;
+                        }
+                        //需要调用getter
+                        if (!ClassModel.isBaseType(inputArg.classModel?.className!!)) {
+                            for (f in inputArg.classModel?.fields!!) {
+                                if (f.name.equals(callArg.classModel?.refName)) {
+                                    //调用get方法
+                                    callArgExpr = MethodCallExpr(NameExpr(inputArg.classModel!!.refName), f.getter)
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    //往复合类型转换
+                    for (inputArg in m.args) {
+                        //类型相同
+                        if (inputArg.classModel?.className.equals(callArg.classModel?.className)) {
+                            callArgExpr = NameExpr(inputArg.classModel?.refName)
+                            break;
+                        }
+                        //需要调用转换
+                        if (!ClassModel.isBaseType(inputArg.classModel?.className!!)) {
+                            //调用copyTo
+                            var callExp = MethodCallExpr(NameExpr(inputArg.classModel!!.refName), "copyTo");
+                            callExp.addArgument(FieldAccessExpr(NameExpr(callArg.classModel?.className), "class"));
+                            var varDeclarator = VariableDeclarator(ClassOrInterfaceType(null, callArg.classModel?.className), callArg.classModel?.refName, callExp)
+                            blockStmt.addStatement(VariableDeclarationExpr(varDeclarator))
+                            callArgExpr = NameExpr(callArg.classModel?.refName)
+                            for (x in m.args) {
+                                if (ClassModel.isBaseType(x.classModel?.className!!)) {
+                                    for (f in inputArg.classModel?.fields!!) {
+                                        if (f.name.equals(x.classModel?.refName, true)) {
+                                            callExp = MethodCallExpr(NameExpr(callArg.classModel?.refName), f.setter);
+                                            callExp.addArgument(NameExpr(x.classModel?.refName))
+                                            blockStmt.addStatement(callExp)
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+            var dependencyCallExpr = MethodCallExpr(NameExpr(MvcClassCtx.getCtrlClass().dependency?.refName), m.dependency?.name);
+            dependencyCallExpr.addArgument(callArgExpr);
+            var callReturn = m.dependency?.result
+            var callResultVarName: String? = null
+//            var resDataVarName: String? = null
+            var resDataType: Type? = WildcardType()
+            var resultTransformExpr:Expression? = null
+//            var resType1 = ClassOrInterfaceType(null, "HttpResponse")
+//            //没有返回值
+            if (m.result != null){
+                resDataType = ClassOrInterfaceType(null, m.result?.classModel?.className)
+                if (m.result?.outputPaged == true){
+                    resDataType = ClassOrInterfaceType(null, "ListResult").setTypeArguments(resDataType)
+                }else if(m.result?.listTypeFlag == true){
+                    resDataType = ClassOrInterfaceType(null, "List").setTypeArguments(resDataType)
+                }
+            }
+            //如果service方法返回空
+            if (callReturn == null || m.result == null) {
+                blockStmt.addStatement(dependencyCallExpr);
+            } else {
+                var resultDeclar: VariableDeclarator?
+                callResultVarName = callReturn.classModel?.refName!!
+                var itemType = ClassOrInterfaceType(null, callReturn.classModel?.className)
+                //如果返回列表
+                if (callReturn.listTypeFlag  == true) {
+                    blockStmt.addStatement(MethodCallExpr(NameExpr("PageHelper"), "startPage"))
+                    callResultVarName = "items"
+                    var dataType = ClassOrInterfaceType(null, "List")
+                            .setTypeArguments(itemType)
+                    resultDeclar = VariableDeclarator(
+                            dataType,
+                            callResultVarName,
+                            dependencyCallExpr
+                    )
+                    //controller也返回列表,并且类型相同
+                    if (m.result != null && m.result?.listTypeFlag  == true && !m.result?.classModel?.className.equals(callReturn.classModel?.className)){
+                        //items.stream().map( e->e.copyTo(Project.class)).toList();
+                        var transformCallExpr =  MethodCallExpr(
+                                MethodCallExpr(
+                                        NameExpr(callResultVarName),
+                                        "steam"
+                                ),
+                                "map"
+                        )
+                                .addArgument(
+                                        LambdaExpr(
+                                                Parameter(itemType, "e"),
+                                                BlockStmt().addStatement(
+                                                        MethodCallExpr(NameExpr("e"), "copyTo").addArgument(FieldAccessExpr(NameExpr(callReturn.classModel?.className), "class"))
+                                                )
+                                        ).setEnclosingParameters(false)
+                                )
+                        resultTransformExpr = VariableDeclarationExpr(
+                                VariableDeclarator(
+                                        ClassOrInterfaceType(null, "List").setTypeArguments(ClassOrInterfaceType(null, m.result?.classModel?.className)),
+                                        "data",
+                                        transformCallExpr
+                                )
+                        )
+                        callResultVarName = "data"
+
+                    }// end if
+                } else {
+                    //返回单个对象
+                    resultDeclar = VariableDeclarator(
+                            ClassOrInterfaceType(null, callReturn.classModel?.className),
+                            callResultVarName,
+                            dependencyCallExpr
+                    )
+                    //单个类型转换
+                    if (m.result != null && m.result?.listTypeFlag  != true && !m.result?.classModel?.className.equals(callReturn.classModel?.className)){
+
+                        resultTransformExpr = VariableDeclarationExpr(
+                                VariableDeclarator(
+                                        ClassOrInterfaceType(null, callReturn.classModel?.className),
+                                        "data",
+                                        MethodCallExpr(NameExpr(callResultVarName),"copyTo").addArgument(FieldAccessExpr(NameExpr(m.result?.classModel?.className), "class"))
+                                )
+                        )
+                        callResultVarName = "data"
+                    }
+                }
+                blockStmt.addStatement(VariableDeclarationExpr(resultDeclar))
+                if (m.result != null && m.result?.outputPaged == true) {
+                    var listResultDeclar = VariableDeclarator(
+                            ClassOrInterfaceType(null, "ListResult")
+                                    .setTypeArguments(ClassOrInterfaceType(null, callReturn.classModel?.className)),
+                            "listResult"
+                    )
+                    listResultDeclar.setInitializer("new ListResult(((Page) " + callResultVarName + ").getTotal(), ((Page)"+callResultVarName+").getPageSize(), ((Page) " + callResultVarName + ").getPageNum(), " + callResultVarName + ")")
+                    blockStmt.addStatement(VariableDeclarationExpr(listResultDeclar))
+                    callResultVarName = "listResult"
+                }
+            }
+            if ( resultTransformExpr != null ){
+                blockStmt.addStatement(resultTransformExpr)
+            }
+
+            var resDeclar = VariableDeclarator(ClassOrInterfaceType(null, "HttpResponse").setTypeArguments(resDataType), "res")
+            resDeclar.setInitializer("HttpResponse.success()")
+            blockStmt.addStatement(VariableDeclarationExpr(resDeclar))
+            if (callResultVarName != null && m.result != null) {
+                blockStmt.addStatement(
+                        MethodCallExpr(
+                                NameExpr("res"),
+                                "setData"
+                        ).addArgument(NameExpr(callResultVarName))
+                )
+            }
+            blockStmt.addStatement(ReturnStmt("res"))
+
+            method?.setBody(blockStmt)
+            return method
         }
-        println(cu);
-        writeFile(getFilePath(), cu.toString())
+
+        @JvmStatic fun getFilePath(): String {
+            var fp = AppCtx.projectCfg?.ctrlSourceDir!! + "/" + MvcClassCtx.getCtrlClass().pkg?.replace(".", "/") + "/" + MvcClassCtx.getCtrlClass().className + ".java"
+            return fp
+        }
+
+        @JvmStatic fun gen() {
+            var classModel = MvcClassCtx.getCtrlClass()
+            processImports(classModel)
+            var data = HashMap<String, Any?>();
+            data["project"] = AppCtx.projectCfg
+            data["ctrlClass"] = classModel
+
+            var c = TempRender.render("ctrl-class.ftl", data)
+            System.out.println(c)
+            System.out.println("====================")
+            val parserConfiguration = ParserConfiguration()
+            parserConfiguration.characterEncoding = StandardCharsets.UTF_8
+            StaticJavaParser.setConfiguration(parserConfiguration)
+            var cu = StaticJavaParser.parse(c)
+            var cls = cu.getClassByName(classModel.className).get()
+            classModel.methods.forEach {
+                var method = createMethod(it as CtrlClass.Method)
+                cls.addMember(method)
+            }
+            println(cu);
+            writeFile(getFilePath(), cu.toString())
+        }
     }
 }

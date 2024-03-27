@@ -10,6 +10,15 @@ import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
  */
 object DomainModelCtx {
     private var maps:MutableMap<DomainType, MutableList<ClassModel>> = HashMap()
+    fun createModel(className:String):ClassModel{
+        for (x in ClassModel.innerClasses()){
+            if (x.className.equals(className, true)){
+                return x
+            }
+        }
+        var cls = ClassModel(className)
+        return cls
+    }
     fun addModel(type:DomainType, classModel: ClassModel){
         if (!maps.containsKey(type)){
             maps[type] = ArrayList<ClassModel>()

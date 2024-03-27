@@ -13,44 +13,66 @@ import java.util.HashMap
  * @author zhangyinghui
  * @date 2024/3/22
  */
-class DomainModelGenerator(): ClassGenerator() {
-    init {
-        DomainModelCtx.getAllModels()!!.forEach {
-            setClassModelRefName(it)
-        }
-    }
-    fun genModel(classModel: ClassModel, validate: Boolean){
-        if (!ClassModel.isBaseType(classModel.className) && !ClassModel.isCommonType(classModel.className) ){
-            var data = HashMap<String, Any?>();
-            data["project"] = AppCtx.projectCfg
-            data["model"] = classModel
-            data["validator"] = validate
-            classModel.fields?.forEach{
-                it.setter = FieldUtils.setter(it.name)
-                it.getter = FieldUtils.getter(it.name)
-            }
-            processImports(classModel)
-            TempRender.renderToFile(AppCtx.projectCfg?.modelSourceDir!!, classModel.pkg!!, classModel.className, "model.ftl", data)
-        }
-    }
-    fun gen(){
-        DomainModelCtx.getModesByTypes(DomainType.ARG)!!.forEach {
-            it.pkg = AppCtx.projectCfg?.basePkg + ".domain.arg." + AppCtx.module
-        }
-        DomainModelCtx.getModesByTypes(DomainType.ENTITY)!!.forEach {
-            it.pkg = AppCtx.projectCfg?.basePkg + ".domain.entity." + AppCtx.module
-        }
-        DomainModelCtx.getModesByTypes(DomainType.RESULT)!!.forEach {
-            it.pkg = AppCtx.projectCfg?.basePkg + ".domain.result." + AppCtx.module
-        }
-        DomainModelCtx.getModesByTypes(DomainType.ARG)!!.forEach {
-            if (!it.isInnerClass()){
-                genModel(it, true)
+class DomainModelGenerator: ClassGenerator() {
+    companion object {
+
+        @JvmStatic fun genModel(classModel: ClassModel, validate: Boolean) {
+            if (!ClassModel.isBaseType(classModel.className) && !ClassModel.isCommonType(classModel.className)) {
+                var data = HashMap<String, Any?>();
+                data["project"] = AppCtx.projectCfg
+                data["model"] = classModel
+                data["validator"] = validate
+                classModel.fields?.forEach {
+                    it.setter = FieldUtils.setter(it.name)
+                    it.getter = FieldUtils.getter(it.name)
+                }
+                processImports(classModel)
+                TempRender.renderToFile(AppCtx.projectCfg?.modelSourceDir!!, classModel.pkg!!, classModel.className, "model.ftl", data)
             }
         }
-        DomainModelCtx.getModesByTypes(DomainType.ENTITY, DomainType.RESULT)!!.forEach {
-            if (!it.isInnerClass()){
-                genModel(it, false)
+        @JvmStatic fun updateImplements(){
+            for( x in DomainModelCtx.getAllModels()!!){
+                if (!ClassModel.isInnerClass(x.className)) {
+                    var s = AppCtx.projectCfg?.modelBaseCls
+                    if (x.className.indexOf("Search") >= 0 && !AppCtx.projectCfg?.searchArgBaseCls.isNullOrEmpty()) {
+                        s = AppCtx.projectCfg?.searchArgBaseCls
+                    }
+                    if (!s.isNullOrEmpty()) {
+                        x.extend = ClassModel.parse(s)
+                    }
+                }
+            }
+        }
+
+        @JvmStatic fun gen() {
+            updateImplements()
+            DomainModelCtx.getAllModels()!!.forEach {
+                setClassModelRefName(it)
+            }
+            DomainModelCtx.getModesByTypes(DomainType.ARG).forEach {
+                if (!ClassModel.isInnerClass(it.className)) {
+                    it.pkg = AppCtx.projectCfg?.basePkg + ".domain.arg." + AppCtx.projectCfg?.module
+                }
+            }
+            DomainModelCtx.getModesByTypes(DomainType.ENTITY).forEach {
+                if (!ClassModel.isInnerClass(it.className)) {
+                    it.pkg = AppCtx.projectCfg?.basePkg + ".domain.entity." + AppCtx.projectCfg?.module
+                }
+            }
+            DomainModelCtx.getModesByTypes(DomainType.RESULT).forEach {
+                if (!ClassModel.isInnerClass(it.className)) {
+                    it.pkg = AppCtx.projectCfg?.basePkg + ".domain.result." + AppCtx.projectCfg?.module
+                }
+            }
+            DomainModelCtx.getModesByTypes(DomainType.ARG).forEach {
+                if (!it.isInnerClass()) {
+                    genModel(it, true)
+                }
+            }
+            DomainModelCtx.getModesByTypes(DomainType.ENTITY, DomainType.RESULT).forEach {
+                if (!it.isInnerClass()) {
+                    genModel(it, false)
+                }
             }
         }
     }

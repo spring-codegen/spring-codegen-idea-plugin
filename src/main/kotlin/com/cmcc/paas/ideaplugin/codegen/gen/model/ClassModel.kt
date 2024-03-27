@@ -11,28 +11,31 @@ import java.util.stream.Collectors
 open class ClassModel(var className: String, var pkg: String?, var comment: String?, var fields: MutableList<Field>?) {
     constructor(className: String) : this(className, null, null, null)
     companion object{
-        val CLASS_ID_ARG = ClassModel("IdArg", "com.cmit.paas.common.web.model", null, null)
-        val CLASS_ID_RESULT = ClassModel("IdResult", "com.cmit.paas.common.web.model", null, null)
-        val CLASS_BOOL_RESULT = ClassModel("Boolean")
-        val CLASS_LONG_RESULT = ClassModel("Long")
-        val CLASS_INTEGER_RESULT = ClassModel("Integer")
-        @JvmStatic fun idArgClass(): ClassModel {
-            return CLASS_ID_ARG
-        }
-        @JvmStatic fun idResultClass(): ClassModel {
-            return CLASS_ID_RESULT
-        }
-        @JvmStatic fun booleanClass(): ClassModel {
-            return CLASS_BOOL_RESULT
-        }
-        @JvmStatic fun longClass(): ClassModel {
-            return CLASS_LONG_RESULT
-        }
-        @JvmStatic fun integerClass(): ClassModel {
-            return CLASS_INTEGER_RESULT
+        @JvmStatic val CLASS_ID_ARG = ClassModel("IdArg", "com.cmit.paas.common.web.model", null, null)
+        @JvmStatic val CLASS_ID_RESULT = ClassModel("IdResult", "com.cmit.paas.common.web.model", null, null)
+        @JvmStatic val CLASS_BOOL_RESULT = ClassModel("Boolean")
+        @JvmStatic val CLASS_LONG_RESULT = ClassModel("Long")
+        @JvmStatic val CLASS_INTEGER_RESULT = ClassModel("Integer")
+//        @JvmStatic fun idArgClass(): ClassModel {
+//            return CLASS_ID_ARG
+//        }
+//        @JvmStatic fun idResultClass(): ClassModel {
+//            return CLASS_ID_RESULT
+//        }
+//        @JvmStatic fun booleanClass(): ClassModel {
+//            return CLASS_BOOL_RESULT
+//        }
+//        @JvmStatic fun longClass(): ClassModel {
+//            return CLASS_LONG_RESULT
+//        }
+//        @JvmStatic fun integerClass(): ClassModel {
+//            return CLASS_INTEGER_RESULT
+//        }
+        @JvmStatic fun innerClasses():List<ClassModel>{
+            return arrayListOf(ClassModel.CLASS_ID_ARG, ClassModel.CLASS_ID_RESULT, ClassModel.CLASS_BOOL_RESULT, ClassModel.CLASS_LONG_RESULT, ClassModel.CLASS_INTEGER_RESULT);
         }
         @JvmStatic fun isInnerClass(className:String):Boolean{
-            return arrayOf("Boolean", "Long", "IdArg", "IdResult").stream().filter { it.equals(className, true) }.count() > 0;
+            return arrayOf("Integer", "Long", "Boolean", "String", "Date", "BigDecimal", "List", "Map", "IdArg", "IdResult").stream().filter { it.equals(className, true) }.count() > 0;
         }
 
         @JvmStatic fun baseTypes(): Array<String> {
@@ -45,6 +48,12 @@ open class ClassModel(var className: String, var pkg: String?, var comment: Stri
 
         @JvmStatic fun isBaseType(clsName: String): Boolean {
             return baseTypes().stream().anyMatch { e -> e.equals(clsName) }
+        }
+        @JvmStatic fun parse(clsName: String):ClassModel{
+            var i = clsName.lastIndexOf(".")
+            var cls = ClassModel(clsName.substring(i+1))
+            cls.pkg =  if (i > 0) clsName.substring(0, i) else null
+            return cls
         }
     }
 
@@ -114,7 +123,7 @@ open class ClassModel(var className: String, var pkg: String?, var comment: Stri
         open fun clone(): Method {
             var m = Method(
                 name,
-                 args!!.stream().map { e -> e.clone() }.toList(),
+                 args.stream().map { e -> e.clone() }.toList(),
                 if (result == null) null else result?.clone())
             m.dependency = if (dependency != null) dependency!!.clone() else null
             m.comment = comment

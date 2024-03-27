@@ -49,10 +49,10 @@ object MvcClassCtx {
                 ctrlClass.extend = baseCtrlCls
             }
         }
-        ctrlClass.pkg = AppCtx.projectCfg?.basePkg + ".controller." + AppCtx.module;
-        svcClass.pkg = AppCtx.projectCfg?.basePkg + ".svc.impl." + AppCtx.module;
-        svcInterface.pkg = AppCtx.projectCfg?.basePkg + ".svc." + AppCtx.module;
-        daoInterface.pkg = AppCtx.projectCfg?.basePkg + ".dao." + AppCtx.module;
+        ctrlClass.pkg = AppCtx.projectCfg?.basePkg + ".controller." + AppCtx.projectCfg?.module;
+        svcInterface.pkg = AppCtx.projectCfg?.basePkg + ".svc." + AppCtx.projectCfg?.module;
+        svcClass.pkg = svcInterface.pkg + ".impl";
+        daoInterface.pkg = AppCtx.projectCfg?.basePkg + ".dao." + AppCtx.projectCfg?.module;
     }
 
     fun setClassName(classType: MvcClassType, className:String){
@@ -68,21 +68,21 @@ object MvcClassCtx {
     }
     fun addMethod(classType: MvcClassType, method: ClassModel.Method): Boolean{
         var cls = getClassByType(classType)
-        if (cls.methods != null){
-            for (m in cls.methods!!){
-                if (m.name.equals(method.name, true)){
-                    return false
-                }
+
+        for (m in cls.methods){
+            if (m.name.equals(method.name, true)){
+                return false
             }
         }
-        cls.methods?.add(method)
+
+        cls.methods.add(method)
         return true
     }
     fun removeMethod(classType: MvcClassType, methodName: String): Boolean{
         var cls = getClassByType(classType)
-        for (m in cls.methods!!){
+        for (m in cls.methods){
             if (m.name.equals(methodName, true)){
-                cls.methods?.remove(m)
+                cls.methods.remove(m)
                 return true
             }
         }

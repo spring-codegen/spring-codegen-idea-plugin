@@ -58,15 +58,15 @@ methods:
     args:
       - className: "{clsPrefix}"
     result:
-      className: Long
-      refName: id
+      className: Boolean
+      refName: t
   - type: DAO
     name: add
     args:
       - className: "{clsPrefix}"
     result:
-      className: Long
-      refName: id
+      className: Boolean
+      refName: t
     sqlDataFieldIncludes: ".*"
     sqlDataFieldExcludes: "id"
     sqlConditionFieldIncludes: "-"

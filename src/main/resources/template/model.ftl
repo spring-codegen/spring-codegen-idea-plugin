@@ -14,7 +14,7 @@ public class ${model.className}<#if model.extend??> extends ${model.extend.class
      */
     <#if validator>
     <#if field.notNull?? && field.notNull>
-    @NotNull()
+    @NotNull
     </#if>
     <#if field.maxLen gt 0>
     @Size(max=${field.maxLen})
