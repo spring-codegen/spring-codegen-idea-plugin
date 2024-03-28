@@ -17,7 +17,7 @@ object NotificationCenter {
         }
         events[event]!!.remove(handler)
     }
-    fun sendMessage(event:String, data:Any){
+    fun sendMessage(event:String, data:Any?){
         println("sendMessage:$event")
         if ( events[event] == null ){
             return
@@ -29,6 +29,6 @@ object NotificationCenter {
     public interface Handler{
         public fun handleMessage(msg:Message);
     }
-    public class Message(var envent:String, var data:Any){
+    public class Message(var envent:String, var data:Any?){
     }
 }

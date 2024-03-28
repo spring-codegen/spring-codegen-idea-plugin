@@ -1,6 +1,7 @@
 package com.cmcc.paas.ideaplugin.codegen.gen
 
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.CodeSettingCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.MvcClassCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
 import com.cmcc.paas.ideaplugin.codegen.gen.model.SvcClass
@@ -157,7 +158,7 @@ class SvcClassGenerator: ClassGenerator(){
         }
 
         @JvmStatic fun getFilePath(): String {
-            var fp = AppCtx.projectCfg?.svcSourceDir!! + "/" + MvcClassCtx.getSvcClass().pkg?.replace(".", "/") + "/" + MvcClassCtx.getSvcClass().className + ".java"
+            var fp = CodeSettingCtx.svcSourceDir!! + "/" + MvcClassCtx.getSvcClass().pkg?.replace(".", "/") + "/" + MvcClassCtx.getSvcClass().className + ".java"
             return fp
         }
 
@@ -165,7 +166,7 @@ class SvcClassGenerator: ClassGenerator(){
             var classModel = MvcClassCtx.getSvcClass()
             processImports(classModel)
             var data = HashMap<String, Any?>();
-            data["project"] = AppCtx.projectCfg
+            data["project"] = CodeSettingCtx
             data["svcClass"] = classModel
 
             var c = TempRender.render("svc-class-impl.ftl", data)

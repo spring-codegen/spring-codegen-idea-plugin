@@ -1,6 +1,6 @@
 package com.cmcc.paas.ideaplugin.codegen.ui;
 
-import com.cmcc.paas.ideaplugin.codegen.config.ProjectCfg;
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.CodeSettingCtx;
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx;
 import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
 import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils;
@@ -37,7 +37,8 @@ public class CodeSettingPane {
     private JTextField svcBaseClsTextField;
     private JTextField apiPrefixTextField;
     private JTextField searchArgBaseClsTextField;
-    private ProjectCfg model;
+    private JTextField responseClsTextField;
+    private CodeSettingCtx model;
 
     public CodeSettingPane(){
         System.out.println("CodeSettingPanel...");
@@ -55,7 +56,7 @@ public class CodeSettingPane {
             public void actionPerformed(ActionEvent e) {
                 getModel().save();
                 MessageBox.showMessageAndFadeout("保存成功！");
-                NotificationCenter.INSTANCE.sendMessage(CODE_SETTING_UPDATED, AppCtx.INSTANCE.getProjectCfg());
+                NotificationCenter.INSTANCE.sendMessage(CODE_SETTING_UPDATED, null);
             }
         });
         ctrlSourceFileButton.addActionListener(new ActionListener() {
@@ -121,7 +122,7 @@ public class CodeSettingPane {
         return content;
     }
 
-    public ProjectCfg getModel() {
+    public CodeSettingCtx getModel() {
         model.setAuthor(authorTextField.getText());
         model.setBasePkg(basePkgTextField.getText());
         model.setModelBaseCls(modelBaseClsTextField.getText());
@@ -134,10 +135,11 @@ public class CodeSettingPane {
         model.setSvcBaseCls(svcBaseClsTextField.getText());
         model.setSvcSourceDir(svcDirTextField.getText());
         model.setMybatisMapperDir(mybatisMapperDirTextField.getText());
+        model.setResponseCls(responseClsTextField.getText());
         return model;
     }
 
-    public void setModel(ProjectCfg model){
+    public void setModel(CodeSettingCtx model){
         this.model = model;
         basePkgTextField.setText(model.getBasePkg());
         authorTextField.setText(model.getAuthor());
@@ -152,6 +154,7 @@ public class CodeSettingPane {
 
         svcBaseClsTextField.setText(model.getSvcBaseCls());
         svcDirTextField.setText(model.getSvcSourceDir());
+        responseClsTextField.setText(model.getResponseCls());
 
         mybatisMapperDirTextField.setText(model.getMybatisMapperDir());
     }

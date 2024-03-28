@@ -1,6 +1,5 @@
 package com.cmcc.paas.ideaplugin.codegen.gen.ctx
 
-import com.cmcc.paas.ideaplugin.codegen.config.ProjectCfg
 import com.cmcc.paas.ideaplugin.codegen.constants.MvcClassType
 import com.cmcc.paas.ideaplugin.codegen.util.FieldUtils
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
@@ -30,29 +29,29 @@ object MvcClassCtx {
         NotificationCenter.register(NotificationType.CODE_SETTING_UPDATED, object : Handler {
             override fun handleMessage(msg: NotificationCenter.Message) {
                 println("MvcClassCtx CODE_SETTING_UPDATED....")
-                refreshSettings(msg.data as ProjectCfg)
+                refreshSettings(CodeSettingCtx)
             }
         })
-        if (AppCtx.projectCfg != null) {
-            refreshSettings(AppCtx.projectCfg!!)
+        if (CodeSettingCtx != null) {
+            refreshSettings(CodeSettingCtx)
         }
     }
-    fun refreshSettings(projectCfg: ProjectCfg){
+    fun refreshSettings(projectCfg: CodeSettingCtx){
         if (projectCfg.ctrlBaseCls.isNullOrEmpty()){
             ctrlClass.extend = null
         }
         if (!projectCfg.ctrlBaseCls.isNullOrEmpty()){
-            var i = AppCtx.projectCfg?.ctrlBaseCls!!.lastIndexOf(".")
+            var i = CodeSettingCtx.ctrlBaseCls!!.lastIndexOf(".")
             if (i > 0) {
-                var baseCtrlCls = ClassModel(AppCtx.projectCfg?.ctrlBaseCls!!.substring(i + 1))
-                baseCtrlCls.pkg = AppCtx.projectCfg?.ctrlBaseCls!!.substring(0, i)
+                var baseCtrlCls = ClassModel(CodeSettingCtx.ctrlBaseCls!!.substring(i + 1))
+                baseCtrlCls.pkg = CodeSettingCtx.ctrlBaseCls!!.substring(0, i)
                 ctrlClass.extend = baseCtrlCls
             }
         }
-        ctrlClass.pkg = AppCtx.projectCfg?.basePkg + ".controller." + AppCtx.projectCfg?.module;
-        svcInterface.pkg = AppCtx.projectCfg?.basePkg + ".svc." + AppCtx.projectCfg?.module;
+        ctrlClass.pkg = CodeSettingCtx.basePkg + ".controller." + CodeSettingCtx.module;
+        svcInterface.pkg = CodeSettingCtx.basePkg + ".svc." + CodeSettingCtx.module;
         svcClass.pkg = svcInterface.pkg + ".impl";
-        daoInterface.pkg = AppCtx.projectCfg?.basePkg + ".dao." + AppCtx.projectCfg?.module;
+        daoInterface.pkg = CodeSettingCtx.basePkg + ".dao." + CodeSettingCtx.module;
     }
 
     fun setClassName(classType: MvcClassType, className:String){

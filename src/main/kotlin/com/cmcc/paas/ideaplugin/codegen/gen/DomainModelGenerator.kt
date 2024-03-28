@@ -1,9 +1,9 @@
 package com.cmcc.paas.ideaplugin.codegen.gen
 
 import com.cmcc.paas.ideaplugin.codegen.constants.DomainType
-import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.DomainModelCtx
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.CodeSettingCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.template.TempRender
 import com.cmcc.paas.ideaplugin.codegen.util.FieldUtils
 import java.util.HashMap
@@ -19,7 +19,7 @@ class DomainModelGenerator: ClassGenerator() {
         @JvmStatic fun genModel(classModel: ClassModel, validate: Boolean) {
             if (!ClassModel.isBaseType(classModel.className) && !ClassModel.isCommonType(classModel.className)) {
                 var data = HashMap<String, Any?>();
-                data["project"] = AppCtx.projectCfg
+                data["project"] = CodeSettingCtx
                 data["model"] = classModel
                 data["validator"] = validate
                 classModel.fields?.forEach {
@@ -27,15 +27,15 @@ class DomainModelGenerator: ClassGenerator() {
                     it.getter = FieldUtils.getter(it.name)
                 }
                 processImports(classModel)
-                TempRender.renderToFile(AppCtx.projectCfg?.modelSourceDir!!, classModel.pkg!!, classModel.className, "model.ftl", data)
+                TempRender.renderToFile(CodeSettingCtx.modelSourceDir!!, classModel.pkg!!, classModel.className, "model.ftl", data)
             }
         }
         @JvmStatic fun updateImplements(){
             for( x in DomainModelCtx.getAllModels()!!){
                 if (!ClassModel.isInnerClass(x.className)) {
-                    var s = AppCtx.projectCfg?.modelBaseCls
-                    if (x.className.indexOf("Search") >= 0 && !AppCtx.projectCfg?.searchArgBaseCls.isNullOrEmpty()) {
-                        s = AppCtx.projectCfg?.searchArgBaseCls
+                    var s = CodeSettingCtx.modelBaseCls
+                    if (x.className.indexOf("Search") >= 0 && !CodeSettingCtx.searchArgBaseCls.isNullOrEmpty()) {
+                        s = CodeSettingCtx.searchArgBaseCls
                     }
                     if (!s.isNullOrEmpty()) {
                         x.extend = ClassModel.parse(s)
@@ -51,17 +51,17 @@ class DomainModelGenerator: ClassGenerator() {
             }
             DomainModelCtx.getModesByTypes(DomainType.ARG).forEach {
                 if (!ClassModel.isInnerClass(it.className)) {
-                    it.pkg = AppCtx.projectCfg?.basePkg + ".domain.arg." + AppCtx.projectCfg?.module
+                    it.pkg = CodeSettingCtx.basePkg + ".domain.arg." + CodeSettingCtx.module
                 }
             }
             DomainModelCtx.getModesByTypes(DomainType.ENTITY).forEach {
                 if (!ClassModel.isInnerClass(it.className)) {
-                    it.pkg = AppCtx.projectCfg?.basePkg + ".domain.entity." + AppCtx.projectCfg?.module
+                    it.pkg = CodeSettingCtx.basePkg + ".domain.entity." + CodeSettingCtx.module
                 }
             }
             DomainModelCtx.getModesByTypes(DomainType.RESULT).forEach {
                 if (!ClassModel.isInnerClass(it.className)) {
-                    it.pkg = AppCtx.projectCfg?.basePkg + ".domain.result." + AppCtx.projectCfg?.module
+                    it.pkg = CodeSettingCtx.basePkg + ".domain.result." + CodeSettingCtx.module
                 }
             }
             DomainModelCtx.getModesByTypes(DomainType.ARG).forEach {

@@ -1,30 +1,17 @@
 package com.cmcc.paas.ideaplugin.codegen.gen
 
-import com.cmcc.paas.ideaplugin.codegen.config.ProjectCfg
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.CodeSettingCtx
 import com.cmcc.paas.ideaplugin.codegen.constants.DomainType
-import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.DomainModelCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.MvcClassCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
-import com.cmcc.paas.ideaplugin.codegen.gen.model.CtrlClass
-import com.cmcc.paas.ideaplugin.codegen.gen.model.DaoClass
-import com.cmcc.paas.ideaplugin.codegen.gen.model.SvcClass
 import com.cmcc.paas.ideaplugin.codegen.gen.template.TempRender
 import com.github.javaparser.ParserConfiguration
 import com.github.javaparser.StaticJavaParser
 import com.github.javaparser.ast.Modifier
-import com.github.javaparser.ast.NodeList
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration
 import com.github.javaparser.ast.body.MethodDeclaration
 import com.github.javaparser.ast.body.Parameter
-import com.github.javaparser.ast.body.VariableDeclarator
-import com.github.javaparser.ast.expr.*
-import com.github.javaparser.ast.stmt.BlockStmt
-import com.github.javaparser.ast.stmt.IfStmt
-import com.github.javaparser.ast.stmt.ReturnStmt
-import com.github.javaparser.ast.stmt.ThrowStmt
 import com.github.javaparser.ast.type.ClassOrInterfaceType
-import com.github.javaparser.ast.type.WildcardType
 import com.github.javaparser.javadoc.Javadoc
 import com.github.javaparser.javadoc.JavadocBlockTag
 import com.github.javaparser.javadoc.description.JavadocDescription
@@ -76,7 +63,7 @@ class DaoInterfaceGenerator:ClassGenerator(){
         }
 
         @JvmStatic fun getFilePath(): String {
-            var fp = AppCtx.projectCfg?.svcSourceDir!! + "/" + MvcClassCtx.getDaoClass().pkg?.replace(".", "/") + "/" + MvcClassCtx.getDaoClass().className + ".java"
+            var fp = CodeSettingCtx.svcSourceDir!! + "/" + MvcClassCtx.getDaoClass().pkg?.replace(".", "/") + "/" + MvcClassCtx.getDaoClass().className + ".java"
             return fp
         }
 
@@ -84,7 +71,7 @@ class DaoInterfaceGenerator:ClassGenerator(){
             var classModel = MvcClassCtx.getDaoClass()
             processImports(classModel)
             var data = HashMap<String, Any?>();
-            data["project"] = AppCtx.projectCfg
+            data["project"] = CodeSettingCtx
             data["daoClass"] = classModel
             var a = DomainModelCtx.getModesByType(DomainType.ARG)
             if (a != null) {

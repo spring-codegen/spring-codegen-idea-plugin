@@ -8,6 +8,7 @@ import com.cmcc.paas.ideaplugin.codegen.db.DBCtx;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTable;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.CodeGenerator;
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.CodeSettingCtx;
 import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
 import com.cmcc.paas.ideaplugin.codegen.notify.NotificationType;
 import com.cmcc.paas.ideaplugin.codegen.util.FieldUtils;
@@ -61,7 +62,6 @@ public class CodeGenPane {
     private List<DBTable> dbTables;
 
     private CodeCfg codeCfg;
-    private final ProjectCfg projectCfg = new ProjectCfg();
     private final DBCfg dbCfg = new DBCfg();
     private MethodSelectionPopupMenu methodSelectionPopupMenu;
     public CodeGenPane() {
@@ -69,10 +69,11 @@ public class CodeGenPane {
 //        clsTableScrollView.setBorder(null);
 //        clsTableScrollView.setViewportBorder(null);
 
-        ProjectCfg.load();
+        CodeSettingCtx.load();
         dbCfg.load();
         dbSettingPane.setModel(dbCfg);
-        codeSettingPane.setModel(AppCtx.INSTANCE.getProjectCfg());
+        codeSettingPane.setModel(CodeSettingCtx.INSTANCE);
+        moduleTextField.setText(CodeSettingCtx.INSTANCE.getModule());
 
         tableComboBox.addItemListener(new ItemListener() {
             @Override
@@ -127,8 +128,8 @@ public class CodeGenPane {
             TextFieldUtils.INSTANCE.addTextChangedEvent(e,  textField -> {
                 pathPrefixLabel.setText(getPathSuffix());
                 if (textField == moduleTextField) {
-                    AppCtx.INSTANCE.getProjectCfg().setModule(moduleTextField.getText());
-                    NotificationCenter.INSTANCE.sendMessage(NotificationType.CODE_SETTING_UPDATED, AppCtx.INSTANCE.getProjectCfg());
+                    CodeSettingCtx.INSTANCE.setModule(moduleTextField.getText());
+                    NotificationCenter.INSTANCE.sendMessage(NotificationType.CODE_SETTING_UPDATED, null);
                 }
             });
         });
@@ -151,7 +152,7 @@ public class CodeGenPane {
         String moduleName = moduleTextField.getText();
         String resourceName = resourceNameTextField.getText();
         return String.format("%s/%s/%s",
-                AppCtx.INSTANCE.getProjectCfg().getApiPrefix(),
+                CodeSettingCtx.INSTANCE.getApiPrefix(),
                 org.apache.commons.lang3.StringUtils.isEmpty(moduleName)?"{module}":moduleName,
                 org.apache.commons.lang3.StringUtils.isEmpty(resourceName)?"resourceName":resourceName
         );

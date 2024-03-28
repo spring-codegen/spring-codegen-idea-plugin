@@ -1,7 +1,5 @@
 package com.cmcc.paas.ideaplugin.codegen.gen
 
-import com.cmcc.paas.ideaplugin.codegen.config.ProjectCfg
-import com.cmcc.paas.ideaplugin.codegen.gen.ctx.MvcClassCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
 import kotlin.collections.ArrayList
 

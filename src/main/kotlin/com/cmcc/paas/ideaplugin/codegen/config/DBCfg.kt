@@ -13,6 +13,9 @@ import java.nio.charset.Charset
  * @date 2023/8/16
  */
 class DBCfg {
+    companion object{
+        var x:String? = null
+    }
     var dbName:String? = null
     var schema:String? = null
     var host:String? = null
