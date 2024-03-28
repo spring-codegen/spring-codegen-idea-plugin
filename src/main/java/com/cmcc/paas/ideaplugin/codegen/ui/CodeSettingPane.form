@@ -2,7 +2,7 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.cmcc.paas.ideaplugin.codegen.ui.CodeSettingPane">
   <grid id="27dc6" binding="content" layout-manager="GridBagLayout">
     <constraints>
-      <xy x="20" y="20" width="627" height="515"/>
+      <xy x="20" y="20" width="865" height="765"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -154,12 +154,12 @@
       <component id="c9042" class="javax.swing.JLabel">
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
+          <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
         </constraints>
         <properties>
           <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
-          <text value="Package："/>
+          <text value="&lt;html&gt;&lt;body&gt;包名&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/body&gt;&lt;/html&gt;"/>
         </properties>
       </component>
       <component id="12594" class="javax.swing.JTextField" binding="basePkgTextField">
@@ -176,12 +176,12 @@
       <component id="623a8" class="javax.swing.JLabel">
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
+          <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
         </constraints>
         <properties>
           <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
-          <text value="作者："/>
+          <text value="&lt;html&gt;作者&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/html&gt;"/>
         </properties>
       </component>
       <component id="e443d" class="javax.swing.JTextField" binding="authorTextField">
@@ -198,12 +198,12 @@
       <component id="92501" class="javax.swing.JLabel">
         <constraints>
           <grid row="4" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
+          <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
         </constraints>
         <properties>
           <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
-          <text value="Model基类："/>
+          <text value="&lt;html&gt;&lt;body&gt;模型基类&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/body&gt;&lt;/html&gt;"/>
         </properties>
       </component>
       <component id="b20b1" class="javax.swing.JTextField" binding="modelBaseClsTextField">
@@ -220,7 +220,7 @@
       <component id="af518" class="javax.swing.JLabel">
         <constraints>
           <grid row="7" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
+          <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
         </constraints>
         <properties>
           <foreground color="-7960954"/>
@@ -273,12 +273,12 @@
       <component id="e38cc" class="javax.swing.JLabel">
         <constraints>
           <grid row="9" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
+          <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
         </constraints>
         <properties>
           <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
-          <text value="Ctrl目录："/>
+          <text value="&lt;html&gt;&lt;body&gt;Ctrl目录&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/body&gt;&lt;/html&gt;"/>
         </properties>
       </component>
       <component id="f3406" class="javax.swing.JTextField" binding="ctrlDirTextField">
@@ -307,12 +307,12 @@
       <component id="d801c" class="javax.swing.JLabel">
         <constraints>
           <grid row="12" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
+          <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
         </constraints>
         <properties>
           <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
-          <text value="Mapper目录："/>
+          <text value="&lt;html&gt;&lt;body&gt;Mapper生成目录&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/body&gt;&lt;/html&gt;"/>
         </properties>
       </component>
       <component id="a7f50" class="javax.swing.JTextField" binding="mybatisMapperDirTextField">
@@ -341,12 +341,12 @@
       <component id="b968d" class="javax.swing.JLabel">
         <constraints>
           <grid row="11" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
+          <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
         </constraints>
         <properties>
           <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
-          <text value="Svc目录："/>
+          <text value="&lt;html&gt;&lt;body&gt;Svc生成目录&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/body&gt;&lt;/html&gt;"/>
         </properties>
       </component>
       <component id="1fc6a" class="javax.swing.JTextField" binding="svcDirTextField">
@@ -375,7 +375,7 @@
       <component id="bb59a" class="javax.swing.JLabel">
         <constraints>
           <grid row="10" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
+          <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
         </constraints>
         <properties>
           <foreground color="-7960954"/>
@@ -397,12 +397,12 @@
       <component id="43c91" class="javax.swing.JLabel">
         <constraints>
           <grid row="6" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
+          <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
         </constraints>
         <properties>
           <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
-          <text value="Model目录："/>
+          <text value="&lt;html&gt;&lt;body&gt;模型生成目录&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/body&gt;&lt;/html&gt;"/>
         </properties>
       </component>
       <component id="683a6" class="javax.swing.JTextField" binding="modelDirTextField">
@@ -431,12 +431,12 @@
       <component id="193b4" class="javax.swing.JLabel">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
+          <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
         </constraints>
         <properties>
           <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
-          <text value="api前缀："/>
+          <text value="&lt;html&gt;&lt;body&gt;URL 前缀&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/body&gt;&lt;/html&gt;"/>
         </properties>
       </component>
       <component id="7c005" class="javax.swing.JTextField" binding="apiPrefixTextField">
@@ -464,12 +464,12 @@
       <component id="911cb" class="javax.swing.JLabel">
         <constraints>
           <grid row="5" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
+          <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
         </constraints>
         <properties>
           <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
-          <text value="列表检索基类："/>
+          <text value="&lt;html&gt;&lt;body&gt;列表查询基类&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/body&gt;&lt;/html&gt;"/>
         </properties>
       </component>
       <component id="e2ede" class="javax.swing.JTextField" binding="responseClsTextField">
@@ -486,12 +486,12 @@
       <component id="720" class="javax.swing.JLabel">
         <constraints>
           <grid row="8" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
+          <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
         </constraints>
         <properties>
           <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
-          <text value="统一返回类："/>
+          <text value="&lt;html&gt;&lt;body&gt;统一返回类&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/body&gt;&lt;/html&gt;"/>
         </properties>
       </component>
     </children>
