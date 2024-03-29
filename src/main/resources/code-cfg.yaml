@@ -185,19 +185,3 @@ methods:
     sqlDataFieldIncludes: ".*"
     sqlConditionFieldIncludes: ".*"
     sqlConditionFieldExcludes: ".*time,.*_uid,id"
-renderItems:
-  - title: 方法名
-    field: name
-  - title: 路径
-    field: path
-  - title: Method
-    field: httpMethod
-  - title: 参数类名
-    field: inputClassName
-  - title: 参数字段
-    field: dtoFields
-  - title: 输出类名
-    field: outputClassName
-  - title: 输出字段
-    field: voFields
-

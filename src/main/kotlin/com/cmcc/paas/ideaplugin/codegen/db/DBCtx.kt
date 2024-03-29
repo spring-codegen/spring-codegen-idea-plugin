@@ -2,7 +2,7 @@ package com.cmcc.paas.ideaplugin.codegen.db
 
 import com.alibaba.druid.pool.DruidDataSource
 import com.alibaba.druid.util.JdbcUtils
-import com.cmcc.paas.ideaplugin.codegen.config.DBCfg
+import com.cmcc.paas.ideaplugin.codegen.config.DBSettingCtx
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTable
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField
 import org.apache.commons.lang3.StringUtils
@@ -21,17 +21,16 @@ import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory
  */
 object DBCtx {
     var dataSource:DruidDataSource? = null
-
-    var dbCfg: DBCfg? = null
     var sqlSessionFactory:SqlSessionFactory? = null
     fun resetDataSource(){
-        if (dbCfg == null
-                || StringUtils.isEmpty(dbCfg!!.dbName)
-                || StringUtils.isEmpty(dbCfg!!.host)
-                || StringUtils.isEmpty(dbCfg!!.user)
-                || StringUtils.isEmpty(dbCfg!!.pwd)
-                || StringUtils.isEmpty(dbCfg!!.driverType)
-                || StringUtils.isEmpty(dbCfg!!.schema)){
+        var dbCfg = DBSettingCtx
+        if (
+                StringUtils.isEmpty(dbCfg.dbName)
+                || StringUtils.isEmpty(dbCfg.host)
+                || StringUtils.isEmpty(dbCfg.user)
+                || StringUtils.isEmpty(dbCfg.pwd)
+                || StringUtils.isEmpty(dbCfg.driverType)
+                || StringUtils.isEmpty(dbCfg.schema)){
             dataSource = null
             return
         }
@@ -46,13 +45,13 @@ object DBCtx {
         }
         var driverClass: String? = "org.postgresql.Driver"
         var url:String? = null
-        if (dbCfg!!.driverType == "postgresql"){
+        if (dbCfg.driverType == "postgresql"){
             driverClass = "org.postgresql.Driver"
-            url = String.format("jdbc:postgresql://%s:%d/%s?currentSchema=%s&useUnicode=true&characterEncoding=utf-8", dbCfg!!.host, dbCfg!!.port, dbCfg!!.dbName, dbCfg!!.schema)
+            url = String.format("jdbc:postgresql://%s:%d/%s?currentSchema=%s&useUnicode=true&characterEncoding=utf-8", dbCfg.host, dbCfg.port, dbCfg.dbName, dbCfg.schema)
         }
         var driver = JdbcUtils.createDriver(driverClass)
-        dataSource!!.username = dbCfg!!.user;
-        dataSource!!.password = dbCfg!!.pwd;
+        dataSource!!.username = dbCfg.user;
+        dataSource!!.password = dbCfg.pwd;
         dataSource!!.url = url;
         dataSource!!.driver = driver
         dataSource!!.connectTimeout = 10000;
@@ -78,9 +77,10 @@ object DBCtx {
         resetSessionFactory()
     }
     fun queryFields(params: Map<String, Any>):List<DBTableField>{
+        var dbCfg = DBSettingCtx
         var sqlSession = sqlSessionFactory!!.openSession();
         var p = HashMap<String, Any>()
-        p["schema"] = dbCfg!!.schema!!
+        p["schema"] = dbCfg.schema!!
         p.putAll(params)
 
         var ret = sqlSession.selectList<DBTableField>("postgresql.TableDao.queryFields", p)
@@ -88,11 +88,12 @@ object DBCtx {
         return ret
     }
     fun queryTables():List<DBTable>{
-        if (dbCfg == null || StringUtils.isEmpty(dbCfg!!.schema) || sqlSessionFactory == null || dataSource == null){
+        var dbCfg = DBSettingCtx
+        if ( StringUtils.isEmpty(dbCfg.schema) || sqlSessionFactory == null || dataSource == null){
             return ArrayList()
         }
         var params = HashMap<String, String>()
-        params["schema"] = dbCfg!!.schema!!
+        params["schema"] = dbCfg.schema!!
         var sqlSession = sqlSessionFactory!!.openSession();
         var ret = sqlSession.selectList<DBTable>("postgresql.TableDao.queryTables", params)
         sqlSession.close()

@@ -147,7 +147,7 @@ class CtrlClassGenerator (): ClassGenerator() {
             if (callArg != null) {
                 callArgExpr = NameExpr(callArg.classModel?.refName)
             }
-            var calleeArgName:String? = null
+//            var calleeArgName:String? = null
             if (callArg != null) {
                 //如果目标类型是基本类型，
                 if (ClassModel.isBaseType(callArg.classModel?.className!!)) {

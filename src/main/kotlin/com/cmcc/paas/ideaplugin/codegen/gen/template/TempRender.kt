@@ -1,7 +1,9 @@
 package com.cmcc.paas.ideaplugin.codegen.gen.template
 
+import com.cmcc.paas.ideaplugin.codegen.services.ResourceService
 import com.cmcc.paas.ideaplugin.codegen.ui.MessageBox
 import freemarker.cache.ClassTemplateLoader
+import freemarker.cache.FileTemplateLoader
 import freemarker.template.Configuration
 import freemarker.template.Template
 import org.apache.commons.io.FileUtils
@@ -20,7 +22,7 @@ object TempRender {
         if(configuration == null) {
 //            var url = TempRender::class.java.getResource("/template")
             configuration = Configuration(Configuration.getVersion())
-            configuration!!.templateLoader = ClassTemplateLoader(this.javaClass.classLoader, "/template")
+            configuration!!.templateLoader = FileTemplateLoader(File(ResourceService.getConfigDir()+"/template"));//ClassTemplateLoader(this.javaClass.classLoader, "/template")
             configuration!!.defaultEncoding = "UTF-8";
         }
         return configuration!!;

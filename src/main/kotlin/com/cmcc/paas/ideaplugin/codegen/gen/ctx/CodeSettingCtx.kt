@@ -3,6 +3,7 @@ package com.cmcc.paas.ideaplugin.codegen.gen.ctx
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx.project
 import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter.sendMessage
 import com.cmcc.paas.ideaplugin.codegen.notify.NotificationType
+import com.cmcc.paas.ideaplugin.codegen.services.ResourceService
 import com.cmcc.paas.ideaplugin.codegen.util.JsonUtils
 import io.ktor.util.reflect.*
 import org.apache.commons.io.FileUtils
@@ -49,7 +50,7 @@ object CodeSettingCtx {
         FileUtils.writeStringToFile(cacheFilePath(), s, Charset.forName("UTF-8") )
     }
     private @JvmStatic fun cacheFilePath(): File {
-        return File( project!!.basePath+"/.idea/.codegen.settings.cfg")
+        return File( ResourceService.getConfigDir()+"/.codegen.settings.cfg")
     }
     @JvmStatic fun load() {
         var f = cacheFilePath()

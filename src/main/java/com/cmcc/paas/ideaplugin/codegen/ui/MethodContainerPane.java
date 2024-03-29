@@ -34,7 +34,6 @@ public class MethodContainerPane {
     private static int ITEM_MARGIN_V = 20;
     private static int CONTAINER_PADDING_RIGHT = 30;
     private static int ITEM_HEIGHT = 240;
-    private CodeCfg codeCfg;
 
 
     public MethodContainerPane(){
@@ -52,7 +51,7 @@ public class MethodContainerPane {
         });
     }
     public CodeCfg.MethodCfg getMethodCfg(MvcClassType classType, String methodName){
-        for(CodeCfg.MethodCfg m : codeCfg.getMethods()){
+        for(CodeCfg.MethodCfg m : CodeCfg.getInstance().getMethods()){
             if (MvcClassType.valueOf(m.getType()) == classType && methodName.indexOf(m.getName()) >= 0){
                 return m;
             }
@@ -274,14 +273,6 @@ public class MethodContainerPane {
         this.container.clear();
         allMethods.clear();
         this.container.updateUI();
-    }
-
-    public CodeCfg getCodeCfg() {
-        return codeCfg;
-    }
-
-    public void setCodeCfg(CodeCfg codeCfg) {
-        this.codeCfg = codeCfg;
     }
     public ModelResult getCfgResult(){
         ModelResult result = new ModelResult();

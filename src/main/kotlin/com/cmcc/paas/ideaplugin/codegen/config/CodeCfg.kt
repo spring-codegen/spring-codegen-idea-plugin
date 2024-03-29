@@ -1,5 +1,7 @@
 package com.cmcc.paas.ideaplugin.codegen.config
 
+import com.cmcc.paas.ideaplugin.codegen.services.ResourceService
+
 /**
  *
  * @author zhangyinghui
@@ -11,7 +13,14 @@ open class CodeCfg{
     var daoClass: ClassCfg? = null
     var models: List<ModelCfg>? = null
     var methods: List<MethodCfg>? = null
-    var renderItems: List<RenderItem>? = null
+
+    companion object{
+        @JvmStatic var instance:CodeCfg? = null
+        @JvmStatic fun load(){
+            var codeCfg = ResourceService.readCodeCfgYaml("code-cfg.yaml")
+            instance = codeCfg
+        }
+    }
 
     open class ClassCfg{
         var title: String? = null
@@ -57,9 +66,5 @@ open class CodeCfg{
         var sqlDataFieldIncludes: String? =  null
         var sqlConditionFieldExcludes: String? =  null
         var sqlConditionFieldIncludes: String? =  null
-    }
-    class RenderItem{
-        var title: String? = null
-        var field: String? = null
     }
 }

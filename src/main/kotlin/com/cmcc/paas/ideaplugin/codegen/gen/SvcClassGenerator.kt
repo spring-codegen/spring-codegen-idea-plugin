@@ -12,6 +12,7 @@ import com.github.javaparser.ast.Modifier
 import com.github.javaparser.ast.body.*
 import com.github.javaparser.ast.expr.*
 import com.github.javaparser.ast.stmt.BlockStmt
+import com.github.javaparser.ast.stmt.IfStmt
 import com.github.javaparser.ast.stmt.ReturnStmt
 import com.github.javaparser.ast.type.ClassOrInterfaceType
 import com.github.javaparser.javadoc.Javadoc
@@ -148,6 +149,29 @@ class SvcClassGenerator: ClassGenerator(){
                     )
                 }
                 blockStmt.addStatement(VariableDeclarationExpr(resultDeclar))
+            }
+            //
+            if (m.result != null && callReturn != null){
+                //
+                if (m.result?.classModel?.className.equals("Boolean", true)
+                        && (
+                                callReturn.classModel?.className.equals("Long", true)
+                                        || callReturn.classModel?.className.equals("Integer", true)
+                                )){
+                    var transformExpr = VariableDeclarationExpr(
+                            VariableDeclarator(
+                                    ClassOrInterfaceType(null, m.result?.classModel?.className),
+                                    m.result?.classModel?.refName,
+                                    ConditionalExpr(
+                                            BinaryExpr(NameExpr(resultDataVarName), NameExpr("0"), BinaryExpr.Operator.GREATER),
+                                            BooleanLiteralExpr(true),
+                                            BooleanLiteralExpr(false)
+                                    )
+                            )
+                    )
+                    blockStmt.addStatement(transformExpr)
+                    resultDataVarName = m.result?.classModel?.refName;
+                }
             }
             if (resultDataVarName != null) {
                 blockStmt.addStatement(ReturnStmt(resultDataVarName))

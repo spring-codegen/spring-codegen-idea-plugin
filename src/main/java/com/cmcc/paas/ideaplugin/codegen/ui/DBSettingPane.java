@@ -1,7 +1,7 @@
 package com.cmcc.paas.ideaplugin.codegen.ui;
 
 import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils;
-import com.cmcc.paas.ideaplugin.codegen.config.DBCfg;
+import com.cmcc.paas.ideaplugin.codegen.config.DBSettingCtx;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +25,6 @@ public class DBSettingPane {
     private JButton saveButton;
     private ValueChangedListener valueChangedListener;
 
-    private DBCfg model;
     public DBSettingPane(){
         System.out.println("CodeSettingPanel...");
         DBSettingPane handler = this;
@@ -46,7 +45,7 @@ public class DBSettingPane {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (isValueChnaged()){
-                    getModel().save();
+                    save();
                     if (valueChangedListener != null){
                         valueChangedListener.onValueChanged(handler);
                     }
@@ -56,6 +55,29 @@ public class DBSettingPane {
         });
     }
 
+
+    public void init(){
+        var model = DBSettingCtx.INSTANCE;
+        if (model.getDbName() != null) {
+            dbNameTextField.setText(model.getDbName());
+        }
+        if (model.getHost() != null) {
+            hostTextField.setText(model.getHost());
+        }
+        if (model.getPort() != null) {
+            portTextField.setText(model.getPort().toString());
+        }
+        if (model.getSchema() != null) {
+            tableSchemaTextField.setText(model.getSchema());
+        }
+        if (model.getUser() != null) {
+            userTextField.setText(model.getUser());
+        }
+        if (model.getPwd() != null) {
+            pwdTextField.setText(model.getPwd());
+        }
+
+    }
     public JPanel getContent() {
         return content;
     }
@@ -69,6 +91,7 @@ public class DBSettingPane {
     }
 
     public boolean isValueChnaged(){
+        var model = DBSettingCtx.INSTANCE;
         if (!dbNameTextField.getText().equals(model.getDbName())){
             return true;
         }
@@ -89,7 +112,8 @@ public class DBSettingPane {
         }
         return false;
     }
-    public DBCfg getModel() {
+    public void save() {
+        var model = DBSettingCtx.INSTANCE;
         model.setDbName(dbNameTextField.getText());
         model.setHost(hostTextField.getText());
         if (StringUtils.isNotEmpty(portTextField.getText())) {
@@ -99,30 +123,7 @@ public class DBSettingPane {
         model.setSchema(tableSchemaTextField.getText());
         model.setUser(userTextField.getText());
         model.setPwd(pwdTextField.getText());
-        return model;
-    }
-
-    public void setModel(DBCfg model) {
-        this.model = model;
-        if (model.getDbName() != null) {
-            dbNameTextField.setText(model.getDbName());
-        }
-        if (model.getHost() != null) {
-            hostTextField.setText(model.getHost());
-        }
-        if (model.getPort() != null) {
-            portTextField.setText(model.getPort().toString());
-        }
-        if (model.getSchema() != null) {
-            tableSchemaTextField.setText(model.getSchema());
-        }
-        if (model.getUser() != null) {
-            userTextField.setText(model.getUser());
-        }
-        if (model.getPwd() != null) {
-            pwdTextField.setText(model.getPwd());
-        }
-
+        DBSettingCtx.save();
     }
     public interface ValueChangedListener{
         public void onValueChanged(DBSettingPane dbSettingPanel);

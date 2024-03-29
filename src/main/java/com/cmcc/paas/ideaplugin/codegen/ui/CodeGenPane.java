@@ -61,17 +61,16 @@ public class CodeGenPane {
     private DBTable dbTable;
     private List<DBTable> dbTables;
 
-    private CodeCfg codeCfg;
-    private final DBCfg dbCfg = new DBCfg();
     private MethodSelectionPopupMenu methodSelectionPopupMenu;
     public CodeGenPane() {
         rootScrollPanel.setBorder(null);
 //        clsTableScrollView.setBorder(null);
 //        clsTableScrollView.setViewportBorder(null);
 
+        ResourceService.INSTANCE.prepareConfigFiles();
+        CodeCfg.load();
         CodeSettingCtx.load();
-        dbCfg.load();
-        dbSettingPane.setModel(dbCfg);
+        DBSettingCtx.load();
         codeSettingPane.setModel(CodeSettingCtx.INSTANCE);
         moduleTextField.setText(CodeSettingCtx.INSTANCE.getModule());
 
@@ -81,7 +80,7 @@ public class CodeGenPane {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     // 选择的下拉框选项
                     System.out.println(e.getItem());
-                    ResourceService.INSTANCE.readYaml("code-cfg.yaml");
+//                    ResourceService.INSTANCE.readYaml("code-cfg.yaml");
                     String tableName = tableComboBox.getSelectedItem().toString();
                     dbTables.forEach( x ->{
                         if (tableName.equals(x.getName())){
@@ -133,15 +132,14 @@ public class CodeGenPane {
                 }
             });
         });
-        codeCfg = ResourceService.INSTANCE.getCodeCfg();
+//        codeCfg = ResourceService.INSTANCE.getCodeCfg();
 //        clsCfgTable.setRowHeight(30);
-        methodContainerPane.setCodeCfg(codeCfg);
-        domainContainer.setModelCfgs(codeCfg.getModels());
+//        methodContainerPane.setCodeCfg(CodeCfg.INSTANCE);
+        domainContainer.setModelCfgs(CodeCfg.getInstance().getModels());
 
         /**
          * 配置数据库
          */
-        DBCtx.INSTANCE.setDbCfg(dbCfg);
         DBCtx.INSTANCE.refresh();
         /**
          * 刷新表格
@@ -188,7 +186,7 @@ public class CodeGenPane {
     }
     private void showCreateMethodDialog(){
         MethodCreateDialog dialog = MethodCreateDialog.create();
-        dialog.setMethodTypes(codeCfg.getMethods().stream().filter(e -> e.getType().equals("SVC")).map( e -> e.getName()).toList());
+        dialog.setMethodTypes(CodeCfg.getInstance().getMethods().stream().filter(e -> e.getType().equals("SVC")).map( e -> e.getName()).toList());
         dialog.setListener(new MethodCreateDialog.MethodCreateDialogListener() {
             @Override
             public void onOK(MethodCreateDialog dialog1) {
@@ -205,7 +203,7 @@ public class CodeGenPane {
         addMethodButton.setToolTipText(null);
         if (methodSelectionPopupMenu == null){
             methodSelectionPopupMenu = new MethodSelectionPopupMenu();
-            List<MethodSelectionPopupMenu.MenuItem> menuItems = codeCfg.getMethods().stream().map( e -> new MethodSelectionPopupMenu.MenuItem(e.getName(), e.getName())).toList();
+            List<MethodSelectionPopupMenu.MenuItem> menuItems = CodeCfg.getInstance().getMethods().stream().map( e -> new MethodSelectionPopupMenu.MenuItem(e.getName(), e.getName())).toList();
             methodSelectionPopupMenu.setItems(menuItems);
         }
         methodSelectionPopupMenu.show(addMethodButton,0, addMethodButton.getHeight());
@@ -290,9 +288,9 @@ public class CodeGenPane {
         resetClasses();
     }
     private void resetClasses(){
-        ctrlClassNameTextField.setText(StringUtils.INSTANCE.replacePlaceholders(codeCfg.getCtrlClass().getClassName(), AppCtx.INSTANCE.getENV()));
-        svcClassNameTextField.setText(StringUtils.INSTANCE.replacePlaceholders(codeCfg.getSvcClass().getClassName(),  AppCtx.INSTANCE.getENV()));
-        daoClassNameTextField.setText(StringUtils.INSTANCE.replacePlaceholders(codeCfg.getDaoClass().getClassName(), AppCtx.INSTANCE.getENV()));
+        ctrlClassNameTextField.setText(StringUtils.INSTANCE.replacePlaceholders(CodeCfg.getInstance().getCtrlClass().getClassName(), AppCtx.INSTANCE.getENV()));
+        svcClassNameTextField.setText(StringUtils.INSTANCE.replacePlaceholders(CodeCfg.getInstance().getSvcClass().getClassName(),  AppCtx.INSTANCE.getENV()));
+        daoClassNameTextField.setText(StringUtils.INSTANCE.replacePlaceholders(CodeCfg.getInstance().getDaoClass().getClassName(), AppCtx.INSTANCE.getENV()));
 
         MvcClassCtx.INSTANCE.setClassName(MvcClassType.CTRL, ctrlClassNameTextField.getText());
         MvcClassCtx.INSTANCE.setClassName(MvcClassType.SVC,svcClassNameTextField.getText());

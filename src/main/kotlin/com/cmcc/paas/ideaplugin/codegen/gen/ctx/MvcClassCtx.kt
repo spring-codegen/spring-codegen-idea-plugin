@@ -32,9 +32,7 @@ object MvcClassCtx {
                 refreshSettings(CodeSettingCtx)
             }
         })
-        if (CodeSettingCtx != null) {
-            refreshSettings(CodeSettingCtx)
-        }
+        refreshSettings(CodeSettingCtx)
     }
     fun refreshSettings(projectCfg: CodeSettingCtx){
         if (projectCfg.ctrlBaseCls.isNullOrEmpty()){
