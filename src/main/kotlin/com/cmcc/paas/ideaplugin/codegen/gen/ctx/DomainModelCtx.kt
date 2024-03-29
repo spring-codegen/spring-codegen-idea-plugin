@@ -2,6 +2,7 @@ package com.cmcc.paas.ideaplugin.codegen.gen.ctx
 
 import com.cmcc.paas.ideaplugin.codegen.constants.DomainType
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
+import com.cmcc.paas.ideaplugin.codegen.util.FieldUtils
 
 /**
  *
@@ -13,10 +14,14 @@ object DomainModelCtx {
     fun createModel(className:String):ClassModel{
         for (x in ClassModel.innerClasses()){
             if (x.className.equals(className, true)){
+                if (x.refName == null){
+                    x.refName = FieldUtils.getRefName(className)
+                }
                 return x
             }
         }
         var cls = ClassModel(className)
+        cls.refName = FieldUtils.getRefName(className)
         return cls
     }
     fun addModel(type:DomainType, classModel: ClassModel){

@@ -236,6 +236,9 @@ public class MethodContainerPane {
         List<MethodContainerBackgroundPane.Line> lines = new ArrayList<>();
         int scrollViewHeight = 0;
         for (MvcClassType t : MvcClassType.values()){
+            if (allMethods.get(t) == null){
+                continue;
+            }
             int row = 0;
             for ( Map.Entry<String, MethodItemHolder> e : allMethods.get(t).entrySet() ){
                 int x = t.ordinal() * (w + ITEM_MARGIN_H);
@@ -254,6 +257,9 @@ public class MethodContainerPane {
     public void repaintRelations(){
         List<MethodContainerBackgroundPane.Line> lines = new ArrayList<>();
         for (MvcClassType t : MvcClassType.values()){
+            if ( allMethods.get(t) == null){
+                continue;
+            }
             for ( MethodItemHolder h : allMethods.get(t).values() ){
                 if (h.dependency != null){
                     int offsetX = h.panel.getContent().getWidth();

@@ -199,6 +199,16 @@
           <text value="注释："/>
         </properties>
       </component>
+      <component id="a15" class="javax.swing.JLabel" binding="previewLabel">
+        <constraints>
+          <grid row="0" column="20" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag top="2" left="2" bottom="2" right="2" weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <background color="-11381159"/>
+          <text value="👀"/>
+        </properties>
+      </component>
     </children>
   </grid>
 </form>

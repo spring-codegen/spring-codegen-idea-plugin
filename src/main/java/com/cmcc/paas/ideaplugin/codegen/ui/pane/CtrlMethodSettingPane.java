@@ -1,6 +1,7 @@
 package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
 import com.cmcc.paas.ideaplugin.codegen.constants.MvcClassType;
+import com.cmcc.paas.ideaplugin.codegen.gen.CtrlClassGenerator;
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.gen.model.CtrlClass;
 import com.cmcc.paas.ideaplugin.codegen.setting.CtrlSetting;
@@ -13,6 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,8 +40,9 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
     private JComboBox argComboBox;
     private JLabel methodTypeLabel;
     private JTextArea commentTextArea;
+    private JLabel previewLabel;
 
-//    protected MethodSettingModel model;
+    //    protected MethodSettingModel model;
     private Color PATH_TEXT_FIELD_COLOR = Color.decode("#BBBBBB");
     private Color PATH_TEXT_FIELD_COLOR_HL = Color.decode("#BB9E1B");
     protected CtrlClass.Method method = new CtrlClass.Method("", new ArrayList<ClassModel.MethodArg>(), null);
@@ -49,6 +52,8 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
         init();
         TextFieldUtils.INSTANCE.addTextChangedEvent(pathTextField, textField -> {
             updatePathTextFieldUI();
+        });
+        previewLabel.addMouseListener(new MouseAdapter() {
         });
     }
     public void init(){
@@ -63,6 +68,7 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
                     if (textField == methodTextField) {
                         method.setName(methodTextField.getText());
                     }
+                    updatePreviewContent();
                 });
             }
             if (component instanceof JCheckBox){
@@ -73,10 +79,14 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
                     if (itemEvent.getSource() == outputPagedCheckBox) {
                         method.getResult().setOutputPaged(outputPagedCheckBox.isSelected());
                     }
+                    updatePreviewContent();
                 });
             }
         }
         setCloseBtnAction(closeBtn);
+    }
+    private void updatePreviewContent(){
+//        previewLabel.setToolTipText(CtrlClassGenerator.createMethod(method).toString());
     }
     public void createUIComponents(){
     }
@@ -91,6 +101,7 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
             pathTextField.setFont( pathTextField.getFont().deriveFont(PLAIN ) );
             pathTextField.setToolTipText(null);
         }
+        updatePreviewContent();
     }
     public JPanel getContent() {
         return content;
@@ -119,6 +130,7 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
         resetArgComboBox();
         resetReturnComboBox();
         updatePathTextFieldUI();
+        updatePreviewContent();
     }
 
     @Override
