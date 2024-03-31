@@ -74,18 +74,15 @@ class DaoInterfaceGenerator:ClassGenerator(){
             data["project"] = CodeSettingCtx
             data["daoClass"] = classModel
             var a = DomainModelCtx.getModesByType(DomainType.ARG)
-            if (a != null) {
-                for (x in a) {
-                    if (x.className.indexOf("Search") >= 0) {
-                        data["searchClass"] = x
-                    }
+
+            for (x in a) {
+                if (x.className.indexOf("Search") >= 0) {
+                    data["searchClass"] = x
                 }
             }
             a = DomainModelCtx.getModesByType(DomainType.ENTITY)
-            if (a != null) {
-                for (x in a) {
-                    data["entityClass"] = x
-                }
+            for (x in a) {
+                data["entityClass"] = x
             }
 
             var c = TempRender.render("dao-interface-class.ftl", data)

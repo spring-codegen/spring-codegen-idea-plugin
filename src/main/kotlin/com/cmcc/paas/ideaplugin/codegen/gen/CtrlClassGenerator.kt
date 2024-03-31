@@ -269,7 +269,7 @@ class CtrlClassGenerator (): ClassGenerator() {
                                     MethodCallExpr(NameExpr("e"), "copyTo")
                                         .addArgument(FieldAccessExpr(NameExpr(m.result?.classModel?.className), "class"))
 
-                                )
+                                ).setEnclosingParameters(true)
                             )
                         resultTransformExpr = VariableDeclarationExpr(
                                 VariableDeclarator(
