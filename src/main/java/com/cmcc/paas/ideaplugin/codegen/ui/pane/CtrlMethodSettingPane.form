@@ -199,14 +199,18 @@
           <text value="注释："/>
         </properties>
       </component>
-      <component id="a15" class="javax.swing.JLabel" binding="previewLabel">
+      <component id="c74e6" class="javax.swing.JButton" binding="previewButton">
         <constraints>
-          <grid row="0" column="20" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag top="2" left="2" bottom="2" right="2" weightx="0.0" weighty="0.0"/>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <background color="-11381159"/>
-          <text value="👀"/>
+          <borderPainted value="false"/>
+          <contentAreaFilled value="false"/>
+          <horizontalAlignment value="0"/>
+          <minimumSize width="30" height="30"/>
+          <preferredSize width="30" height="30"/>
+          <text value="🌏"/>
         </properties>
       </component>
     </children>

@@ -6,6 +6,10 @@ import com.cmcc.paas.ideaplugin.codegen.gen.ctx.DomainModelCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.MvcClassCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
 import com.cmcc.paas.ideaplugin.codegen.gen.template.TempRender
+import com.cmcc.paas.ideaplugin.codegen.ui.MessageBox
+import org.apache.commons.io.FileUtils
+import java.io.File
+import java.nio.charset.Charset
 import java.util.HashMap
 
 /**
@@ -19,12 +23,12 @@ class DaoMapperGenerator :ClassGenerator(){
 //            processImports(MvcClassCtx.getDaoClass())
         }
 
-        fun getFilePath(): String {
+        @JvmStatic fun getFilePath(): String {
             var fp = CodeSettingCtx.mybatisMapperDir!! + "/mappers/" + CodeSettingCtx.module + "/" + MvcClassCtx.getDaoClass().className + "Mapper.xml"
             return fp
         }
+        @JvmStatic fun createMapper():String{
 
-        fun gen() {
             var classModel = MvcClassCtx.getDaoClass()
             processImports(classModel)
             var data = HashMap<String, Any?>();
@@ -39,7 +43,17 @@ class DaoMapperGenerator :ClassGenerator(){
                 }
             }
             data["resultMaps"] = resultMaps
-            TempRender.renderToFile(getFilePath(), "dao-mapper.ftl", data)
+            var s = TempRender.render("dao-mapper.ftl", data);
+            return s
+        }
+        @JvmStatic fun gen() {
+            try {
+                var c = createMapper()
+                FileUtils.writeStringToFile(File(getFilePath()), c, Charset.forName("UTF-8"))
+            }catch (e:Exception){
+                MessageBox.showMessageAndFadeout(e.message)
+                throw e
+            }
         }
     }
 }

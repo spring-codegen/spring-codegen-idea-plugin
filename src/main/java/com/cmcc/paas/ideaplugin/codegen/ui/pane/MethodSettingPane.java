@@ -6,11 +6,14 @@ import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.DomainModelCtx;
 import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
+import org.apache.commons.collections.ListUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.cmcc.paas.ideaplugin.codegen.notify.NotificationType.MODEL_ADDED;
@@ -45,6 +48,34 @@ public abstract class MethodSettingPane {
     public void init(){
 //        NotificationCenter.INSTANCE.register(MODEL_ADDED, modelUpdateHandler);
 //        NotificationCenter.INSTANCE.register(MODEL_UPDATED, modelUpdateHandler);
+        getArgComboBox().addItemListener( e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED){
+                String clsName = getArgComboBox().getSelectedItem().toString();
+                ClassModel cls = DomainModelCtx.INSTANCE.getClassModelByName(clsName);
+                List<ClassModel.MethodArg> args = getMethod().getArgs();
+                if (args.size() == 0){
+                    args.add(new ClassModel.MethodArg(cls, null));
+                    return;
+                }
+                ClassModel.MethodArg arg = args.get(args.size() -1 );
+                arg.setClassModel(cls);
+                arg.setRefName(null);
+            }
+        });
+        getReturnComboBox().addItemListener( e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED){
+                String clsName = getReturnComboBox().getSelectedItem().toString();
+                ClassModel cls = DomainModelCtx.INSTANCE.getClassModelByName(clsName);
+                ClassModel.MethodResult result = getMethod().getResult();
+                if (result == null){
+                    result = new ClassModel.MethodResult(cls, null);
+                    getMethod().setResult(result);
+                    return;
+                }
+                result.setClassModel(cls);
+                result.setRefName(null);
+            }
+        });
     }
 
     private MethodCfgPaneActionListener methodCfgPaneActionListener;

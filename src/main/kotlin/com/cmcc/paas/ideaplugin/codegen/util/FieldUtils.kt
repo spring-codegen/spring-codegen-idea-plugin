@@ -9,7 +9,7 @@ import java.util.*
  * @date 2023/8/7
  */
 object FieldUtils {
-    fun propertyName(columnName: String): String {
+    @JvmStatic fun propertyName(columnName: String): String {
         var a: List<String> = columnName.split("_");
         var s: StringBuilder = StringBuilder();
         for (i in 0 until a.size) {
@@ -19,7 +19,7 @@ object FieldUtils {
     }
 
 
-    fun javaType(dbType: String): String {
+    @JvmStatic fun javaType(dbType: String): String {
         if ("int2".equals(dbType)) {
             return "Boolean"
         }
@@ -35,19 +35,19 @@ object FieldUtils {
         return "String";
     }
 
-    fun className(columnName: String): String {
+    @JvmStatic fun className(columnName: String): String {
         return propertyName(columnName).capitalize();
     }
 
-    fun getter(columnName: String): String {
+    @JvmStatic fun getter(columnName: String): String {
         return "get" + propertyName(columnName).capitalize();
     }
 
-    fun setter(columnName: String): String {
+    @JvmStatic fun setter(columnName: String): String {
         return "set" + propertyName(columnName).capitalize();
     }
 
-    fun getRefName(v: String): String {
+    @JvmStatic fun getRefName(v: String): String {
         if (ClassModel.isBaseType(v)) {
             return v.substring(0, 1).toLowerCase(Locale.getDefault())
         }

@@ -22,10 +22,10 @@ class DomainModelGenerator: ClassGenerator() {
                 data["project"] = CodeSettingCtx
                 data["model"] = classModel
                 data["validator"] = validate
-                classModel.fields?.forEach {
-                    it.setter = FieldUtils.setter(it.name)
-                    it.getter = FieldUtils.getter(it.name)
-                }
+//                classModel.fields?.forEach {
+//                    it.setter = FieldUtils.setter(it.name)
+//                    it.getter = FieldUtils.getter(it.name)
+//                }
                 processImports(classModel)
                 TempRender.renderToFile(CodeSettingCtx.modelSourceDir!!, classModel.pkg!!, classModel.className, "model.ftl", data)
             }

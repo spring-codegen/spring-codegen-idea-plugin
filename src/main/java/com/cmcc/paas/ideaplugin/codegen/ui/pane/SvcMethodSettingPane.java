@@ -1,6 +1,8 @@
 package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
 import com.cmcc.paas.ideaplugin.codegen.constants.MvcClassType;
+import com.cmcc.paas.ideaplugin.codegen.gen.CtrlClassGenerator;
+import com.cmcc.paas.ideaplugin.codegen.gen.SvcClassGenerator;
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils;
 import org.jetbrains.annotations.NotNull;
@@ -25,8 +27,9 @@ public class SvcMethodSettingPane extends MethodSettingPane {
 //    private ArgsSettingPane argsSettingPane;
     private JComboBox resultComboBox;
     private JComboBox argComboBox;
+    private JButton previewButton;
 
-//    protected MethodSettingModel model;
+    //    protected MethodSettingModel model;
     private ClassModel.Method method = null;
 
     public SvcMethodSettingPane(){
@@ -34,6 +37,11 @@ public class SvcMethodSettingPane extends MethodSettingPane {
     }
     public void init(){
         super.init();
+        previewButton.addActionListener(actionEvent -> {
+//        String c = "<html>" + CtrlClassGenerator.createMethod(method).toString().replaceAll("\n", "<br/>") + "</html>";
+            String c = SvcClassGenerator.createMethod(method).toString();
+            CodePreviewDialog.preview(c);
+        });
         for (Component component : content.getComponents()) {
             if (component instanceof JTextField){
                 TextFieldUtils.INSTANCE.addTextChangedEvent((JTextField) component, textField -> {

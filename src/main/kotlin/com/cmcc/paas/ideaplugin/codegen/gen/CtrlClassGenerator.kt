@@ -7,14 +7,12 @@ import com.cmcc.paas.ideaplugin.codegen.gen.model.CtrlClass
 import com.cmcc.paas.ideaplugin.codegen.gen.template.TempRender
 import com.github.javaparser.ParserConfiguration
 import com.github.javaparser.StaticJavaParser
+import com.github.javaparser.ast.CompilationUnit
 import com.github.javaparser.ast.Modifier
 import com.github.javaparser.ast.NodeList
 import com.github.javaparser.ast.body.*
 import com.github.javaparser.ast.expr.*
-import com.github.javaparser.ast.stmt.BlockStmt
-import com.github.javaparser.ast.stmt.IfStmt
-import com.github.javaparser.ast.stmt.ReturnStmt
-import com.github.javaparser.ast.stmt.ThrowStmt
+import com.github.javaparser.ast.stmt.*
 import com.github.javaparser.ast.type.ClassOrInterfaceType
 import com.github.javaparser.ast.type.Type
 import com.github.javaparser.ast.type.WildcardType
@@ -36,28 +34,32 @@ class CtrlClassGenerator (): ClassGenerator() {
              * 处理路径参数
              */
             MvcClassCtx.getCtrlClass().methods.forEach {
-                var m = it as CtrlClass.Method
-                if (!StringUtils.isEmpty(m.request!!.path)) {
-                    var phs = com.cmcc.paas.ideaplugin.codegen.util.StringUtils.parsePlaceholders(m.request!!.path)
-                    if (phs != null) {
-                        for (ph in phs) {
-                            if (m.dependency != null) {
-                                for (arg in m.dependency!!.args) {
-                                    var field = arg.classModel!!.fields!!.find { e2 -> e2.name.equals(ph, true) }
-                                    if (field != null) {
-                                        var c = ClassModel(field.javaType)
-                                        c.refName = ph
-                                        var phArg = ClassModel.MethodArg(c, ph)
-                                        phArg.isPathVar = true
-                                        phArg.comment = field.comment
-                                        m.args.add(0, phArg)
-                                    }
+
+            }
+        }
+        @JvmStatic fun getInputArgs(m: CtrlClass.Method):List<ClassModel.MethodArg>{
+            var args = ArrayList<ClassModel.MethodArg>(m.args)
+            if (!StringUtils.isEmpty(m.request!!.path)) {
+                var phs = com.cmcc.paas.ideaplugin.codegen.util.StringUtils.parsePlaceholders(m.request!!.path)
+                if (phs != null) {
+                    for (ph in phs) {
+                        if (m.dependency != null) {
+                            for (arg in m.dependency!!.args) {
+                                var field = arg.classModel!!.fields!!.find { e2 -> e2.name.equals(ph, true) }
+                                if (field != null) {
+                                    var c = ClassModel(field.javaType)
+                                    c.refName = ph
+                                    var phArg = ClassModel.MethodArg(c, ph)
+                                    phArg.isPathVar = true
+                                    phArg.comment = field.comment
+                                    args.add(0, phArg)
                                 }
                             }
                         }
                     }
                 }
             }
+            return args
         }
 
         @JvmStatic fun createMethod(m: CtrlClass.Method): MethodDeclaration {
@@ -93,9 +95,10 @@ class CtrlClassGenerator (): ClassGenerator() {
             )
             method?.addAnnotation(methodAnno)
 
+            var inputArgs = getInputArgs(m)
             //加绑定参数
             var br: Parameter? = null
-            m.args.forEach {
+            inputArgs.forEach {
                 var varName = if (StringUtils.isEmpty(it.refName)) it.classModel?.refName else it.refName
                 var p = Parameter()
                         .setType(it.classModel?.className)
@@ -120,15 +123,20 @@ class CtrlClassGenerator (): ClassGenerator() {
                     var brIfStmt = IfStmt(
                             MethodCallExpr(NameExpr("br"), "hasErrors"),
                             BlockStmt().addStatement(
-                                    ThrowStmt(
-                                            ObjectCreationExpr(
-                                                    null,
-                                                    ClassOrInterfaceType(null, "ParamException"),
-                                                    NodeList<Expression>(NameExpr("br.getFieldError().getField() + br.getFieldError().getDefaultMessage()"))
-                                            )
-                                    )
+                                ReturnStmt(MethodCallExpr(
+                                    NameExpr(responseCls),
+                                    "paramError"
+                                ).addArgument(NameExpr("br.getFieldError().getField() + br.getFieldError().getDefaultMessage()")))
                             ),
                             null)
+
+//                                    ThrowStmt(
+//                                            ObjectCreationExpr(
+//                                                    null,
+//                                                    ClassOrInterfaceType(null, "ParamException"),
+//                                                    NodeList<Expression>()
+//                                            )
+//                                    )
                     blockStmt.addStatement(brIfStmt)
                     p.addAnnotation(MarkerAnnotationExpr("Validated"))
                 }
@@ -152,7 +160,7 @@ class CtrlClassGenerator (): ClassGenerator() {
                 //如果目标类型是基本类型，
                 if (ClassModel.isBaseType(callArg.classModel?.className!!)) {
                     //目标类型
-                    for (inputArg in m.args) {
+                    for (inputArg in inputArgs) {
                         //都是基本类型
                         if (inputArg.classModel?.className.equals(callArg.classModel?.className)) {
                             callArgExpr = NameExpr(inputArg.classModel?.refName)
@@ -170,7 +178,7 @@ class CtrlClassGenerator (): ClassGenerator() {
                     }
                 } else {
                     //往复合类型转换
-                    for (inputArg in m.args) {
+                    for (inputArg in inputArgs) {
                         //类型相同
                         if (inputArg.classModel?.className.equals(callArg.classModel?.className)) {
                             callArgExpr = NameExpr(inputArg.classModel?.refName)
@@ -184,7 +192,7 @@ class CtrlClassGenerator (): ClassGenerator() {
                             var varDeclarator = VariableDeclarator(ClassOrInterfaceType(null, callArg.classModel?.className), callArg.classModel?.refName, callExp)
                             blockStmt.addStatement(VariableDeclarationExpr(varDeclarator))
                             callArgExpr = NameExpr(callArg.classModel?.refName)
-                            for (x in m.args) {
+                            for (x in inputArgs) {
                                 if (ClassModel.isBaseType(x.classModel?.className!!)) {
                                     for (f in inputArg.classModel?.fields!!) {
                                         if (f.name.equals(x.classModel?.refName, true)) {
@@ -224,16 +232,18 @@ class CtrlClassGenerator (): ClassGenerator() {
                 var resultDeclar: VariableDeclarator?
                 callResultVarName = callReturn.classModel?.refName!!
                 var itemType = ClassOrInterfaceType(null, callReturn.classModel?.className)
+                if (m.result != null && m.result?.outputPaged == true){
+                    blockStmt.addStatement(
+                        MethodCallExpr(NameExpr("PageHelper"), "startPage")
+                            .addArgument(
+                                MethodCallExpr(callArgExpr, "getPageNum")
+                            ).addArgument(
+                                MethodCallExpr(callArgExpr, "getPageSize")
+                            )
+                    )
+                }
                 //如果返回列表
                 if (callReturn.listTypeFlag  == true) {
-                    blockStmt.addStatement(
-                            MethodCallExpr(NameExpr("PageHelper"), "startPage")
-                                    .addArgument(
-                                            MethodCallExpr(callArgExpr, "getPageNum")
-                                    ).addArgument(
-                                            MethodCallExpr(callArgExpr, "getPageSize")
-                                    )
-                    )
                     callResultVarName = "items"
                     var dataType = ClassOrInterfaceType(null, "List")
                             .setTypeArguments(itemType)
@@ -250,25 +260,23 @@ class CtrlClassGenerator (): ClassGenerator() {
                             && !ClassModel.isBaseType(callReturn.classModel?.className!!)){
                         //items.stream().map( e->e.copyTo(Project.class)).toList();
                         var transformCallExpr =  MethodCallExpr(
-                                MethodCallExpr(
-                                        NameExpr(callResultVarName),
-                                        "steam"
-                                ),
-                                "map"
+                            MethodCallExpr( NameExpr(callResultVarName), "stream" ),
+                            "map"
                         )
-                                .addArgument(
-                                        LambdaExpr(
-                                                Parameter(itemType, "e"),
-                                                BlockStmt().addStatement(
-                                                        MethodCallExpr(NameExpr("e"), "copyTo").addArgument(FieldAccessExpr(NameExpr(callReturn.classModel?.className), "class"))
-                                                )
-                                        ).setEnclosingParameters(false)
+                            .addArgument(
+                                LambdaExpr(
+                                    Parameter(itemType, "e"),
+                                    MethodCallExpr(NameExpr("e"), "copyTo")
+                                        .addArgument(FieldAccessExpr(NameExpr(m.result?.classModel?.className), "class"))
+
                                 )
+                            )
                         resultTransformExpr = VariableDeclarationExpr(
                                 VariableDeclarator(
-                                        ClassOrInterfaceType(null, "List").setTypeArguments(ClassOrInterfaceType(null, m.result?.classModel?.className)),
+                                        ClassOrInterfaceType(null, "List")
+                                            .setTypeArguments(ClassOrInterfaceType(null, m.result?.classModel?.className)),
                                         "data",
-                                        transformCallExpr
+                                        MethodCallExpr(transformCallExpr, "toList")
                                 )
                         )
                         callResultVarName = "data"
@@ -291,7 +299,7 @@ class CtrlClassGenerator (): ClassGenerator() {
 
                         resultTransformExpr = VariableDeclarationExpr(
                                 VariableDeclarator(
-                                        ClassOrInterfaceType(null, callReturn.classModel?.className),
+                                        ClassOrInterfaceType(null, m.result?.classModel?.className),
                                         "data",
                                         MethodCallExpr(NameExpr(callResultVarName),"copyTo").addArgument(FieldAccessExpr(NameExpr(m.result?.classModel?.className), "class"))
                                 )
@@ -300,24 +308,31 @@ class CtrlClassGenerator (): ClassGenerator() {
                     }
                 }
                 blockStmt.addStatement(VariableDeclarationExpr(resultDeclar))
-                //需要分页 生命ListResult
-                if (m.result != null && m.result?.outputPaged == true) {
-                    var listResultDeclar = VariableDeclarator(
-                            ClassOrInterfaceType(null, "ListResult")
-                                    .setTypeArguments(ClassOrInterfaceType(null, callReturn.classModel?.className)),
-                            "listResult"
-                    )
-                    listResultDeclar.setInitializer("new ListResult(((Page) " + callResultVarName + ").getTotal(), ((Page)"+callResultVarName+").getPageSize(), ((Page) " + callResultVarName + ").getPageNum(), " + callResultVarName + ")")
-                    blockStmt.addStatement(VariableDeclarationExpr(listResultDeclar))
-                    callResultVarName = "listResult"
-                }
             }
+
             if ( resultTransformExpr != null ){
                 blockStmt.addStatement(resultTransformExpr)
             }
-
+            //需要分页 生命ListResult
+            if (m.result != null && m.result?.outputPaged == true && callReturn != null) {
+                var listResultDeclar = VariableDeclarator(
+                    ClassOrInterfaceType(null, "ListResult")
+                        .setTypeArguments(ClassOrInterfaceType(null, m.result?.classModel?.className)),
+                    "listResult"
+                )
+                listResultDeclar.setInitializer(
+                    "new ListResult(((Page) "
+                            + callResultVarName + ").getTotal(), ((Page)"
+                            +callResultVarName+").getPageSize(), ((Page) "
+                            + callResultVarName + ").getPageNum(), "
+                            + callResultVarName + ")"
+                )
+                blockStmt.addStatement(VariableDeclarationExpr(listResultDeclar))
+                callResultVarName = "listResult"
+            }
             var resDeclar = VariableDeclarator(ClassOrInterfaceType(null, responseCls).setTypeArguments(resDataType), "res")
             blockStmt.addStatement(VariableDeclarationExpr(resDeclar))
+
 
             //单独处理下add方法
             if (
@@ -378,8 +393,7 @@ class CtrlClassGenerator (): ClassGenerator() {
             var fp = CodeSettingCtx.ctrlSourceDir!! + "/" + MvcClassCtx.getCtrlClass().pkg?.replace(".", "/") + "/" + MvcClassCtx.getCtrlClass().className + ".java"
             return fp
         }
-
-        @JvmStatic fun gen() {
+        @JvmStatic fun createClass(): CompilationUnit {
             var classModel = MvcClassCtx.getCtrlClass()
             processImports(classModel)
             var data = HashMap<String, Any?>();
@@ -398,6 +412,10 @@ class CtrlClassGenerator (): ClassGenerator() {
                 var method = createMethod(it as CtrlClass.Method)
                 cls.addMember(method)
             }
+            return cu;
+        }
+        @JvmStatic fun gen() {
+            var cu = createClass();
             println(cu);
             writeFile(getFilePath(), cu.toString())
         }

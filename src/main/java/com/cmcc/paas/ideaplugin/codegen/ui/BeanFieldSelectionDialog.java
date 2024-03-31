@@ -165,6 +165,8 @@ public class BeanFieldSelectionDialog extends JDialog {
             v = tablePanel.getModel().getValueAt(i, TableHeaderIndex.MAX_LEN.ordinal());
             fieldDefine.setMaxLen(v == null ?  -1 : Integer.parseInt(v.toString()));
             fieldDefine.setColumn((String) tablePanel.getModel().getValueAt(i, TableHeaderIndex.COLUMN_NAME.ordinal()));
+            fieldDefine.setSetter(FieldUtils.setter(fieldDefine.getName()));
+            fieldDefine.setGetter(FieldUtils.getter(fieldDefine.getName()));
             result.add(fieldDefine);
         }
         return result;

@@ -2,17 +2,17 @@ package com.cmcc.paas.ideaplugin.codegen.ui;
 
 import com.cmcc.paas.ideaplugin.codegen.config.*;
 import com.cmcc.paas.ideaplugin.codegen.constants.MvcClassType;
+import com.cmcc.paas.ideaplugin.codegen.gen.*;
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx;
 import com.cmcc.paas.ideaplugin.codegen.constants.EnvKey;
 import com.cmcc.paas.ideaplugin.codegen.db.DBCtx;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTable;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
-import com.cmcc.paas.ideaplugin.codegen.gen.CodeGenerator;
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.CodeSettingCtx;
 import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
 import com.cmcc.paas.ideaplugin.codegen.notify.NotificationType;
+import com.cmcc.paas.ideaplugin.codegen.ui.pane.CodePreviewDialog;
 import com.cmcc.paas.ideaplugin.codegen.util.FieldUtils;
-import com.cmcc.paas.ideaplugin.codegen.gen.ModelResult;
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.MvcClassCtx;
 import com.cmcc.paas.ideaplugin.codegen.gen.model.CtrlClass;
 import com.cmcc.paas.ideaplugin.codegen.services.ResourceService;
@@ -57,6 +57,9 @@ public class CodeGenPane {
     private JTextField resourceNameTextField;
     private DomainPaneContainer domainContainer;
     private JLabel pathPrefixLabel;
+    private JButton ctrlClsPreviewButton;
+    private JButton svcClsPreviewButton;
+    private JButton daoClsPreviewButton;
 
     private DBTable dbTable;
     private List<DBTable> dbTables;
@@ -130,6 +133,12 @@ public class CodeGenPane {
                     CodeSettingCtx.INSTANCE.setModule(moduleTextField.getText());
                     NotificationCenter.INSTANCE.sendMessage(NotificationType.CODE_SETTING_UPDATED, null);
                 }
+                CtrlClass.Request request = MvcClassCtx.INSTANCE.getCtrlClass().getRequest();
+                if (request == null){
+                    MvcClassCtx.INSTANCE.getCtrlClass().setRequest( new CtrlClass.Request(getPathSuffix(), null));
+                }else{
+                    request.setPath(getPathSuffix());
+                }
             });
         });
 //        codeCfg = ResourceService.INSTANCE.getCodeCfg();
@@ -145,6 +154,18 @@ public class CodeGenPane {
          * 刷新表格
          */
         refreshDBCtx();
+        ctrlClsPreviewButton.addActionListener(  actionEvent -> {
+            String code = CtrlClassGenerator.createClass().toString();
+            CodePreviewDialog.preview(code);
+        });
+        svcClsPreviewButton.addActionListener(  actionEvent -> {
+            String code = SvcClassGenerator.createClass().toString();
+            CodePreviewDialog.preview(code);
+        });
+        daoClsPreviewButton.addActionListener(  actionEvent -> {
+            String code = DaoMapperGenerator.createMapper();
+            CodePreviewDialog.preview(code);
+        });
     }
     private String getPathSuffix(){
         String moduleName = moduleTextField.getText();
@@ -292,9 +313,9 @@ public class CodeGenPane {
         svcClassNameTextField.setText(StringUtils.INSTANCE.replacePlaceholders(CodeCfg.getInstance().getSvcClass().getClassName(),  AppCtx.INSTANCE.getENV()));
         daoClassNameTextField.setText(StringUtils.INSTANCE.replacePlaceholders(CodeCfg.getInstance().getDaoClass().getClassName(), AppCtx.INSTANCE.getENV()));
 
-        MvcClassCtx.INSTANCE.setClassName(MvcClassType.CTRL, ctrlClassNameTextField.getText());
-        MvcClassCtx.INSTANCE.setClassName(MvcClassType.SVC,svcClassNameTextField.getText());
-        MvcClassCtx.INSTANCE.setClassName(MvcClassType.DAO,daoClassNameTextField.getText());
+        MvcClassCtx.INSTANCE.resetClass(MvcClassType.CTRL, ctrlClassNameTextField.getText());
+        MvcClassCtx.INSTANCE.resetClass(MvcClassType.SVC,svcClassNameTextField.getText());
+        MvcClassCtx.INSTANCE.resetClass(MvcClassType.DAO,daoClassNameTextField.getText());
 
         MvcClassCtx.INSTANCE.getCtrlClass().setComment(dbTable.getComment());
         MvcClassCtx.INSTANCE.getCtrlClass().setTableName(dbTable.getName());
@@ -305,11 +326,6 @@ public class CodeGenPane {
     }
     private void resetModels(){
         domainContainer.reset();
-    }
-    private void updateClassCfg(){
-        MvcClassCtx.INSTANCE.setClassName(MvcClassType.CTRL, ctrlClassNameTextField.getText());
-        MvcClassCtx.INSTANCE.setClassName(MvcClassType.SVC, svcClassNameTextField.getText());
-        MvcClassCtx.INSTANCE.setClassName(MvcClassType.DAO, daoClassNameTextField.getText());
     }
 
     /**
@@ -330,12 +346,6 @@ public class CodeGenPane {
         MessageBox.showMessage("生成中...");
         System.out.println("generate 2");
         //resource name for path
-        String resourceName = resourceNameTextField.getText();
-        if (resourceName != null){
-            resourceName = resourceName.toLowerCase();
-        }
-        MvcClassCtx.INSTANCE.getCtrlClass().setRequest(new CtrlClass.Request(getPathSuffix(), null));
-        ModelResult modelResult = methodContainerPane.getCfgResult();
         System.out.println("generate 3");
         new CodeGenerator().gen( );
         System.out.println("generate 4");

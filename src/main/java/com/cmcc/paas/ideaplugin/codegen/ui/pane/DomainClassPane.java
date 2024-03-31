@@ -17,7 +17,6 @@ import java.util.Arrays;
  */
 public class DomainClassPane {
     private JPanel content;
-    private JButton fieldSelectionButton;
     private JButton deleteButton;
     private JLabel classNameLabel;
     private JButton alterButton;

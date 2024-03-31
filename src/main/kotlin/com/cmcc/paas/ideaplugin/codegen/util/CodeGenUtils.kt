@@ -28,6 +28,8 @@ object CodeGenUtils {
                 }
             }
             val f = ClassModel.Field(propertyName(field.name!!), javaType(field.type!!), field.comment, field.notNull, null, null)
+            f.setter = FieldUtils.setter(f.name)
+            f.getter = FieldUtils.getter(f.name)
             f.column = field.name
             if (field.comment != null && field.comment!!.startsWith("JSON:")) {
                 f.javaType = "Map"

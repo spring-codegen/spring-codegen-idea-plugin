@@ -8,6 +8,7 @@ import com.cmcc.paas.ideaplugin.codegen.gen.model.SvcClass
 import com.cmcc.paas.ideaplugin.codegen.gen.template.TempRender
 import com.github.javaparser.ParserConfiguration
 import com.github.javaparser.StaticJavaParser
+import com.github.javaparser.ast.CompilationUnit
 import com.github.javaparser.ast.Modifier
 import com.github.javaparser.ast.body.*
 import com.github.javaparser.ast.expr.*
@@ -66,7 +67,7 @@ class SvcClassGenerator: ClassGenerator(){
             }
             var callArgExpr: Expression? = null
             if (callArg != null) {
-                callArgExpr = NameExpr(callArg.classModel?.refName)
+                callArgExpr = NameExpr(callArg.refName?:callArg.classModel?.refName)
             }
 
             if (callArg != null) {
@@ -77,7 +78,7 @@ class SvcClassGenerator: ClassGenerator(){
                     for (inputArg in m.args) {
                         //都是基本类型
                         if (inputArg.classModel?.className.equals(callArg.classModel?.className)) {
-                            callArgExpr = NameExpr(inputArg.classModel?.refName)
+                            callArgExpr = NameExpr(inputArg.refName?:inputArg.classModel?.refName)
                             break;
                         }
                         //需要调用getter
@@ -186,7 +187,7 @@ class SvcClassGenerator: ClassGenerator(){
             return fp
         }
 
-        @JvmStatic fun gen() {
+        @JvmStatic fun createClass(): CompilationUnit {
             var classModel = MvcClassCtx.getSvcClass()
             processImports(classModel)
             var data = HashMap<String, Any?>();
@@ -205,6 +206,11 @@ class SvcClassGenerator: ClassGenerator(){
                 var method = createMethod(it )
                 cls.addMember(method)
             }
+            return cu;
+        }
+
+        @JvmStatic fun gen() {
+            var cu = createClass()
             println(cu);
             writeFile(getFilePath(), cu.toString())
         }

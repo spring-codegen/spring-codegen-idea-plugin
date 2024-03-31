@@ -4,16 +4,13 @@ import com.cmcc.paas.ideaplugin.codegen.constants.MvcClassType;
 import com.cmcc.paas.ideaplugin.codegen.gen.CtrlClassGenerator;
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.gen.model.CtrlClass;
-import com.cmcc.paas.ideaplugin.codegen.setting.CtrlSetting;
 import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils;
-import com.cmcc.paas.ideaplugin.codegen.swing.util.TextFieldUtils.TextChangedEvent;
 import com.cmcc.paas.ideaplugin.codegen.util.StringUtils;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +37,7 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
     private JComboBox argComboBox;
     private JLabel methodTypeLabel;
     private JTextArea commentTextArea;
-    private JLabel previewLabel;
+    private JButton previewButton;
 
     //    protected MethodSettingModel model;
     private Color PATH_TEXT_FIELD_COLOR = Color.decode("#BBBBBB");
@@ -50,10 +47,10 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
 
     public CtrlMethodSettingPane(){
         init();
-        TextFieldUtils.INSTANCE.addTextChangedEvent(pathTextField, textField -> {
-            updatePathTextFieldUI();
-        });
-        previewLabel.addMouseListener(new MouseAdapter() {
+        previewButton.addActionListener(actionEvent -> {
+//        String c = "<html>" + CtrlClassGenerator.createMethod(method).toString().replaceAll("\n", "<br/>") + "</html>";
+                String c = CtrlClassGenerator.createMethod(method).toString();
+                CodePreviewDialog.preview(c);
         });
     }
     public void init(){
@@ -64,11 +61,11 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
                 TextFieldUtils.INSTANCE.addTextChangedEvent((JTextField) component, textField -> {
                     if (textField == pathTextField) {
                         method.getRequest().setPath(pathTextField.getText());
+                        updatePathTextFieldUI();
                     }
                     if (textField == methodTextField) {
                         method.setName(methodTextField.getText());
                     }
-                    updatePreviewContent();
                 });
             }
             if (component instanceof JCheckBox){
@@ -79,14 +76,10 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
                     if (itemEvent.getSource() == outputPagedCheckBox) {
                         method.getResult().setOutputPaged(outputPagedCheckBox.isSelected());
                     }
-                    updatePreviewContent();
                 });
             }
         }
         setCloseBtnAction(closeBtn);
-    }
-    private void updatePreviewContent(){
-//        previewLabel.setToolTipText(CtrlClassGenerator.createMethod(method).toString());
     }
     public void createUIComponents(){
     }
@@ -101,7 +94,6 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
             pathTextField.setFont( pathTextField.getFont().deriveFont(PLAIN ) );
             pathTextField.setToolTipText(null);
         }
-        updatePreviewContent();
     }
     public JPanel getContent() {
         return content;
@@ -130,7 +122,6 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
         resetArgComboBox();
         resetReturnComboBox();
         updatePathTextFieldUI();
-        updatePreviewContent();
     }
 
     @Override

@@ -57,8 +57,9 @@ public class DomainPaneContainer {
                     public void onFieldSelected(BeanFieldSelectionDialog dialog) {
                         ClassModel cls = DomainModelCtx.INSTANCE.createModel(dialog.getClassName());
                         cls.setFields(dialog.getSelectedFields());
-                        addClassModel((DomainType) dialog.getUserInfo(), cls);
-                        NotificationCenter.INSTANCE.sendMessage(NotificationType.MODEL_ADDED, cls);
+                        DomainType type = (DomainType) dialog.getUserInfo();
+                        DomainModelCtx.INSTANCE.addModel(type, cls);
+                        addClassModel(type, cls);
                     }
                 });
                 dialog.setVisible(true);
@@ -69,18 +70,27 @@ public class DomainPaneContainer {
         addResultButton.addActionListener(listener);
     }
     public void reset(){
-        DomainModelCtx.INSTANCE.clear();
+        DomainModelCtx.INSTANCE.reset();
         Arrays.stream(new JComponent[]{argDomainContainer, entityDomainContainer, resultDomainContainer}).forEach(e->e.removeAll());
 
 
-        List<DBTableField> tableFields = AppCtx.INSTANCE.getCurrentTable().getFields();
-        Map p = AppCtx.INSTANCE.getENV();
-        modelCfgs.forEach(e -> {
-            ClassModel cls = DomainModelCtx.INSTANCE.createModel(StringUtils.INSTANCE.replacePlaceholders(e.getClassName(), p));
-            cls.setRefName(e.getRefName());
-            List<ClassModel.Field> fields = CodeGenUtils.INSTANCE.getDefaultFields(tableFields, e.getFieldIncludes(), e.getFieldExcludes());
-            cls.setFields(fields);
-            addClassModel(DomainType.valueOf(e.getType()), cls);
+//        List<DBTableField> tableFields = AppCtx.INSTANCE.getCurrentTable().getFields();
+//        Map p = AppCtx.INSTANCE.getENV();
+//        modelCfgs.forEach(e -> {
+//            ClassModel cls = DomainModelCtx.INSTANCE.createModel(StringUtils.INSTANCE.replacePlaceholders(e.getClassName(), p));
+//            if (org.apache.commons.lang3.StringUtils.isNotEmpty(e.getRefName())) {
+//                cls.setRefName(e.getRefName());
+//            }
+//            List<ClassModel.Field> fields = CodeGenUtils.INSTANCE.getDefaultFields(tableFields, e.getFieldIncludes(), e.getFieldExcludes());
+//            cls.setFields(fields);
+//            DomainType domainType = DomainType.valueOf(e.getType());
+//            DomainModelCtx.INSTANCE.addModel(domainType, cls);
+//            addClassModel(domainType, cls);
+//        });
+        DomainModelCtx.INSTANCE.getAllTypes().forEach(domainType ->{
+            DomainModelCtx.INSTANCE.getModesByType(domainType).forEach(cls ->{
+                addClassModel(domainType, cls);
+            });
         });
         System.out.println("DomainPaneContainer reset....");
 
@@ -101,7 +111,6 @@ public class DomainPaneContainer {
     }
 
     public void addClassModel(DomainType domainType, ClassModel classModel){
-        DomainModelCtx.INSTANCE.addModel(domainType, classModel);
         if (ClassModel.isInnerClass(classModel.getClassName())){
             return;
         }

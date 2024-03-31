@@ -63,6 +63,14 @@ object MvcClassCtx {
         }
         getClassByType(classType).refName = FieldUtils.getRefName(className)
     }
+    fun resetClass(classType: MvcClassType, className:String){
+        setClassName(classType, className)
+        when (classType){
+            MvcClassType.CTRL -> ctrlClass.methods.clear()
+            MvcClassType.SVC -> svcClass.methods.clear()
+            MvcClassType.DAO -> daoInterface.methods.clear()
+        }
+    }
     fun addMethod(classType: MvcClassType, method: ClassModel.Method): Boolean{
         var cls = getClassByType(classType)
 
