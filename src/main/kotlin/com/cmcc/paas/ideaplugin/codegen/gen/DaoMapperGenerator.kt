@@ -19,10 +19,6 @@ import java.util.HashMap
  */
 class DaoMapperGenerator :ClassGenerator(){
     companion object {
-        init {
-//            processImports(MvcClassCtx.getDaoClass())
-        }
-
         @JvmStatic fun getFilePath(): String {
             var fp = CodeSettingCtx.mybatisMapperDir!! + "/mappers/" + CodeSettingCtx.module + "/" + MvcClassCtx.getDaoClass().className + "Mapper.xml"
             return fp
@@ -36,11 +32,9 @@ class DaoMapperGenerator :ClassGenerator(){
             data["daoClass"] = classModel
             var a = DomainModelCtx.getModesByType(DomainType.ENTITY)
             val resultMaps: MutableMap<String, ClassModel> = HashMap()
-            if (a != null) {
-                for (x in a) {
-                    data["entityClass"] = x
-                    resultMaps[x.className] = x
-                }
+            for (x in a) {
+                data["entityClass"] = x
+                resultMaps[x.className] = x
             }
             data["resultMaps"] = resultMaps
             var s = TempRender.render("dao-mapper.ftl", data);

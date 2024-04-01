@@ -33,9 +33,6 @@ public class SvcMethodSettingPane extends MethodSettingPane {
     private ClassModel.Method method = null;
 
     public SvcMethodSettingPane(){
-        init();
-    }
-    public void init(){
         super.init();
         previewButton.addActionListener(actionEvent -> {
 //        String c = "<html>" + CtrlClassGenerator.createMethod(method).toString().replaceAll("\n", "<br/>") + "</html>";

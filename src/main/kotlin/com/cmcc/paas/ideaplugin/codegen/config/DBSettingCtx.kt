@@ -20,6 +20,7 @@ object DBSettingCtx {
     var user:String? = null
     var pwd:String? = null
     var driverType:String? = "postgresql"
+    var tableNamePrefix:String? = "t_"
 
      @JvmStatic fun save(){
         var s = JsonUtils.toString(this)

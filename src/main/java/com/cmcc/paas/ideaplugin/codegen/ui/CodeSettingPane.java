@@ -19,7 +19,6 @@ import static com.cmcc.paas.ideaplugin.codegen.notify.NotificationType.CODE_SETT
  * @date 2023/8/16
  */
 public class CodeSettingPane {
-    private JTextField tableSchemaTextField;
     private JTextField basePkgTextField;
     private JTextField authorTextField;
     private JTextField modelBaseClsTextField;
@@ -38,6 +37,7 @@ public class CodeSettingPane {
     private JTextField apiPrefixTextField;
     private JTextField searchArgBaseClsTextField;
     private JTextField responseClsTextField;
+    private JTextField daoBaseClsTextField;
     private CodeSettingCtx model;
 
     public CodeSettingPane(){
@@ -136,6 +136,7 @@ public class CodeSettingPane {
         model.setSvcSourceDir(svcDirTextField.getText());
         model.setMybatisMapperDir(mybatisMapperDirTextField.getText());
         model.setResponseCls(responseClsTextField.getText());
+        model.setDaoBaseCls(daoBaseClsTextField.getText());
         return model;
     }
 
@@ -157,5 +158,6 @@ public class CodeSettingPane {
         responseClsTextField.setText(model.getResponseCls());
 
         mybatisMapperDirTextField.setText(model.getMybatisMapperDir());
+        daoBaseClsTextField.setText(model.getDaoBaseCls());
     }
 }

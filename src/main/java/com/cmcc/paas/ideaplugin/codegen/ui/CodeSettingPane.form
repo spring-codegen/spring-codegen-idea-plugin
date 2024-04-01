@@ -241,13 +241,13 @@
       </component>
       <vspacer id="56f83">
         <constraints>
-          <grid row="13" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="1.0"/>
         </constraints>
       </vspacer>
       <grid id="95570" layout-manager="GridBagLayout">
         <constraints>
-          <grid row="14" column="0" row-span="1" col-span="24" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="15" column="0" row-span="1" col-span="24" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties/>
@@ -306,7 +306,7 @@
       </component>
       <component id="d801c" class="javax.swing.JLabel">
         <constraints>
-          <grid row="12" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="13" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
         </constraints>
         <properties>
@@ -317,7 +317,7 @@
       </component>
       <component id="a7f50" class="javax.swing.JTextField" binding="mybatisMapperDirTextField">
         <constraints>
-          <grid row="12" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="13" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
           <gridbag weightx="0.0" weighty="0.0"/>
@@ -329,7 +329,7 @@
       </component>
       <component id="423f" class="javax.swing.JButton" binding="resourceFileBtn">
         <constraints>
-          <grid row="12" column="13" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="13" column="13" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0" ipadx="2"/>
         </constraints>
         <properties>
@@ -492,6 +492,28 @@
           <foreground color="-7960954"/>
           <horizontalAlignment value="4"/>
           <text value="&lt;html&gt;&lt;body&gt;统一返回类&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/body&gt;&lt;/html&gt;"/>
+        </properties>
+      </component>
+      <component id="4b7bb" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="12" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
+        </constraints>
+        <properties>
+          <foreground color="-7960954"/>
+          <horizontalAlignment value="4"/>
+          <text value="&lt;html&gt;&lt;body&gt;DaoMapper基类&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/body&gt;&lt;/html&gt;"/>
+        </properties>
+      </component>
+      <component id="730f" class="javax.swing.JTextField" binding="daoBaseClsTextField">
+        <constraints>
+          <grid row="12" column="2" row-span="1" col-span="11" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <text value="com.cmit.paas.common.web.dao.BaseDao"/>
         </properties>
       </component>
     </children>

@@ -60,6 +60,8 @@ public class CodeGenPane {
     private JButton ctrlClsPreviewButton;
     private JButton svcClsPreviewButton;
     private JButton daoClsPreviewButton;
+    private JCheckBox relationCheckBox;
+    private JComboBox relationTableCombox;
 
     private DBTable dbTable;
     private List<DBTable> dbTables;
@@ -67,8 +69,6 @@ public class CodeGenPane {
     private MethodSelectionPopupMenu methodSelectionPopupMenu;
     public CodeGenPane() {
         rootScrollPanel.setBorder(null);
-//        clsTableScrollView.setBorder(null);
-//        clsTableScrollView.setViewportBorder(null);
 
         ResourceService.INSTANCE.prepareConfigFiles();
         CodeCfg.load();
@@ -83,7 +83,6 @@ public class CodeGenPane {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     // 选择的下拉框选项
                     System.out.println(e.getItem());
-//                    ResourceService.INSTANCE.readYaml("code-cfg.yaml");
                     String tableName = tableComboBox.getSelectedItem().toString();
                     dbTables.forEach( x ->{
                         if (tableName.equals(x.getName())){
@@ -141,9 +140,6 @@ public class CodeGenPane {
                 }
             });
         });
-//        codeCfg = ResourceService.INSTANCE.getCodeCfg();
-//        clsCfgTable.setRowHeight(30);
-//        methodContainerPane.setCodeCfg(CodeCfg.INSTANCE);
         domainContainer.setModelCfgs(CodeCfg.getInstance().getModels());
 
         /**
@@ -163,9 +159,29 @@ public class CodeGenPane {
             CodePreviewDialog.preview(code);
         });
         daoClsPreviewButton.addActionListener(  actionEvent -> {
-            String code = DaoMapperGenerator.createMapper();
-            CodePreviewDialog.preview(code);
+            String code = DaoInterfaceGenerator.createClass().toString();
+            String mapperXml = DaoMapperGenerator.createMapper();
+            CodePreviewDialog.preview(code + "\n---\n" + mapperXml);
         });
+        relationCheckBox.addItemListener( e ->{
+            Arrays.stream(relationTableCombox.getParent().getComponents()).forEach(comp -> {
+                if ( "relation-group".equals(comp.getName())){
+                    comp.setVisible( relationCheckBox.isSelected() );
+                }
+                if ( relationCheckBox.isSelected() ){
+                    refreshTableCombox(relationTableCombox);
+                }
+            });
+        });
+    }
+    private void refreshTableCombox(JComboBox combox){
+        List<String> items = dbTables.stream().map(DBTable::getName).toList();
+        DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
+        for (String element : items) {
+            comboBoxModel.addElement(element);
+        }
+        combox.setModel(comboBoxModel);
+        combox.setSelectedItem(null);
     }
     private String getPathSuffix(){
         String moduleName = moduleTextField.getText();
@@ -191,13 +207,14 @@ public class CodeGenPane {
             protected void done() {
                 try {
                     dbTables = get();
-                    List<String> items = dbTables.stream().map(DBTable::getName).toList();
-                    DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
-                    for (String element : items) {
-                        comboBoxModel.addElement(element);
-                    }
-                    tableComboBox.setModel(comboBoxModel);
-                    tableComboBox.setSelectedItem(null);
+                    refreshTableCombox(tableComboBox);
+//                    List<String> items = dbTables.stream().map(DBTable::getName).toList();
+//                    DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
+//                    for (String element : items) {
+//                        comboBoxModel.addElement(element);
+//                    }
+//                    tableComboBox.setModel(comboBoxModel);
+//                    tableComboBox.setSelectedItem(null);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

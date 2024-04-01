@@ -23,6 +23,7 @@ public class DBSettingPane {
     private JPanel content;
     private JTextField pwdTextField;
     private JButton saveButton;
+    private JTextField tableNamePrefixTextField;
     private ValueChangedListener valueChangedListener;
 
     public DBSettingPane(){
@@ -76,6 +77,9 @@ public class DBSettingPane {
         if (model.getPwd() != null) {
             pwdTextField.setText(model.getPwd());
         }
+        if (model.getTableNamePrefix() != null) {
+            pwdTextField.setText(model.getTableNamePrefix());
+        }
 
     }
     public JPanel getContent() {
@@ -123,6 +127,7 @@ public class DBSettingPane {
         model.setSchema(tableSchemaTextField.getText());
         model.setUser(userTextField.getText());
         model.setPwd(pwdTextField.getText());
+        model.setTableNamePrefix(tableNamePrefixTextField.getText());
         DBSettingCtx.save();
     }
     public interface ValueChangedListener{

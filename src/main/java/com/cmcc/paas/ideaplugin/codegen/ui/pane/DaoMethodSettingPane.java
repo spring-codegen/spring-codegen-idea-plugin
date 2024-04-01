@@ -2,6 +2,7 @@ package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
 import com.cmcc.paas.ideaplugin.codegen.constants.MvcClassType;
 import com.cmcc.paas.ideaplugin.codegen.gen.CtrlClassGenerator;
+import com.cmcc.paas.ideaplugin.codegen.gen.DaoMapperGenerator;
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx;
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.gen.model.DaoClass;
@@ -33,14 +34,9 @@ public class DaoMethodSettingPane extends MethodSettingPane {
 //    private ArgsSettingPane argsSettingPane;
     private JComboBox resultComboBox;
     private JComboBox argComboBox;
-
-    //    private MethodSettingModel model;
     private DaoClass.Method method = null;
 
     public DaoMethodSettingPane(){
-        init();
-    }
-    public void init(){
         super.init();
         for (Component component : content.getComponents()) {
             if (component instanceof JTextField){

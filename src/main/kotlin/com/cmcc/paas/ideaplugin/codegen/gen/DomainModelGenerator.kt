@@ -4,8 +4,12 @@ import com.cmcc.paas.ideaplugin.codegen.constants.DomainType
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.DomainModelCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.CodeSettingCtx
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.MvcClassCtx
 import com.cmcc.paas.ideaplugin.codegen.gen.template.TempRender
 import com.cmcc.paas.ideaplugin.codegen.util.FieldUtils
+import org.apache.commons.io.FileUtils
+import java.io.File
+import java.nio.charset.Charset
 import java.util.HashMap
 
 /**
@@ -15,20 +19,25 @@ import java.util.HashMap
  */
 class DomainModelGenerator: ClassGenerator() {
     companion object {
-
-        @JvmStatic fun genModel(classModel: ClassModel, validate: Boolean) {
+        @JvmStatic fun createClass(classModel: ClassModel, validate: Boolean):String? {
             if (!ClassModel.isBaseType(classModel.className) && !ClassModel.isCommonType(classModel.className)) {
                 var data = HashMap<String, Any?>();
                 data["project"] = CodeSettingCtx
                 data["model"] = classModel
                 data["validator"] = validate
-//                classModel.fields?.forEach {
-//                    it.setter = FieldUtils.setter(it.name)
-//                    it.getter = FieldUtils.getter(it.name)
-//                }
                 processImports(classModel)
-                TempRender.renderToFile(CodeSettingCtx.modelSourceDir!!, classModel.pkg!!, classModel.className, "model.ftl", data)
+                var c = TempRender.render("model.ftl", data);
+                return c;
             }
+            return null;
+        }
+        @JvmStatic fun getFilePath(classModel:ClassModel): String {
+            var fp = CodeSettingCtx.modelSourceDir!! + "/"+ classModel.pkg!!.replace(".", "/") + "/" + classModel.className+".java"
+            return fp
+        }
+        @JvmStatic fun genModel(classModel: ClassModel, validate: Boolean) {
+            var c = createClass(classModel, validate)
+            FileUtils.writeStringToFile(File(getFilePath(classModel)), c, Charset.forName("UTF-8"))
         }
         @JvmStatic fun updateImplements(){
             for( x in DomainModelCtx.getAllModels()!!){

@@ -13,7 +13,10 @@ import com.cmcc.paas.ideaplugin.codegen.util.CodeGenUtils.getDefaultFields
 import com.cmcc.paas.ideaplugin.codegen.util.FieldUtils
 import com.cmcc.paas.ideaplugin.codegen.util.StringUtils.replacePlaceholders
 import org.apache.commons.lang3.StringUtils
+import java.util.*
 import java.util.function.Consumer
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 /**
  *
@@ -75,7 +78,7 @@ object DomainModelCtx {
                 x.getter = x.getter?:FieldUtils.getter(x.name)
             }
         }
-        classModel.pkg =  CodeSettingCtx.basePkg + ".domain." + type.toString() + "." + CodeSettingCtx.module
+        classModel.pkg =  CodeSettingCtx.basePkg + ".domain." + type.toString().toLowerCase() + "." + CodeSettingCtx.module
         maps[type]!!.add(classModel)
     }
     fun addModel(type:DomainType, classModel: ClassModel){

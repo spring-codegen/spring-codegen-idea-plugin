@@ -263,7 +263,7 @@
       </component>
       <vspacer id="9c18">
         <constraints>
-          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="1.0"/>
         </constraints>
       </vspacer>
@@ -291,7 +291,7 @@
       </component>
       <grid id="2a666" layout-manager="GridBagLayout">
         <constraints>
-          <grid row="8" column="0" row-span="1" col-span="24" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="9" column="0" row-span="1" col-span="24" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties/>
@@ -314,6 +314,28 @@
           </component>
         </children>
       </grid>
+      <component id="ac9a8" class="javax.swing.JTextField" binding="tableNamePrefixTextField">
+        <constraints>
+          <grid row="7" column="2" row-span="1" col-span="6" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <text value="t_"/>
+        </properties>
+      </component>
+      <component id="c8a65" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="7" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0" ipady="20"/>
+        </constraints>
+        <properties>
+          <foreground color="-7960954"/>
+          <horizontalAlignment value="4"/>
+          <text value="表名前缀："/>
+        </properties>
+      </component>
     </children>
   </grid>
 </form>

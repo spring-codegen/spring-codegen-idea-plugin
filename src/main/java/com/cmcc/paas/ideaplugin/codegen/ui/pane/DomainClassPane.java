@@ -1,5 +1,7 @@
 package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
+import com.cmcc.paas.ideaplugin.codegen.gen.CtrlClassGenerator;
+import com.cmcc.paas.ideaplugin.codegen.gen.DomainModelGenerator;
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx;
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
@@ -20,11 +22,17 @@ public class DomainClassPane {
     private JButton deleteButton;
     private JLabel classNameLabel;
     private JButton alterButton;
+    private JButton previewButton;
     private ClassModel classModel;
     private OperationActionListener actionListener;
 
     public DomainClassPane(){
         Arrays.stream(this.content.getComponents()).forEach(e -> e.setBackground(null));
+
+        previewButton.addActionListener(actionEvent -> {
+            String c = DomainModelGenerator.createClass(classModel, true);
+            CodePreviewDialog.preview(c);
+        });
         alterButton.addActionListener(new ActionListener() {
             /**
              * @param actionEvent

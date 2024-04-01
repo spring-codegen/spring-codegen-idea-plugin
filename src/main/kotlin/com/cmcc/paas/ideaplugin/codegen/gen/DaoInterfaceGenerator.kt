@@ -8,6 +8,7 @@ import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
 import com.cmcc.paas.ideaplugin.codegen.gen.template.TempRender
 import com.github.javaparser.ParserConfiguration
 import com.github.javaparser.StaticJavaParser
+import com.github.javaparser.ast.CompilationUnit
 import com.github.javaparser.ast.Modifier
 import com.github.javaparser.ast.body.MethodDeclaration
 import com.github.javaparser.ast.body.Parameter
@@ -67,7 +68,7 @@ class DaoInterfaceGenerator:ClassGenerator(){
             return fp
         }
 
-        @JvmStatic fun gen() {
+        @JvmStatic fun createClass(): CompilationUnit {
             var classModel = MvcClassCtx.getDaoClass()
             processImports(classModel)
             var data = HashMap<String, Any?>();
@@ -100,6 +101,10 @@ class DaoInterfaceGenerator:ClassGenerator(){
                 method.setBody(null)
                 cls.addMember(method)
             }
+            return cu;
+        }
+        @JvmStatic fun gen() {
+            var cu = createClass();
             writeFile(getFilePath(), cu.toString())
         }
     }

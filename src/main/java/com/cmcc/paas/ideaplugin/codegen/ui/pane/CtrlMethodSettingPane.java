@@ -46,15 +46,11 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
 
 
     public CtrlMethodSettingPane(){
-        init();
+        super.init();
         previewButton.addActionListener(actionEvent -> {
-//        String c = "<html>" + CtrlClassGenerator.createMethod(method).toString().replaceAll("\n", "<br/>") + "</html>";
                 String c = CtrlClassGenerator.createMethod(method).toString();
                 CodePreviewDialog.preview(c);
         });
-    }
-    public void init(){
-        super.init();
         outputPagedCheckBox.setBackground(null);
         for (Component component : content.getComponents()) {
             if (component instanceof JTextField){
