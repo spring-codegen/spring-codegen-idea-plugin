@@ -85,11 +85,12 @@ object DomainModelCtx {
         _addModel(type, classModel)
         sendMessage(NotificationType.MODEL_ADDED, classModel)
     }
-    fun removeModel(classModel: ClassModel){
+    fun removeModel(className: String){
         for( a in maps.values){
-            for(e in a){
-                if (e.className.equals(classModel.className, true)){
-                    a.remove(e)
+            for(  j in 0 until a.size){
+                if (a[j].className.equals(className, true)){
+                    a.remove(a[j])
+                    return
                 }
             }
         }

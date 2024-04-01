@@ -24,7 +24,7 @@ import java.util.List;
  * @author zhangyinghui
  * @date 2024/3/18
  */
-public class DomainPaneContainer {
+public class DomainPaneContainer implements DomainClassPane.DomainModelActionListener {
     private JPanel content;
     private JPanel argDomainContainer;
     private JPanel entityDomainContainer;
@@ -32,16 +32,10 @@ public class DomainPaneContainer {
     private JButton addArgButton;
     private JButton addEntityButton;
     private JButton addResultButton;
-    private List<CodeCfg.ModelCfg> modelCfgs;
     private Color[] colors = new Color[]{Color.decode("#585C5F"),Color.decode("#4A4E50")};
 
     public DomainPaneContainer(){
-        ActionListener listener = new ActionListener() {
-            /**
-             * @param actionEvent
-             */
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
+        ActionListener listener = actionEvent -> {
                 DomainType domainType = DomainType.ARG;
                 if (actionEvent.getSource() == addEntityButton){
                     domainType = DomainType.ENTITY;
@@ -63,7 +57,6 @@ public class DomainPaneContainer {
                     }
                 });
                 dialog.setVisible(true);
-            }
         };
         addArgButton.addActionListener(listener);
         addEntityButton.addActionListener(listener);
@@ -73,20 +66,6 @@ public class DomainPaneContainer {
         DomainModelCtx.INSTANCE.reset();
         Arrays.stream(new JComponent[]{argDomainContainer, entityDomainContainer, resultDomainContainer}).forEach(e->e.removeAll());
 
-
-//        List<DBTableField> tableFields = AppCtx.INSTANCE.getCurrentTable().getFields();
-//        Map p = AppCtx.INSTANCE.getENV();
-//        modelCfgs.forEach(e -> {
-//            ClassModel cls = DomainModelCtx.INSTANCE.createModel(StringUtils.INSTANCE.replacePlaceholders(e.getClassName(), p));
-//            if (org.apache.commons.lang3.StringUtils.isNotEmpty(e.getRefName())) {
-//                cls.setRefName(e.getRefName());
-//            }
-//            List<ClassModel.Field> fields = CodeGenUtils.INSTANCE.getDefaultFields(tableFields, e.getFieldIncludes(), e.getFieldExcludes());
-//            cls.setFields(fields);
-//            DomainType domainType = DomainType.valueOf(e.getType());
-//            DomainModelCtx.INSTANCE.addModel(domainType, cls);
-//            addClassModel(domainType, cls);
-//        });
         DomainModelCtx.INSTANCE.getAllTypes().forEach(domainType ->{
             DomainModelCtx.INSTANCE.getModesByType(domainType).forEach(cls ->{
                 addClassModel(domainType, cls);
@@ -101,21 +80,11 @@ public class DomainPaneContainer {
             });
         });
     }
-
-    public List<CodeCfg.ModelCfg> getModelCfgs() {
-        return modelCfgs;
-    }
-
-    public void setModelCfgs(List<CodeCfg.ModelCfg> modelCfgs) {
-        this.modelCfgs = modelCfgs;
-    }
-
     public void addClassModel(DomainType domainType, ClassModel classModel){
         if (ClassModel.isInnerClass(classModel.getClassName())){
             return;
         }
-        DomainClassPane classPane = new DomainClassPane();
-        classPane.setClassModel(classModel);
+        DomainClassPane classPane = new DomainClassPane(domainType, classModel);
         JPanel domainContainer = domainType == DomainType.ARG ?  argDomainContainer :  (domainType == DomainType.ENTITY) ? entityDomainContainer : resultDomainContainer;
         int n = domainContainer.getComponentCount() ;
         domainContainer.setLayout(new GridLayout(n+1, 1, 2, 3));
@@ -124,10 +93,28 @@ public class DomainPaneContainer {
         c.setRow( n);
         domainContainer.add( classPane.getContent(), c );
         classPane.getContent().setBackground(colors[n%2]);
-
+        classPane.setActionListener(this);
     }
 
     public JPanel getContent() {
         return content;
+    }
+
+    /**
+     * @param domainClassPane
+     */
+    @Override
+    public void onDomainClassRemove(DomainClassPane domainClassPane) {
+        DomainModelCtx.INSTANCE.removeModel(domainClassPane.getClassModel().getClassName());
+        domainClassPane.getContent().getParent().remove(domainClassPane.getContent());
+        NotificationCenter.INSTANCE.sendMessage(NotificationType.MODEL_REMOVED, domainClassPane.getClassModel());
+    }
+
+    /**
+     * @param domainClassPane
+     */
+    @Override
+    public void onDomainClassAlter(DomainClassPane domainClassPane) {
+
     }
 }

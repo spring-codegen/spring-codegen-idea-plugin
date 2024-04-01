@@ -24,8 +24,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import static com.cmcc.paas.ideaplugin.codegen.notify.NotificationType.MODEL_ADDED;
-import static com.cmcc.paas.ideaplugin.codegen.notify.NotificationType.MODEL_UPDATED;
+import static com.cmcc.paas.ideaplugin.codegen.notify.NotificationType.*;
 
 /**
  * @author zhangyinghui
@@ -65,6 +64,7 @@ public class MethodContainerPane {
         };
         NotificationCenter.INSTANCE.register(MODEL_ADDED, h);
         NotificationCenter.INSTANCE.register(MODEL_UPDATED, h);
+        NotificationCenter.INSTANCE.register(MODEL_REMOVED, h);
     }
     public CodeCfg.MethodCfg getMethodCfg(MvcClassType classType, String methodName){
         for(CodeCfg.MethodCfg m : CodeCfg.getInstance().getMethods()){
@@ -77,99 +77,6 @@ public class MethodContainerPane {
         }
         return null;
     }
-
-//    private List<ClassModel.Field> getDefaultFields(String excludes, String includes){
-//        List<ClassModel.Field> allowFields = new ArrayList<>();
-//        AppCtx.INSTANCE.getCurrentTable().getFields().forEach(field -> {
-//            if (StringUtils.isNotEmpty(excludes)){
-//                boolean isExclude = Arrays.stream(excludes.split(",")).filter(p -> Pattern.matches(p, field.getName())).findFirst().isPresent();
-//                if (isExclude){
-//                    return;
-//                }
-//            }
-//
-//            ClassModel.Field f = new ClassModel.Field(FieldUtils.INSTANCE.propertyName(field.getName()), FieldUtils.INSTANCE.javaType(field.getType()), field.getComment(), field.getNotNull(),null, null);
-//            f.setColumn(field.getName());
-//            if (field.getComment() != null && field.getComment().startsWith("JSON:")){
-//                f.setJavaType("Map");
-//            }
-//            if (field.getMaxLen() != null && field.getMaxLen() > 4) {
-//                f.setMaxLen(field.getMaxLen() - 4);
-//            }
-//
-//            if (StringUtils.isNotEmpty(includes)){
-//                boolean isInclude = Arrays.stream(includes.split(",")).filter(p -> Pattern.matches(p, field.getName())).findFirst().isPresent();
-//                if (isInclude){
-//                    allowFields.add(f);
-//                    return;
-//                }
-//                return;
-//            }
-//            allowFields.add( f );
-//        });
-//        return allowFields;
-//    }
-//    private String getHandledVar(String v, Map<String, Object> p){
-//        if (v == null){
-//            return v;
-//        }
-//        String r = v;
-//        for (String k : p.keySet()){
-//            r = r.replaceAll("\\{\\s*"+k+"\\s*\\}",  p.get(k).toString());
-//        }
-//        return r;
-//    }
-//    public MethodSettingPane.MethodSettingModel getDefaultMethodCfgModel(MvcClassType classType, String methodType, String methodName){
-//        Map p = AppCtx.INSTANCE.getENV();
-//        DBTable dbTable = AppCtx.INSTANCE.getCurrentTable();
-//        p.put("entityName", dbTable.getComment() == null ? dbTable.getName() : dbTable.getComment());
-//        String className = MvcClassCtx.INSTANCE.getClassByType(classType).getClassName();
-//        CodeCfg.MethodCfg methodCfg = getMethodCfg(classType, methodType);
-//
-//        MethodSettingPane.MethodSettingModel model = new MethodSettingPane.MethodSettingModel();
-//        model.setClassName(className);
-//        model.setMethodName(methodName);
-//        model.setClassType(classType);
-//        if (methodCfg.getRequest() != null) {
-//            model.setPath(methodCfg.getRequest().getPath());
-//            model.setHttpMethod(methodCfg.getRequest().getHttpMethod());
-//        }
-//        model.setMethodType(methodCfg.getName());
-//        model.setComment(getHandledVar(methodCfg.getComment(), p));
-//        model.setDbTableFields(dbTable.getFields());
-//        List<MethodSettingPane.MethodSettingModel.MethodArgModel> args = new ArrayList<>();
-//        for(CodeCfg.MethodArgCfg arg : methodCfg.getArgs()){
-//            MethodSettingPane.MethodSettingModel.MethodArgModel methodArgModel = MethodSettingPane.MethodSettingModel.MethodArgModel.of(
-//                    getHandledVar(arg.getClassName(), AppCtx.INSTANCE.getENV()),
-//                    arg.getRefName(),
-//                    arg.getListTypeFlag(),
-//                    arg.isPathVar()
-//                    );
-//            methodArgModel.setRefName(arg.getRefName());
-//            methodArgModel.setComment(arg.getComment());
-//            methodArgModel.setClassModel(DomainModelCtx.INSTANCE.getClassModelByName(methodArgModel.getClassName()));;
-//            args.add(methodArgModel);
-//        }
-//        model.setArgs(args);
-//        if (methodCfg.getResult() != null){
-//            MethodSettingPane.MethodSettingModel.MethodResultModel methodResultModel = MethodSettingPane.MethodSettingModel.MethodResultModel.of(
-//                    getHandledVar(methodCfg.getResult().getClassName(), AppCtx.INSTANCE.getENV()),
-//                    methodCfg.getResult().getRefName(),
-//                    methodCfg.getResult().getListTypeFlag(),
-//                    methodCfg.getResult().getOutputPaged());
-//            methodResultModel.setRefName(methodCfg.getResult().getRefName());
-//            methodResultModel.setComment(methodCfg.getResult().getComment());
-//            methodResultModel.setClassModel(DomainModelCtx.INSTANCE.getClassModelByName(methodResultModel.getClassName()));
-//            model.setResult(methodResultModel);
-//        }
-//
-//
-//
-//        model.setSqlDataFields(getDefaultFields(methodCfg.getSqlDataFieldExcludes(), methodCfg.getSqlDataFieldIncludes()));
-//        model.setSqlCondFields(getDefaultFields(methodCfg.getSqlConditionFieldExcludes(), methodCfg.getSqlConditionFieldIncludes()));
-//
-//        return model;
-//    }
     public MethodItemHolder addClassMethod(MvcClassType classType,ClassModel.Method method){
         MvcClassType k = classType;
         if ( !allMethods.containsKey(k) ){
@@ -201,11 +108,8 @@ public class MethodContainerPane {
 
         holder.panel.setMethod(method);
         this.container.add(holder.panel.getContent());
-        holder.panel.setMethodCfgPaneActionListener(new MethodSettingPane.MethodCfgPaneActionListener() {
-            @Override
-            public void onClose(MethodSettingPane methodSettingPane) {
+        holder.panel.setMethodCfgPaneActionListener(methodSettingPane -> {
                 removePane(methodSettingPane);
-            }
         });
         MvcClassCtx.INSTANCE.addMethod(classType, method);
         return holder;
@@ -231,9 +135,7 @@ public class MethodContainerPane {
         }
     }
     public void createMethod(String methodType, String methodName, Boolean ctrlChecked, Boolean svcChecked, Boolean daoChecked){
-        BiFunction<MvcClassType, String, ClassModel.Method> f = (classType, mName) ->{
-          return   MethodFactory.INSTANCE.createMethod(mName, classType, getMethodCfg( classType, methodType));
-        };
+        BiFunction<MvcClassType, String, ClassModel.Method> f = (classType, mName) ->  MethodFactory.createMethod(mName, classType, methodType);
         ClassModel.Method ctrlMethod = ctrlChecked ? f.apply( MvcClassType.CTRL, methodName) : null;
         ClassModel.Method svcMethod = svcChecked ? f.apply( MvcClassType.SVC, methodName) : null;;
         ClassModel.Method daoMethod = daoChecked ? f.apply( MvcClassType.DAO, methodName) : null;

@@ -1,5 +1,6 @@
 package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 
+import com.cmcc.paas.ideaplugin.codegen.constants.DomainType;
 import com.cmcc.paas.ideaplugin.codegen.gen.CtrlClassGenerator;
 import com.cmcc.paas.ideaplugin.codegen.gen.DomainModelGenerator;
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx;
@@ -24,21 +25,35 @@ public class DomainClassPane {
     private JButton alterButton;
     private JButton previewButton;
     private ClassModel classModel;
-    private OperationActionListener actionListener;
+    private DomainType domainType;
 
-    public DomainClassPane(){
+    public DomainModelActionListener getActionListener() {
+        return actionListener;
+    }
+
+    public void setActionListener(DomainModelActionListener actionListener) {
+        this.actionListener = actionListener;
+    }
+
+    private DomainModelActionListener actionListener;
+
+    public DomainType getDomainType() {
+        return domainType;
+    }
+
+    public void setDomainType(DomainType domainType) {
+        this.domainType = domainType;
+    }
+
+    public DomainClassPane(DomainType domainType, ClassModel classModel){
+        setDomainType(domainType);
+        setClassModel(classModel);
         Arrays.stream(this.content.getComponents()).forEach(e -> e.setBackground(null));
-
         previewButton.addActionListener(actionEvent -> {
             String c = DomainModelGenerator.createClass(classModel, true);
             CodePreviewDialog.preview(c);
         });
-        alterButton.addActionListener(new ActionListener() {
-            /**
-             * @param actionEvent
-             */
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
+        alterButton.addActionListener(actionEvent -> {
                 BeanFieldSelectionDialog dialog = BeanFieldSelectionDialog.create();
                 dialog.setFields(AppCtx.INSTANCE.getCurrentTable().getFields());
                 dialog.setSelectedFields(classModel.getFields());
@@ -55,18 +70,10 @@ public class DomainClassPane {
                     }
                 });
                 dialog.setVisible(true);
-            }
-        });
-        DomainClassPane handler = this;
-        deleteButton.addActionListener(new ActionListener() {
-            /**
-             * @param actionEvent
-             */
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (actionListener != null){
-                    actionListener.onDomainClassRemove(handler);
-                }
+            });
+        deleteButton.addActionListener(actionEvent ->{
+            if (actionListener != null){
+                actionListener.onDomainClassRemove(this);
             }
         });
     }
@@ -85,7 +92,7 @@ public class DomainClassPane {
         classNameLabel.setText(classModel.getClassName());
         classNameLabel.setToolTipText(String.format("%s %s", classModel.getClassName(), classModel.getRefName()));
     }
-    public static interface OperationActionListener{
+    public static interface DomainModelActionListener{
         public void onDomainClassRemove(DomainClassPane domainClassPane);
         public void onDomainClassAlter(DomainClassPane domainClassPane);
     }

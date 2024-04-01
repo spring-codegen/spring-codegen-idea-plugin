@@ -140,7 +140,6 @@ public class CodeGenPane {
                 }
             });
         });
-        domainContainer.setModelCfgs(CodeCfg.getInstance().getModels());
 
         /**
          * 配置数据库

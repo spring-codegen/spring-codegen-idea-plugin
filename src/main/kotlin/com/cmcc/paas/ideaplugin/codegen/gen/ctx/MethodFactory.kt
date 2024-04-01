@@ -1,6 +1,7 @@
 package com.cmcc.paas.ideaplugin.codegen.gen.ctx
 
 import com.cmcc.paas.ideaplugin.codegen.config.CodeCfg
+import com.cmcc.paas.ideaplugin.codegen.config.CodeCfg.MethodCfg
 import com.cmcc.paas.ideaplugin.codegen.constants.MvcClassType
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.AppCtx.ENV
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel
@@ -15,11 +16,21 @@ import com.cmcc.paas.ideaplugin.codegen.util.StringUtils.replacePlaceholders
  * @date 2024/3/25
  */
 object MethodFactory {
-    private fun formatText(s:String?):String {
+    @JvmStatic private fun formatText(s:String?):String {
         return replacePlaceholders(s, ENV) ?: ""
     }
-    fun createMethod(name:String, classType: MvcClassType, methodCfg:CodeCfg.MethodCfg): ClassModel.Method{
-
+    @JvmStatic fun getMethodCfg(classType: MvcClassType, methodType: String): MethodCfg? {
+        for (m in CodeCfg.instance!!.methods!!) {
+            if (MvcClassType.valueOf(m.type!!) === classType
+                && methodType.indexOf(m.name!!) >= 0
+            ) {
+                return m
+            }
+        }
+        return null
+    }
+    @JvmStatic fun createMethod(name:String, classType: MvcClassType, methodType:String): ClassModel.Method{
+        var methodCfg = getMethodCfg(classType, methodType)!!
         val args: MutableList<ClassModel.MethodArg> = ArrayList()
         for (argCfg in methodCfg.args!!) {
             var argClsName = replacePlaceholders(argCfg.className, ENV)

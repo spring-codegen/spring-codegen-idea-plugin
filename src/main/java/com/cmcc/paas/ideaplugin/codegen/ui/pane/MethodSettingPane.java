@@ -26,56 +26,58 @@ import static com.cmcc.paas.ideaplugin.codegen.notify.NotificationType.MODEL_UPD
  */
 public abstract class MethodSettingPane {
     public abstract JPanel getContent();
-//    public abstract void setModel(MethodSettingModel model);
     public abstract JComboBox getReturnComboBox();
     public abstract JComboBox getArgComboBox();
-//    public abstract  ArgsSettingPane getArgsSettingPane();
-//    public abstract MethodSettingModel getModel();
     public abstract ClassModel.Method getMethod();
     public abstract void setMethod(ClassModel.Method method);
     public abstract MvcClassType getClassType();
-//    private NotificationCenter.Handler modelUpdateHandler = new NotificationCenter.Handler() {
-//        @Override
-//        public void handleMessage(@NotNull NotificationCenter.Message msg) {
-//            resetReturnComboBox();
-//            if (msg.getEnvent().equalsIgnoreCase(MODEL_UPDATED)){
-////                    getArgsSettingPane().updateClassModel((ClassModel) msg.getData());
-//                resetArgComboBox();
-//                resetReturnComboBox();
-//            }
-//        }
-//    };
     public void init(){
-//        NotificationCenter.INSTANCE.register(MODEL_ADDED, modelUpdateHandler);
-//        NotificationCenter.INSTANCE.register(MODEL_UPDATED, modelUpdateHandler);
         getArgComboBox().addItemListener( e -> {
             if (e.getStateChange() == ItemEvent.SELECTED){
-                String clsName = getArgComboBox().getSelectedItem().toString();
-                ClassModel cls = DomainModelCtx.INSTANCE.getClassModelByName(clsName);
-                List<ClassModel.MethodArg> args = getMethod().getArgs();
-                if (args.size() == 0){
-                    args.add(new ClassModel.MethodArg(cls, null));
-                    return;
-                }
-                ClassModel.MethodArg arg = args.get(args.size() -1 );
-                arg.setClassModel(cls);
-                arg.setRefName(null);
+                updateInputArgParam();
             }
         });
         getReturnComboBox().addItemListener( e -> {
             if (e.getStateChange() == ItemEvent.SELECTED){
-                String clsName = getReturnComboBox().getSelectedItem().toString();
-                ClassModel cls = DomainModelCtx.INSTANCE.getClassModelByName(clsName);
-                ClassModel.MethodResult result = getMethod().getResult();
-                if (result == null){
-                    result = new ClassModel.MethodResult(cls, null);
-                    getMethod().setResult(result);
-                    return;
-                }
-                result.setClassModel(cls);
-                result.setRefName(null);
+                updateReturnParam();
             }
         });
+    }
+    private void updateReturnParam(){
+        String clsName = getReturnComboBox().getSelectedItem().toString();
+        System.out.println( "updateReturnParam:name:"+getMethod().getName()+"  classType:" + getClassType().toString() + ","+  getMethod().getName() + ", inputArg:"+clsName);
+        ClassModel cls = DomainModelCtx.INSTANCE.getClassModelByName(clsName);
+        if (cls == null){
+            getMethod().setResult(null);
+            return;
+        }
+        ClassModel.MethodResult result = getMethod().getResult();
+        if (result == null){
+            result = new ClassModel.MethodResult(cls, null);
+            getMethod().setResult(result);
+            return;
+        }
+        result.setClassModel(cls);
+        result.setRefName(null);
+
+    }
+    private void updateInputArgParam(){
+        String clsName = getArgComboBox().getSelectedItem().toString();
+        ClassModel cls = DomainModelCtx.INSTANCE.getClassModelByName(clsName);
+        System.out.println( "updateInputArgParam:name:"+getMethod().getName()+" classType:" + getClassType().toString() + ","+  getMethod().getName() + ", inputArg:"+clsName+",cls:"+(cls==null?"":cls.getClassName()));
+
+        List<ClassModel.MethodArg> args = getMethod().getArgs();
+        if (cls == null){
+            args.clear();
+            return;
+        }
+        if (args.size() == 0){
+            args.add(new ClassModel.MethodArg(cls, null));
+            return;
+        }
+        ClassModel.MethodArg arg = args.get(args.size() -1 );
+        arg.setClassModel(cls);
+        arg.setRefName(null);
     }
 
     private MethodCfgPaneActionListener methodCfgPaneActionListener;
@@ -95,14 +97,20 @@ public abstract class MethodSettingPane {
         resetComboBoxWithDomainTypes(getReturnComboBox(), DomainType.ENTITY, DomainType.RESULT);
         if (getMethod() != null && getMethod().getResult() != null) {
             ClassModel classModel = getMethod().getResult().getClassModel();
+            System.out.println("resetReturnComboBox:name:"+getMethod().getName()+"  selected1:"+classModel);
             getReturnComboBox().setSelectedItem( classModel != null ? classModel.getClassName() : getMethod().getResult().getClassModel().getClassName());
+            updateReturnParam();
+            System.out.println("resetReturnComboBox:name:"+getMethod().getName()+"  selected2:"+getReturnComboBox().getSelectedItem());
         }
     }
     public void resetArgComboBox(){
         resetComboBoxWithDomainTypes(getArgComboBox(), DomainType.ARG, DomainType.ENTITY);
         if (getMethod() != null && getMethod().getArgs() != null && getMethod().getArgs().size() > 0) {
             ClassModel.MethodArg arg = getMethod().getArgs().get(0);
+            System.out.println("resetArgComboBox:name:"+getMethod().getName()+"  selected1:"+arg);
             getArgComboBox().setSelectedItem(arg.getClassModel() != null ? arg.getClassModel().getClassName() : arg.getClassModel().getClassName());
+            updateInputArgParam();
+            System.out.println("resetArgComboBox: name:"+getMethod().getName()+" selected2:"+getArgComboBox().getSelectedItem());
         }
     }
     public void setMethodCfgPaneActionListener(MethodCfgPaneActionListener methodCfgPaneActionListener) {
