@@ -35,21 +35,12 @@ object MvcClassCtx {
         refreshSettings(CodeSettingCtx)
     }
     fun refreshSettings(projectCfg: CodeSettingCtx){
-        if (projectCfg.ctrlBaseCls.isNullOrEmpty()){
-            ctrlClass.extend = null
-        }
-        if (!projectCfg.ctrlBaseCls.isNullOrEmpty()){
-            var i = CodeSettingCtx.ctrlBaseCls!!.lastIndexOf(".")
-            if (i > 0) {
-                var baseCtrlCls = ClassModel(CodeSettingCtx.ctrlBaseCls!!.substring(i + 1))
-                baseCtrlCls.pkg = CodeSettingCtx.ctrlBaseCls!!.substring(0, i)
-                ctrlClass.extend = baseCtrlCls
-            }
-        }
+        ctrlClass.extend = if (projectCfg.ctrlBaseCls.isNullOrEmpty()) null else ClassModel.parse(projectCfg.ctrlBaseCls!!)
         ctrlClass.pkg = CodeSettingCtx.basePkg + ".controller." + CodeSettingCtx.module;
         svcInterface.pkg = CodeSettingCtx.basePkg + ".svc." + CodeSettingCtx.module;
         svcClass.pkg = svcInterface.pkg + ".impl";
         daoInterface.pkg = CodeSettingCtx.basePkg + ".dao." + CodeSettingCtx.module;
+        daoInterface.extend = if(projectCfg.daoBaseCls.isNullOrEmpty()) null else ClassModel.parse(projectCfg.daoBaseCls!!)
     }
 
     fun setClassName(classType: MvcClassType, className:String){

@@ -45,7 +45,7 @@ public abstract class MethodSettingPane {
     }
     private void updateReturnParam(){
         String clsName = getReturnComboBox().getSelectedItem().toString();
-        System.out.println( "updateReturnParam:name:"+getMethod().getName()+"  classType:" + getClassType().toString() + ","+  getMethod().getName() + ", inputArg:"+clsName);
+//        System.out.println( "updateReturnParam:name:"+getMethod().getName()+"  classType:" + getClassType().toString() + ","+  getMethod().getName() + ", inputArg:"+clsName);
         ClassModel cls = DomainModelCtx.INSTANCE.getClassModelByName(clsName);
         if (cls == null){
             getMethod().setResult(null);
@@ -64,7 +64,7 @@ public abstract class MethodSettingPane {
     private void updateInputArgParam(){
         String clsName = getArgComboBox().getSelectedItem().toString();
         ClassModel cls = DomainModelCtx.INSTANCE.getClassModelByName(clsName);
-        System.out.println( "updateInputArgParam:name:"+getMethod().getName()+" classType:" + getClassType().toString() + ","+  getMethod().getName() + ", inputArg:"+clsName+",cls:"+(cls==null?"":cls.getClassName()));
+//        System.out.println( "updateInputArgParam:name:"+getMethod().getName()+" classType:" + getClassType().toString() + ","+  getMethod().getName() + ", inputArg:"+clsName+",cls:"+(cls==null?"":cls.getClassName()));
 
         List<ClassModel.MethodArg> args = getMethod().getArgs();
         if (cls == null){
@@ -97,20 +97,20 @@ public abstract class MethodSettingPane {
         resetComboBoxWithDomainTypes(getReturnComboBox(), DomainType.ENTITY, DomainType.RESULT);
         if (getMethod() != null && getMethod().getResult() != null) {
             ClassModel classModel = getMethod().getResult().getClassModel();
-            System.out.println("resetReturnComboBox:name:"+getMethod().getName()+"  selected1:"+classModel);
+//            System.out.println("resetReturnComboBox:name:"+getMethod().getName()+"  selected1:"+classModel);
             getReturnComboBox().setSelectedItem( classModel != null ? classModel.getClassName() : getMethod().getResult().getClassModel().getClassName());
             updateReturnParam();
-            System.out.println("resetReturnComboBox:name:"+getMethod().getName()+"  selected2:"+getReturnComboBox().getSelectedItem());
+//            System.out.println("resetReturnComboBox:name:"+getMethod().getName()+"  selected2:"+getReturnComboBox().getSelectedItem());
         }
     }
     public void resetArgComboBox(){
         resetComboBoxWithDomainTypes(getArgComboBox(), DomainType.ARG, DomainType.ENTITY);
         if (getMethod() != null && getMethod().getArgs() != null && getMethod().getArgs().size() > 0) {
             ClassModel.MethodArg arg = getMethod().getArgs().get(0);
-            System.out.println("resetArgComboBox:name:"+getMethod().getName()+"  selected1:"+arg);
+//            System.out.println("resetArgComboBox:name:"+getMethod().getName()+"  selected1:"+arg);
             getArgComboBox().setSelectedItem(arg.getClassModel() != null ? arg.getClassModel().getClassName() : arg.getClassModel().getClassName());
             updateInputArgParam();
-            System.out.println("resetArgComboBox: name:"+getMethod().getName()+" selected2:"+getArgComboBox().getSelectedItem());
+//            System.out.println("resetArgComboBox: name:"+getMethod().getName()+" selected2:"+getArgComboBox().getSelectedItem());
         }
     }
     public void setMethodCfgPaneActionListener(MethodCfgPaneActionListener methodCfgPaneActionListener) {

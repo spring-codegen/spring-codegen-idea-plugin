@@ -2,13 +2,9 @@ package com.cmcc.paas.ideaplugin.codegen.ui;
 
 import com.cmcc.paas.ideaplugin.codegen.config.CodeCfg;
 import com.cmcc.paas.ideaplugin.codegen.constants.MvcClassType;
-import com.cmcc.paas.ideaplugin.codegen.gen.ModelResult;
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.MethodFactory;
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.MvcClassCtx;
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel;
-import com.cmcc.paas.ideaplugin.codegen.gen.model.CtrlClass;
-import com.cmcc.paas.ideaplugin.codegen.gen.model.DaoClass;
-import com.cmcc.paas.ideaplugin.codegen.gen.model.SvcClass;
 import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
 import com.cmcc.paas.ideaplugin.codegen.ui.pane.CtrlMethodSettingPane;
 import com.cmcc.paas.ideaplugin.codegen.ui.pane.DaoMethodSettingPane;
@@ -22,7 +18,6 @@ import java.awt.event.ComponentEvent;
 import java.util.*;
 import java.util.List;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import static com.cmcc.paas.ideaplugin.codegen.notify.NotificationType.*;
 
@@ -57,8 +52,8 @@ public class MethodContainerPane {
         NotificationCenter.Handler h = msg ->{
             allMethods.entrySet().forEach(e->{
                 e.getValue().entrySet().forEach(e2 ->{
-                    e2.getValue().panel.resetArgComboBox();
-                    e2.getValue().panel.resetReturnComboBox();
+                    e2.getValue().pane.resetArgComboBox();
+                    e2.getValue().pane.resetReturnComboBox();
                 });
             });
         };
@@ -77,7 +72,7 @@ public class MethodContainerPane {
         }
         return null;
     }
-    public MethodItemHolder addClassMethod(MvcClassType classType,ClassModel.Method method){
+    private MethodItemHolder createMethodPane(MvcClassType classType, ClassModel.Method method){
         MvcClassType k = classType;
         if ( !allMethods.containsKey(k) ){
             allMethods.put(k, new LinkedHashMap<>());
@@ -97,64 +92,69 @@ public class MethodContainerPane {
         int y = (row-1) * (ITEM_HEIGHT + ITEM_MARGIN_H);
         //界面
         if ( classType == MvcClassType.DAO  ){
-            holder.panel = new DaoMethodSettingPane();
+            holder.pane = new DaoMethodSettingPane();
         }else if ( classType == MvcClassType.SVC  ){
-            holder.panel = new SvcMethodSettingPane();
+            holder.pane = new SvcMethodSettingPane();
         }else{
-            holder.panel =new CtrlMethodSettingPane();
+            holder.pane =new CtrlMethodSettingPane();
         }
-        holder.panel.getContent().setSize(w, ITEM_HEIGHT);
-        holder.panel.getContent().setLocation(x,y);
+        holder.pane.getContent().setSize(w, ITEM_HEIGHT);
+        holder.pane.getContent().setLocation(x,y);
 
-        holder.panel.setMethod(method);
-        this.container.add(holder.panel.getContent());
-        holder.panel.setMethodCfgPaneActionListener(methodSettingPane -> {
+        holder.pane.setMethod(method);
+        this.container.add(holder.pane.getContent());
+        holder.pane.setMethodCfgPaneActionListener(methodSettingPane -> {
                 removePane(methodSettingPane);
         });
-        MvcClassCtx.INSTANCE.addMethod(classType, method);
         return holder;
     }
     public void removePane(MethodSettingPane methodSettingPane){
         MvcClassType classType = methodSettingPane.getClassType();
         Map<String, MethodItemHolder> m = allMethods.get(classType);
-        Optional<Map.Entry<String, MethodItemHolder>> x =  m.entrySet().stream().filter(e -> e.getValue().panel == methodSettingPane).findFirst();
+        Optional<Map.Entry<String, MethodItemHolder>> x =  m.entrySet().stream().filter(e -> e.getValue().pane == methodSettingPane).findFirst();
         if (x.isPresent()){
             Map.Entry<String, MethodItemHolder> e = x.get();
             MethodItemHolder holder = e.getValue();
-            this.container.remove(holder.panel.getContent());
-            if (holder.dependency != null){
-                holder.dependency.caller = null;
+            this.container.remove(holder.pane.getContent());
+            if (holder.callee != null){
+                holder.callee.caller = null;
             }
             if (holder.caller != null){
-                holder.caller.dependency = null;
+                holder.caller.callee = null;
+                holder.caller.pane.getMethod().setDependency(null);
             }
             m.remove(e.getKey());
             this.resize();
 
-            MvcClassCtx.INSTANCE.removeMethod(classType, holder.method.getName());
+            MvcClassCtx.INSTANCE.removeMethod(classType, holder.pane.getMethod().getName());
         }
     }
     public void createMethod(String methodType, String methodName, Boolean ctrlChecked, Boolean svcChecked, Boolean daoChecked){
-        BiFunction<MvcClassType, String, ClassModel.Method> f = (classType, mName) ->  MethodFactory.createMethod(mName, classType, methodType);
-        ClassModel.Method ctrlMethod = ctrlChecked ? f.apply( MvcClassType.CTRL, methodName) : null;
-        ClassModel.Method svcMethod = svcChecked ? f.apply( MvcClassType.SVC, methodName) : null;;
-        ClassModel.Method daoMethod = daoChecked ? f.apply( MvcClassType.DAO, methodName) : null;
-        if (ctrlMethod != null && svcMethod != null){
+        ClassModel.Method ctrlMethod = null, svcMethod = null, daoMethod = null;
+        MethodItemHolder ctrlMethodHolder = null, svcMethodHolder = null, daoMethodHolder = null;
+        if(ctrlChecked){
+            ctrlMethod = MethodFactory.createMethod(methodName, MvcClassType.CTRL, methodType);
+            ctrlMethodHolder = createMethodPane(MvcClassType.CTRL, ctrlMethod);
+            MvcClassCtx.INSTANCE.addMethod(MvcClassType.CTRL, ctrlMethod);
+        }
+        if (svcChecked){
+            svcMethod = MethodFactory.createMethod(methodName, MvcClassType.SVC, methodType);
+            svcMethodHolder = createMethodPane(MvcClassType.SVC,svcMethod);
+            MvcClassCtx.INSTANCE.addMethod(MvcClassType.SVC, svcMethod);
+        }
+        if (daoChecked){
+            daoMethod = MethodFactory.createMethod(methodName, MvcClassType.DAO, methodType);
+            daoMethodHolder = createMethodPane(MvcClassType.DAO, daoMethod);
+            MvcClassCtx.INSTANCE.addMethod(MvcClassType.DAO, daoMethod);
+        }
+        if (ctrlChecked  && svcChecked){
             ctrlMethod.setDependency(svcMethod);
-        }
-        if (  svcMethod != null && daoMethod != null){
-            svcMethod.setDependency(daoMethod);
-        }
-
-        MethodItemHolder ctrlMethodHolder = ctrlChecked ?  addClassMethod(MvcClassType.CTRL, ctrlMethod) : null;
-        MethodItemHolder svcMethodHolder = svcChecked ?  addClassMethod(MvcClassType.SVC,svcMethod) : null;
-        MethodItemHolder daoMethodHolder = daoChecked ?  addClassMethod(MvcClassType.DAO, daoMethod) : null;
-        if (ctrlMethodHolder != null && svcMethodHolder != null){
-            ctrlMethodHolder.dependency = svcMethodHolder;
+            ctrlMethodHolder.callee = svcMethodHolder;
             svcMethodHolder.caller = ctrlMethodHolder;
         }
-        if (daoMethodHolder != null && svcMethodHolder != null){
-            svcMethodHolder.dependency = daoMethodHolder;
+        if (  svcChecked  && daoChecked){
+            svcMethod.setDependency(daoMethod);
+            svcMethodHolder.callee = daoMethodHolder;
             daoMethodHolder.caller = svcMethodHolder;
         }
         this.resize();
@@ -174,7 +174,7 @@ public class MethodContainerPane {
             for ( Map.Entry<String, MethodItemHolder> e : allMethods.get(t).entrySet() ){
                 int x = t.ordinal() * (w + ITEM_MARGIN_H);
                 int y = row * (ITEM_HEIGHT + ITEM_MARGIN_V);
-                e.getValue().panel.getContent().setBounds(x, y, w, ITEM_HEIGHT);
+                e.getValue().pane.getContent().setBounds(x, y, w, ITEM_HEIGHT);
                 scrollViewHeight = Integer.max(scrollViewHeight, y + ITEM_HEIGHT);
                 row ++;
             }
@@ -192,11 +192,11 @@ public class MethodContainerPane {
                 continue;
             }
             for ( MethodItemHolder h : allMethods.get(t).values() ){
-                if (h.dependency != null){
-                    int offsetX = h.panel.getContent().getWidth();
-                    int offsetY = h.dependency.panel.getContent().getHeight()/2;
-                    Point p1 = h.panel.getContent().getLocation();
-                    Point p2 = h.dependency.panel.getContent().getLocation();
+                if (h.callee != null){
+                    int offsetX = h.pane.getContent().getWidth();
+                    int offsetY = h.callee.pane.getContent().getHeight()/2;
+                    Point p1 = h.pane.getContent().getLocation();
+                    Point p2 = h.callee.pane.getContent().getLocation();
                     lines.add(new MethodContainerBackgroundPane.Line(new Point(p1.x + offsetX, p1.y + offsetY), new Point(p2.x, p2.y + offsetY)));
                 }
             }
@@ -212,9 +212,8 @@ public class MethodContainerPane {
         this.container.updateUI();
     }
     static class MethodItemHolder {
-        public MethodSettingPane panel;
-        public ClassModel.Method method;
-        public MethodItemHolder dependency;
+        public MethodSettingPane pane;
+        public MethodItemHolder callee;
         public MethodItemHolder caller;
     }
 }

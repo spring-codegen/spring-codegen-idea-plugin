@@ -123,6 +123,9 @@ class SvcClassGenerator: ClassGenerator(){
                     }
                 }
             }
+            if (m.dependency == null){
+                return method
+            }
             var dependencyCallExpr = MethodCallExpr(NameExpr(MvcClassCtx.getSvcClass().dependency?.refName), m.dependency?.name);
             dependencyCallExpr.addArgument(callArgExpr);
             var callReturn = m.dependency?.result

@@ -51,7 +51,6 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
                 String c = CtrlClassGenerator.createMethod(method).toString();
                 CodePreviewDialog.preview(c);
         });
-        outputPagedCheckBox.setBackground(null);
         for (Component component : content.getComponents()) {
             if (component instanceof JTextField){
                 TextFieldUtils.INSTANCE.addTextChangedEvent((JTextField) component, textField -> {

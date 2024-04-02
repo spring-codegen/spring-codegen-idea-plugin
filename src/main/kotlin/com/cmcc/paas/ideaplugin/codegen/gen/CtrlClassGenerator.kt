@@ -208,6 +208,9 @@ class CtrlClassGenerator (): ClassGenerator() {
                     }
                 }
             }
+            if (m.dependency == null){
+                return method
+            }
             var dependencyCallExpr = MethodCallExpr(NameExpr(MvcClassCtx.getCtrlClass().dependency?.refName), m.dependency?.name);
             dependencyCallExpr.addArgument(callArgExpr);
             var callReturn = m.dependency?.result

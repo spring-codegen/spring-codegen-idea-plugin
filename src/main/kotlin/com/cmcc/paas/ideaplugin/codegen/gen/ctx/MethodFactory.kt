@@ -46,7 +46,10 @@ object MethodFactory {
             var resultClsName = replacePlaceholders(methodCfg.result!!.className, ENV)
             var resultClsModel = DomainModelCtx.getClassModelByName(resultClsName!!)
             result = ClassModel.MethodResult(resultClsModel, methodCfg.result!!.refName)
-            result.listTypeFlag = if(methodCfg.result  ==null) false else methodCfg.result?.listTypeFlag!!
+            if(methodCfg.result  != null){
+                result.listTypeFlag = methodCfg.result?.listTypeFlag?:false
+                result.outputPaged = methodCfg.result?.outputPaged?:false
+            }
             result.comment = formatText(methodCfg.result?.comment)
         }
 

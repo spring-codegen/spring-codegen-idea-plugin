@@ -31,6 +31,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.*;
 import java.util.List;
+import java.util.function.Function;
 
 public class CodeGenPane {
     private JTabbedPane tabbedPanel;
@@ -62,11 +63,13 @@ public class CodeGenPane {
     private JButton daoClsPreviewButton;
     private JCheckBox relationCheckBox;
     private JComboBox relationTableCombox;
+    private JTextField relationResourceNameTextField;
 
     private DBTable dbTable;
     private List<DBTable> dbTables;
 
     private MethodSelectionPopupMenu methodSelectionPopupMenu;
+    private static String RELATION_COMP_NAME = "relation-group";
     public CodeGenPane() {
         rootScrollPanel.setBorder(null);
 
@@ -163,15 +166,9 @@ public class CodeGenPane {
             CodePreviewDialog.preview(code + "\n---\n" + mapperXml);
         });
         relationCheckBox.addItemListener( e ->{
-            Arrays.stream(relationTableCombox.getParent().getComponents()).forEach(comp -> {
-                if ( "relation-group".equals(comp.getName())){
-                    comp.setVisible( relationCheckBox.isSelected() );
-                }
-                if ( relationCheckBox.isSelected() ){
-                    refreshTableCombox(relationTableCombox);
-                }
-            });
+            refreshRelationComponents();
         });
+        refreshRelationComponents();
     }
     private void refreshTableCombox(JComboBox combox){
         List<String> items = dbTables.stream().map(DBTable::getName).toList();
@@ -181,6 +178,27 @@ public class CodeGenPane {
         }
         combox.setModel(comboBoxModel);
         combox.setSelectedItem(null);
+    }
+    private List<Component> searchComponentsByName(Component c, String name){
+        List<Component> a = new ArrayList<>();
+        if ( RELATION_COMP_NAME.equals( c.getName() ) ){
+            a.add(c);
+        }
+        if (c instanceof Container){
+            Arrays.stream(((Container) c).getComponents()).forEach( e -> {
+                List<Component> a2 = searchComponentsByName(e, name);
+                a.addAll(a2);
+            });
+        }
+        return a;
+    }
+    private void refreshRelationComponents(){
+        searchComponentsByName(relationTableCombox.getParent(), RELATION_COMP_NAME).forEach(comp -> {
+            comp.setVisible( relationCheckBox.isSelected() );
+            if ( relationCheckBox.isSelected() ){
+                refreshTableCombox(relationTableCombox);
+            }
+        });
     }
     private String getPathSuffix(){
         String moduleName = moduleTextField.getText();
@@ -231,19 +249,6 @@ public class CodeGenPane {
             }
         });
         dialog.setVisible(true);
-    }
-    private void showAddMethodPopupMenu(){
-        if (dbTable == null){
-           addMethodButton.setToolTipText("请选择表格");
-            return;
-        }
-        addMethodButton.setToolTipText(null);
-        if (methodSelectionPopupMenu == null){
-            methodSelectionPopupMenu = new MethodSelectionPopupMenu();
-            List<MethodSelectionPopupMenu.MenuItem> menuItems = CodeCfg.getInstance().getMethods().stream().map( e -> new MethodSelectionPopupMenu.MenuItem(e.getName(), e.getName())).toList();
-            methodSelectionPopupMenu.setItems(menuItems);
-        }
-        methodSelectionPopupMenu.show(addMethodButton,0, addMethodButton.getHeight());
     }
     private void selectTable(DBTable dbTable){
         this.dbTable = dbTable;

@@ -19,7 +19,19 @@ import java.util.HashMap
  */
 class DomainModelGenerator: ClassGenerator() {
     companion object {
+        @JvmStatic fun updateImplement(classModel: ClassModel){
+            if (!ClassModel.isInnerClass(classModel.className)) {
+                var s = CodeSettingCtx.modelBaseCls
+                if (classModel.className.indexOf("Search") >= 0 && !CodeSettingCtx.searchArgBaseCls.isNullOrEmpty()) {
+                    s = CodeSettingCtx.searchArgBaseCls
+                }
+                if (!s.isNullOrEmpty()) {
+                    classModel.extend = ClassModel.parse(s)
+                }
+            }
+        }
         @JvmStatic fun createClass(classModel: ClassModel, validate: Boolean):String? {
+            updateImplement(classModel)
             if (!ClassModel.isBaseType(classModel.className) && !ClassModel.isCommonType(classModel.className)) {
                 var data = HashMap<String, Any?>();
                 data["project"] = CodeSettingCtx
@@ -39,22 +51,8 @@ class DomainModelGenerator: ClassGenerator() {
             var c = createClass(classModel, validate)
             FileUtils.writeStringToFile(File(getFilePath(classModel)), c, Charset.forName("UTF-8"))
         }
-        @JvmStatic fun updateImplements(){
-            for( x in DomainModelCtx.getAllModels()!!){
-                if (!ClassModel.isInnerClass(x.className)) {
-                    var s = CodeSettingCtx.modelBaseCls
-                    if (x.className.indexOf("Search") >= 0 && !CodeSettingCtx.searchArgBaseCls.isNullOrEmpty()) {
-                        s = CodeSettingCtx.searchArgBaseCls
-                    }
-                    if (!s.isNullOrEmpty()) {
-                        x.extend = ClassModel.parse(s)
-                    }
-                }
-            }
-        }
 
         @JvmStatic fun gen() {
-            updateImplements()
             DomainModelCtx.getAllModels()!!.forEach {
                 setClassModelRefName(it)
             }

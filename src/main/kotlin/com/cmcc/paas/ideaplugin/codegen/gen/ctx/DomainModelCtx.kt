@@ -78,7 +78,9 @@ object DomainModelCtx {
                 x.getter = x.getter?:FieldUtils.getter(x.name)
             }
         }
-        classModel.pkg =  CodeSettingCtx.basePkg + ".domain." + type.toString().toLowerCase() + "." + CodeSettingCtx.module
+        if (!ClassModel.isInnerClass(classModel.className)) {
+            classModel.pkg = CodeSettingCtx.basePkg + ".domain." + type.toString().toLowerCase() + "." + CodeSettingCtx.module
+        }
         maps[type]!!.add(classModel)
     }
     fun addModel(type:DomainType, classModel: ClassModel){

@@ -17,7 +17,7 @@ public class ${model.className}<#if model.extend??> extends ${model.extend.class
     @NotNull
     </#if>
     <#if field.maxLen gt 0>
-    @Size(max=${field.maxLen})
+    @Size(max=${field.maxLen?c})
     </#if>
     </#if>
     private ${field.javaType} ${field.name};

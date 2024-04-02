@@ -26,7 +26,7 @@ object CodeSettingCtx {
     var ctrlSourceDir:String? = null
     var svcBaseCls: String? = null
     var svcSourceDir:String? = null
-    var daoBaseCls: String? = null
+    var daoBaseCls: String? = "com.cmit.paas.common.web.dao.BaseDaoV2"
     var mybatisMapperDir:String? = null
     var apiPrefix:String? = "/api/v1"
     var responseCls:String? = "com.cmit.paas.common.web.model.HttpResponse"
