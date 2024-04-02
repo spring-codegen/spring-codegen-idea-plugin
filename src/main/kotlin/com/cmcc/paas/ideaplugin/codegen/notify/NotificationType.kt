@@ -14,5 +14,6 @@ class NotificationType {
         const val REQUEST_PATH_UPDATED = "request-path-updated"
         const val METHOD_UPDATED = "request-path-updated"
         const val CODE_SETTING_UPDATED = "code-setting-updated"
+        const val MVC_CLASS_UPDATED = "mvc-class-updated"
     }
 }

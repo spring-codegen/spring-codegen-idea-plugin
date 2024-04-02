@@ -52,7 +52,9 @@ object MvcClassCtx {
             }
             MvcClassType.DAO -> daoInterface.className = className
         }
-        getClassByType(classType).refName = FieldUtils.getRefName(className)
+        var cls = getClassByType(classType)
+        cls.refName = FieldUtils.getRefName(className)
+        NotificationCenter.sendMessage(NotificationType.MVC_CLASS_UPDATED, cls);
     }
     fun resetClass(classType: MvcClassType, className:String){
         setClassName(classType, className)

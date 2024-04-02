@@ -6,6 +6,7 @@ import com.cmcc.paas.ideaplugin.codegen.gen.ctx.MethodFactory;
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.MvcClassCtx;
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
+import com.cmcc.paas.ideaplugin.codegen.notify.NotificationType;
 import com.cmcc.paas.ideaplugin.codegen.ui.pane.CtrlMethodSettingPane;
 import com.cmcc.paas.ideaplugin.codegen.ui.pane.DaoMethodSettingPane;
 import com.cmcc.paas.ideaplugin.codegen.ui.pane.MethodSettingPane;
@@ -60,6 +61,13 @@ public class MethodContainerPane {
         NotificationCenter.INSTANCE.register(MODEL_ADDED, h);
         NotificationCenter.INSTANCE.register(MODEL_UPDATED, h);
         NotificationCenter.INSTANCE.register(MODEL_REMOVED, h);
+        NotificationCenter.INSTANCE.register(NotificationType.MVC_CLASS_UPDATED, msg -> {
+            allMethods.entrySet().forEach(e->{
+                e.getValue().entrySet().forEach(e2 ->{
+                    e2.getValue().pane.onClassUpdated();
+                });
+            });
+        });
     }
     public CodeCfg.MethodCfg getMethodCfg(MvcClassType classType, String methodName){
         for(CodeCfg.MethodCfg m : CodeCfg.getInstance().getMethods()){

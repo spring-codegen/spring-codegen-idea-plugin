@@ -3,6 +3,7 @@ package com.cmcc.paas.ideaplugin.codegen.ui.pane;
 import com.cmcc.paas.ideaplugin.codegen.constants.DomainType;
 import com.cmcc.paas.ideaplugin.codegen.constants.MvcClassType;
 import com.cmcc.paas.ideaplugin.codegen.db.model.DBTableField;
+import com.cmcc.paas.ideaplugin.codegen.gen.ctx.MvcClassCtx;
 import com.cmcc.paas.ideaplugin.codegen.gen.model.ClassModel;
 import com.cmcc.paas.ideaplugin.codegen.gen.ctx.DomainModelCtx;
 import com.cmcc.paas.ideaplugin.codegen.notify.NotificationCenter;
@@ -29,8 +30,8 @@ public abstract class MethodSettingPane {
     public abstract JComboBox getReturnComboBox();
     public abstract JComboBox getArgComboBox();
     public abstract ClassModel.Method getMethod();
-    public abstract void setMethod(ClassModel.Method method);
     public abstract MvcClassType getClassType();
+    public abstract JLabel getClassLabel();
     public void init(){
         getArgComboBox().addItemListener( e -> {
             if (e.getStateChange() == ItemEvent.SELECTED){
@@ -112,6 +113,13 @@ public abstract class MethodSettingPane {
             updateInputArgParam();
 //            System.out.println("resetArgComboBox: name:"+getMethod().getName()+" selected2:"+getArgComboBox().getSelectedItem());
         }
+    }
+    public void onClassUpdated(){
+        ClassModel cls = MvcClassCtx.INSTANCE.getClassByType(getClassType());
+        getClassLabel().setText(cls.getClassName());
+    }
+    public void setMethod(ClassModel.Method method){
+        onClassUpdated();
     }
     public void setMethodCfgPaneActionListener(MethodCfgPaneActionListener methodCfgPaneActionListener) {
         this.methodCfgPaneActionListener = methodCfgPaneActionListener;

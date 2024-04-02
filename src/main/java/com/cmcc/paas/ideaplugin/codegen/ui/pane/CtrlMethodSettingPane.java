@@ -9,9 +9,6 @@ import com.cmcc.paas.ideaplugin.codegen.util.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,18 +23,16 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
     protected JLabel clsTagLabel;
     protected JTextField pathTextField;
     protected JTextField methodTextField;
-    protected JTextField outputClsTextField;
     protected JPanel content;
     protected JCheckBox outputListTypeCheckBox;
     protected JCheckBox outputPagedCheckBox;
-    protected JButton inputButton;
-    protected JButton outputButton;
     private JButton closeBtn;
     private JComboBox resultComboBox;
     private JComboBox argComboBox;
     private JLabel methodTypeLabel;
     private JTextArea commentTextArea;
     private JButton previewButton;
+    private JLabel clsNameLabel;
 
     //    protected MethodSettingModel model;
     private Color PATH_TEXT_FIELD_COLOR = Color.decode("#BBBBBB");
@@ -93,18 +88,13 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
     public JPanel getContent() {
         return content;
     }
-
-//    public MethodSettingModel getModel(){
-//        model.setComment(commentTextArea.getText());
-//        return model;
-//    }
-
     public CtrlClass.Method getMethod() {
         return method;
     }
 
     @Override
     public void setMethod(ClassModel.Method method) {
+        super.setMethod(method);
         this.method = (CtrlClass.Method) method;
         this.pathTextField.setText(this.method.getRequest().getPath());
         this.methodTextField.setText(this.method.getName());
@@ -124,21 +114,13 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
         return MvcClassType.CTRL;
     }
 
-    //    public void setModel(MethodSettingModel model) {
-//        this.model = model;
-//        this.pathTextField.setText(model.getPath());
-//        this.methodTextField.setText(model.getMethodName());
-//        this.methodTypeLabel.setText(model.getHttpMethod());
-//        this.commentTextArea.setText(model.getComment());
-//        if (model.getResult() != null) {
-//            this.outputListTypeCheckBox.setSelected(model.getResult().getListTypeFlag() == null ? false : model.getResult().getListTypeFlag());
-//            this.outputPagedCheckBox.setSelected(model.getResult().getOutputPaged());
-//        }
-//        resetArgComboBox();
-//        resetReturnComboBox();
-//        updatePathTextFieldUI();
-//        refreshMethod();
-//    }
+    /**
+     * @return
+     */
+    @Override
+    public JLabel getClassLabel() {
+        return clsNameLabel;
+    }
     @Override
     public JComboBox getReturnComboBox() {
         return resultComboBox;
@@ -148,9 +130,4 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
     public JComboBox getArgComboBox() {
         return argComboBox;
     }
-
-//    @Override
-//    public ArgsSettingPane getArgsSettingPane() {
-//        return argsSettingPane;
-//    }
 }

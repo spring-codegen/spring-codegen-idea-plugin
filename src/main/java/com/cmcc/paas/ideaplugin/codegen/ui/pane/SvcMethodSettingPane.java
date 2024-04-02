@@ -17,8 +17,6 @@ import java.awt.event.ItemListener;
  * @date 2023/8/8
  */
 public class SvcMethodSettingPane extends MethodSettingPane {
-    protected JLabel clsTagLabel;
-    protected JTextField clsTextField;
     protected JTextField methodTextField;
     protected JPanel content;
     protected JCheckBox outputListTypeCheckBox;
@@ -28,6 +26,7 @@ public class SvcMethodSettingPane extends MethodSettingPane {
     private JComboBox resultComboBox;
     private JComboBox argComboBox;
     private JButton previewButton;
+    private JLabel clsNameLabel;
 
     //    protected MethodSettingModel model;
     private ClassModel.Method method = null;
@@ -66,17 +65,6 @@ public class SvcMethodSettingPane extends MethodSettingPane {
         return content;
     }
 
-//    public MethodSettingModel getModel(){
-//        return model;
-//    }
-//    public void setModel(MethodSettingModel model) {
-//        this.model = model;
-//        this.clsTextField.setText(model.getClassName());
-//        this.methodTextField.setText(model.getMethodName());
-////        argsSettingPane.setArgs(model.getArgs());
-//        resetArgComboBox();
-//        resetReturnComboBox();
-//    }
 
     @Override
     public ClassModel.Method getMethod() {
@@ -84,6 +72,7 @@ public class SvcMethodSettingPane extends MethodSettingPane {
     }
 
     public void setMethod(ClassModel.Method method) {
+        super.setMethod(method);
         this.method = method;
         methodTextField.setText(method.getName());
         resetArgComboBox();
@@ -99,10 +88,10 @@ public class SvcMethodSettingPane extends MethodSettingPane {
     public JComboBox getReturnComboBox() {
         return resultComboBox;
     }
-//    @Override
-//    public ArgsSettingPane getArgsSettingPane() {
-//        return argsSettingPane;
-//    }
+    @Override
+    public JLabel getClassLabel() {
+        return clsNameLabel;
+    }
 
     @Override
     public JComboBox getArgComboBox() {

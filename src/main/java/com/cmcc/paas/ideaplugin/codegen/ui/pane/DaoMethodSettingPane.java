@@ -22,10 +22,7 @@ import java.awt.event.ItemListener;
  * @date 2023/12/21
  */
 public class DaoMethodSettingPane extends MethodSettingPane {
-    private JLabel clsTagLabel;
-    private JTextField clsTextField;
     private JTextField methodTextField;
-    private JCheckBox outputPagedCheckBox;
     private JCheckBox outputListTypeCheckBox;
     private JButton dataFieldButton;
     private JButton whereFieldButton;
@@ -34,6 +31,7 @@ public class DaoMethodSettingPane extends MethodSettingPane {
 //    private ArgsSettingPane argsSettingPane;
     private JComboBox resultComboBox;
     private JComboBox argComboBox;
+    private JLabel clsNameLabel;
     private DaoClass.Method method = null;
 
     public DaoMethodSettingPane(){
@@ -50,9 +48,6 @@ public class DaoMethodSettingPane extends MethodSettingPane {
                 ((JCheckBox)component).addItemListener( itemEvent ->{
                     if (itemEvent.getSource() == outputListTypeCheckBox) {
                         method.getResult().setListTypeFlag(outputListTypeCheckBox.isSelected());
-                    }
-                    if (itemEvent.getSource() == outputPagedCheckBox) {
-                        method.getResult().setOutputPaged(outputPagedCheckBox.isSelected());
                     }
                 });
             }
@@ -91,20 +86,6 @@ public class DaoMethodSettingPane extends MethodSettingPane {
         return content;
     }
 
-//    @Override
-//    public void setModel(MethodSettingModel model) {
-//        this.model = model;
-//        this.clsTextField.setText(model.getClassName());
-//        this.methodTextField.setText(model.getMethodName());
-////        argsSettingPane.setArgs(model.getArgs());
-//        resetArgComboBox();
-//        resetReturnComboBox();
-//    }
-//
-//    @Override
-//    public MethodSettingModel getModel() {
-//        return this.model;
-//    }
 
     @Override
     public DaoClass.Method getMethod() {
@@ -113,11 +94,16 @@ public class DaoMethodSettingPane extends MethodSettingPane {
 
     @Override
     public void setMethod(ClassModel.Method method) {
+        super.setMethod(method);
         this.method = (DaoClass.Method)method;
         this.methodTextField.setText(method.getName());
         this.outputListTypeCheckBox.setSelected(method.getResult().getListTypeFlag());
         resetArgComboBox();
         resetReturnComboBox();
+    }
+    @Override
+    public JLabel getClassLabel() {
+        return clsNameLabel;
     }
 
     @Override
@@ -129,10 +115,7 @@ public class DaoMethodSettingPane extends MethodSettingPane {
     public JComboBox getReturnComboBox() {
         return resultComboBox;
     }
-//    @Override
-//    public ArgsSettingPane getArgsSettingPane() {
-//        return argsSettingPane;
-//    }
+
 
     @Override
     public JComboBox getArgComboBox() {
