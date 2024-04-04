@@ -27,7 +27,7 @@ dependencies {
     api("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.2")
     api("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.11.2")
     implementation("org.mybatis:mybatis:3.5.13")
-    implementation("org.opengauss:opengauss-jdbc:3.1.1")
+    implementation("org.opengauss:opengauss-jdbc:5.1.0-og")
     implementation("com.alibaba:druid:1.2.18")
     implementation("commons-beanutils:commons-beanutils:1.9.4")
     implementation("org.freemarker:freemarker:2.3.32")
