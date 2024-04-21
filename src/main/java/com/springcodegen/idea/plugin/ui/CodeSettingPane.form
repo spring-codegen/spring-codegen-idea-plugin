@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.springcodegen.idea.plugin.ui.CodeSettingPane">
+  <grid id="27dc6" binding="content" layout-manager="GridBagLayout">
+    <constraints>
+      <xy x="20" y="20" width="845" height="804"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <grid id="95570" layout-manager="GridBagLayout">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="24" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <hspacer id="8e3e9">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="1.0" weighty="0.0"/>
+            </constraints>
+          </hspacer>
+          <component id="b2118" class="javax.swing.JButton" binding="saveSettingBtn">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag top="0" left="20" bottom="0" right="20" weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="保存"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <scrollpane id="cbab7" binding="scrollPane">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="24" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="1.0"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <grid id="87150" layout-manager="GridBagLayout">
+            <constraints/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="623a8" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
+                </constraints>
+                <properties>
+                  <foreground color="-7960954"/>
+                  <horizontalAlignment value="4"/>
+                  <text value="&lt;html&gt;作者&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/html&gt;"/>
+                </properties>
+              </component>
+              <hspacer id="78760">
+                <constraints>
+                  <grid row="0" column="12" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+              </hspacer>
+              <component id="e443d" class="javax.swing.JTextField" binding="authorTextField">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag weightx="1.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text value="zhangyinghui"/>
+                </properties>
+              </component>
+              <component id="193b4" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
+                </constraints>
+                <properties>
+                  <foreground color="-7960954"/>
+                  <horizontalAlignment value="4"/>
+                  <text value="&lt;html&gt;&lt;body&gt;URL 前缀&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/body&gt;&lt;/html&gt;"/>
+                </properties>
+              </component>
+              <component id="7c005" class="javax.swing.JTextField" binding="apiPrefixTextField">
+                <constraints>
+                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text value="/api/v1"/>
+                </properties>
+              </component>
+              <component id="c9042" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
+                </constraints>
+                <properties>
+                  <foreground color="-7960954"/>
+                  <horizontalAlignment value="4"/>
+                  <text value="&lt;html&gt;&lt;body&gt;包名&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/body&gt;&lt;/html&gt;"/>
+                </properties>
+              </component>
+              <component id="12594" class="javax.swing.JTextField" binding="basePkgTextField">
+                <constraints>
+                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="92501" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
+                </constraints>
+                <properties>
+                  <foreground color="-7960954"/>
+                  <horizontalAlignment value="4"/>
+                  <text value="&lt;html&gt;&lt;body&gt;模型基类&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/body&gt;&lt;/html&gt;"/>
+                </properties>
+              </component>
+              <component id="b20b1" class="javax.swing.JTextField" binding="modelBaseClsTextField">
+                <constraints>
+                  <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text value="net.takela.common.web.model.Model"/>
+                </properties>
+              </component>
+              <component id="911cb" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
+                </constraints>
+                <properties>
+                  <foreground color="-7960954"/>
+                  <horizontalAlignment value="4"/>
+                  <text value="&lt;html&gt;&lt;body&gt;列表查询基类&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/body&gt;&lt;/html&gt;"/>
+                </properties>
+              </component>
+              <component id="d6ab2" class="javax.swing.JTextField" binding="searchArgBaseClsTextField">
+                <constraints>
+                  <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text value="net.takela.common.web.model.PagedSearchArg"/>
+                </properties>
+              </component>
+              <component id="43c91" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
+                </constraints>
+                <properties>
+                  <foreground color="-7960954"/>
+                  <horizontalAlignment value="4"/>
+                  <text value="&lt;html&gt;&lt;body&gt;模型所在模块&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/body&gt;&lt;/html&gt;"/>
+                </properties>
+              </component>
+              <component id="683a6" class="javax.swing.JTextField" binding="modelDirTextField">
+                <constraints>
+                  <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <editable value="false"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="af518" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
+                </constraints>
+                <properties>
+                  <foreground color="-7960954"/>
+                  <horizontalAlignment value="4"/>
+                  <text value="Ctrl基类："/>
+                </properties>
+              </component>
+              <component id="e3cd6" class="javax.swing.JTextField" binding="ctrlBaseClsTextField">
+                <constraints>
+                  <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="d975a" class="javax.swing.JButton" binding="domainSourceFileButton">
+                <constraints>
+                  <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipadx="2"/>
+                </constraints>
+                <properties>
+                  <maximumSize width="60" height="30"/>
+                  <minimumSize width="60" height="30"/>
+                  <preferredSize width="60" height="30"/>
+                  <text value="选择目录"/>
+                </properties>
+              </component>
+              <component id="720" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
+                </constraints>
+                <properties>
+                  <foreground color="-7960954"/>
+                  <horizontalAlignment value="4"/>
+                  <text value="&lt;html&gt;&lt;body&gt;统一返回类&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/body&gt;&lt;/html&gt;"/>
+                </properties>
+              </component>
+              <component id="e2ede" class="javax.swing.JTextField" binding="responseClsTextField">
+                <constraints>
+                  <grid row="8" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text value="net.takela.common.web.model.HttpResponse"/>
+                </properties>
+              </component>
+              <component id="e38cc" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
+                </constraints>
+                <properties>
+                  <foreground color="-7960954"/>
+                  <horizontalAlignment value="4"/>
+                  <text value="&lt;html&gt;&lt;body&gt;Ctrl所在模块&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/body&gt;&lt;/html&gt;"/>
+                </properties>
+              </component>
+              <component id="f3406" class="javax.swing.JTextField" binding="ctrlDirTextField">
+                <constraints>
+                  <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <editable value="false"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="656d3" class="javax.swing.JButton" binding="ctrlSourceFileButton">
+                <constraints>
+                  <grid row="7" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipadx="2"/>
+                </constraints>
+                <properties>
+                  <maximumSize width="60" height="30"/>
+                  <minimumSize width="60" height="30"/>
+                  <preferredSize width="60" height="30"/>
+                  <text value="选择目录"/>
+                </properties>
+              </component>
+              <component id="bb59a" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
+                </constraints>
+                <properties>
+                  <foreground color="-7960954"/>
+                  <horizontalAlignment value="4"/>
+                  <text value="Svc基类："/>
+                </properties>
+              </component>
+              <component id="aa78d" class="javax.swing.JTextField" binding="svcBaseClsTextField">
+                <constraints>
+                  <grid row="9" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="b968d" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
+                </constraints>
+                <properties>
+                  <foreground color="-7960954"/>
+                  <horizontalAlignment value="4"/>
+                  <text value="&lt;html&gt;&lt;body&gt;Svc生成目录&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/body&gt;&lt;/html&gt;"/>
+                </properties>
+              </component>
+              <component id="1fc6a" class="javax.swing.JTextField" binding="svcDirTextField">
+                <constraints>
+                  <grid row="10" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <editable value="false"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="30942" class="javax.swing.JButton" binding="svcSourceFileButton">
+                <constraints>
+                  <grid row="10" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipadx="2"/>
+                </constraints>
+                <properties>
+                  <maximumSize width="60" height="30"/>
+                  <minimumSize width="60" height="30"/>
+                  <preferredSize width="60" height="30"/>
+                  <text value="选择目录"/>
+                </properties>
+              </component>
+              <component id="4b7bb" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
+                </constraints>
+                <properties>
+                  <foreground color="-7960954"/>
+                  <horizontalAlignment value="4"/>
+                  <text value="&lt;html&gt;&lt;body&gt;DaoMapper基类&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/body&gt;&lt;/html&gt;"/>
+                </properties>
+              </component>
+              <component id="730f" class="javax.swing.JTextField" binding="daoBaseClsTextField">
+                <constraints>
+                  <grid row="11" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text value="net.takela.common.web.dao.BaseDao"/>
+                </properties>
+              </component>
+              <component id="a7f50" class="javax.swing.JTextField" binding="mybatisMapperDirTextField">
+                <constraints>
+                  <grid row="12" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <editable value="false"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="423f" class="javax.swing.JButton" binding="resourceFileBtn">
+                <constraints>
+                  <grid row="12" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipadx="2"/>
+                </constraints>
+                <properties>
+                  <maximumSize width="60" height="30"/>
+                  <minimumSize width="60" height="30"/>
+                  <preferredSize width="60" height="30"/>
+                  <text value="选择目录"/>
+                </properties>
+              </component>
+              <component id="d801c" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
+                </constraints>
+                <properties>
+                  <foreground color="-7960954"/>
+                  <horizontalAlignment value="4"/>
+                  <text value="&lt;html&gt;&lt;body&gt;Mapper生成目录&lt;span color=&quot;red&quot;&gt;*&lt;/span&gt;：&lt;/body&gt;&lt;/html&gt;"/>
+                </properties>
+              </component>
+              <component id="3507c" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
+                </constraints>
+                <properties>
+                  <foreground color="-7960954"/>
+                  <horizontalAlignment value="4"/>
+                  <text value="&lt;html&gt;&lt;body&gt;内置Domain模型&lt;span color=&quot;red&quot;&gt;&lt;/span&gt;：&lt;/body&gt;&lt;/html&gt;"/>
+                </properties>
+              </component>
+              <component id="1109c" class="javax.swing.JTextArea" binding="innerTextArea">
+                <constraints>
+                  <grid row="14" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="50"/>
+                  </grid>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <minimumSize width="243" height="50"/>
+                  <preferredSize width="243" height="50"/>
+                  <text value="net.takela.common.web.model.IdArg&#10;net.takela.common.web.model.IdResult" noi18n="true"/>
+                </properties>
+              </component>
+              <component id="7102e" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="17" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
+                </constraints>
+                <properties>
+                  <foreground color="-7960954"/>
+                  <horizontalAlignment value="4"/>
+                  <text value="Ctrl入参模型后缀："/>
+                </properties>
+              </component>
+              <component id="ea2e4" class="javax.swing.JTextField" binding="argModelSuffix">
+                <constraints>
+                  <grid row="17" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text value="Arg"/>
+                </properties>
+              </component>
+              <component id="667b2" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="16" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
+                </constraints>
+                <properties>
+                  <foreground color="-7960954"/>
+                  <horizontalAlignment value="4"/>
+                  <text value="Ctrl输出模型后缀："/>
+                </properties>
+              </component>
+              <component id="e0714" class="javax.swing.JTextField" binding="resultModelSuffix">
+                <constraints>
+                  <grid row="16" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text value="Result"/>
+                </properties>
+              </component>
+              <component id="59310" class="javax.swing.JTextField" binding="entityModelSuffix">
+                <constraints>
+                  <grid row="15" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="8361e" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="15" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0" ipadx="10" ipady="20"/>
+                </constraints>
+                <properties>
+                  <foreground color="-7960954"/>
+                  <horizontalAlignment value="4"/>
+                  <text value="实体类后缀："/>
+                </properties>
+              </component>
+              <component id="6d80d" class="javax.swing.JSeparator">
+                <constraints>
+                  <grid row="13" column="0" row-span="1" col-span="3" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <gridbag top="5" left="0" bottom="5" right="0" weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties/>
+              </component>
+              <vspacer id="5b1c">
+                <constraints>
+                  <grid row="18" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="1.0" weighty="1.0"/>
+                </constraints>
+              </vspacer>
+            </children>
+          </grid>
+        </children>
+      </scrollpane>
+    </children>
+  </grid>
+</form>

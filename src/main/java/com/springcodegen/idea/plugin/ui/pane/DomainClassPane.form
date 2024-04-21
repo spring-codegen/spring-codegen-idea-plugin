@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.springcodegen.idea.plugin.ui.pane.DomainClassPane">
+  <grid id="27dc6" binding="content" layout-manager="GridBagLayout">
+    <constraints>
+      <xy x="20" y="20" width="515" height="36"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <component id="a11fb" class="javax.swing.JButton" binding="deleteButton">
+        <constraints>
+          <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <borderPainted value="false"/>
+          <contentAreaFilled value="false"/>
+          <maximumSize width="50" height="30"/>
+          <minimumSize width="10" height="30"/>
+          <preferredSize width="30" height="30"/>
+          <text value="x"/>
+        </properties>
+      </component>
+      <component id="b80a5" class="javax.swing.JButton" binding="alterButton">
+        <constraints>
+          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <borderPainted value="false"/>
+          <contentAreaFilled value="false"/>
+          <label value="修改"/>
+          <maximumSize width="50" height="30"/>
+          <minimumSize width="30" height="30"/>
+          <preferredSize width="50" height="30"/>
+          <text value="修改"/>
+        </properties>
+      </component>
+      <component id="7617c" class="javax.swing.JLabel" binding="classNameLabel">
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag top="0" left="5" bottom="0" right="5" weightx="1.0" weighty="0.0" ipadx="5"/>
+        </constraints>
+        <properties>
+          <foreground color="-4868683"/>
+          <text value="Label"/>
+        </properties>
+      </component>
+      <component id="27448" class="javax.swing.JButton" binding="previewButton">
+        <constraints>
+          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <borderPainted value="false"/>
+          <contentAreaFilled value="false"/>
+          <horizontalAlignment value="0"/>
+          <minimumSize width="30" height="30"/>
+          <preferredSize width="30" height="30"/>
+          <text value="🌏"/>
+        </properties>
+      </component>
+      <component id="47129" class="javax.swing.JLabel" binding="existLabel">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag top="0" left="5" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <font size="18" style="1"/>
+          <foreground color="-4502266"/>
+          <maximumSize width="10" height="24"/>
+          <minimumSize width="10" height="24"/>
+          <opaque value="false"/>
+          <preferredSize width="10" height="24"/>
+          <text value="!"/>
+          <toolTipText value=""/>
+          <visible value="true"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>

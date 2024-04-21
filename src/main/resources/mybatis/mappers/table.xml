@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="postgresql.TableDao">
+
+	<resultMap id="field" type="com.springcodegen.idea.plugin.db.model.DBTableField">
+		<result column="table_name" property="tableName"/>
+		<result column="name" property="name"/>
+		<result column="comment" property="comment"/>
+		<result column="schema" property="schema"/>
+		<result column="type" property="type"/>
+		<result column="not_null" property="notNull"/>
+		<result column="max_len" property="maxLen"/>
+	</resultMap>
+	<resultMap id="table" type="com.springcodegen.idea.plugin.db.model.DBTable">
+		<result column="name" property="name"/>
+		<result column="comment" property="comment"/>
+		<result column="schema" property="schema"/>
+	</resultMap>
+
+	<select id="queryFields" resultMap="field">
+		SELECT
+			a.attnum,
+			n.nspname AS schema,
+			c.relname as table_name,
+			a.attname as name,
+			t.typname as type,
+			a.attlen as byteLen,
+			a.atttypmod as max_len,
+			a.attnotnull as not_null,
+			b.description as comment
+		FROM
+			pg_namespace n LEFT JOIN pg_class c
+									 on n.oid = c.relnamespace
+						   LEFT JOIN pg_attribute a
+									 on a.attrelid = c.oid
+						   LEFT JOIN pg_description b
+									 on a.attrelid = b.objoid and a.attnum = b.objsubid
+						   LEFT JOIN pg_type t
+									 on a.atttypid = t.oid
+		WHERE
+			n.nspname = #{schema}
+		  AND c.relname = #{tableName}
+		  AND a.attnum > 0
+		ORDER BY
+			a.attnum
+	</select>
+	<select id="queryTables" resultMap="table">
+		SELECT tb.table_name as name, d.description as comment, tb.table_schema as schema
+		FROM information_schema.tables tb
+			LEFT JOIN pg_namespace ns on ns.nspname=tb.table_schema
+			LEFT JOIN pg_class c ON c.relnamespace=ns.oid AND c.relname = tb.table_name
+			LEFT JOIN pg_description d ON d.objoid = c.oid AND d.objsubid = '0'
+		WHERE tb.table_schema=#{schema}
+	</select>
+</mapper>

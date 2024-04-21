@@ -1,0 +1,18 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>com.springcodegen.idea.plugin</id>
+    <name>Spring-Codegen</name>
+    <vendor>baboy</vendor>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <resource-bundle>messages.MyBundle</resource-bundle>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow factoryClass="com.springcodegen.idea.plugin.toolWindow.MyToolWindowFactory" id="Spring-Codegen"/>
+    </extensions>
+
+    <applicationListeners>
+        <listener class="com.springcodegen.idea.plugin.listeners.MyApplicationActivationListener" topic="com.intellij.openapi.application.ApplicationActivationListener"/>
+    </applicationListeners>
+</idea-plugin>

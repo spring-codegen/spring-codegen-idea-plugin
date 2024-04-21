@@ -1,0 +1,218 @@
+
+ctrlClass:
+  title: "Ctrl类"
+  dir: ""
+  className: "{clsPrefix}Controller"
+  baseURI: "/api/v1"
+svcClass:
+  title: "Svc类"
+  dir: ""
+  className: "{clsPrefix}Service"
+daoClass:
+  title: "Dao类"
+  dir: ""
+  className: "{clsPrefix}Dao"
+models:
+  - className: "{clsPrefix}Add{argModelSuffix}"
+    fieldExcludes: "id,.*time,.*_uid,del"
+    type: ARG
+  - className: "{clsPrefix}{entityModelSuffix}"
+    fieldIncludes: ".*"
+    type: ENTITY
+  - className: "{clsPrefix}Update{argModelSuffix}"
+    fieldExcludes: ".*time,.*_uid"
+    type: ARG
+  - className: "{clsPrefix}Search{argModelSuffix}"
+    fieldExcludes: ".*time,.*_uid"
+    type: ARG
+  - className: "IdArg"
+    fieldIncludes: "id"
+    type: ARG
+  - className: "IdResult"
+    fieldIncludes: "id"
+    type: RESULT
+  - className: "Long"
+    fieldIncludes: "id"
+    type: RESULT
+  - className: "Long"
+    fieldIncludes: "id"
+    type: ARG
+  - className: "Boolean"
+    refName: "t"
+    fieldIncludes: "-"
+    type: RESULT
+relationModels:
+  - className: "{clsPrefix}Add{relClsPrefix}{argModelSuffix}"
+    fieldIncludes: ".*_id"
+    type: ARG
+methods:
+  - type: CTRL
+    request:
+      path: ""
+      httpMethod: POST
+    comment: "添加{entityName}"
+    name: add
+    args:
+      - className: "{clsPrefix}Add{argModelSuffix}"
+        comment: 新增参数
+    result:
+      className: IdResult
+  - type: SVC
+    name: add
+    args:
+      - className: "{clsPrefix}{entityModelSuffix}"
+    result:
+      className: Boolean
+      refName: t
+  - type: DAO
+    name: add
+    args:
+      - className: "{clsPrefix}{entityModelSuffix}"
+    result:
+      className: Boolean
+      refName: t
+    sqlDataFieldIncludes: ".*"
+    sqlDataFieldExcludes: "id"
+    sqlConditionFieldIncludes: "-"
+  - type: CTRL
+    request:
+      path: "{id}"
+      httpMethod: DELETE
+    comment: "删除{entityName}"
+    name: remove
+    args: []
+#      - isPathVar: true
+#        className: "Long"
+#        refName: "id"
+  - type: SVC
+    name: remove
+    args:
+      - className: "Long"
+        refName: "id"
+    result:
+      className: Boolean
+      refName: t
+  - type: DAO
+    name: remove
+    args:
+      - className: "Long"
+        refName: "id"
+    result:
+      className: Boolean
+      refName: t
+    sqlDataFieldIncludes: "del"
+    sqlConditionFieldIncludes: "id"
+  - type: CTRL
+    request:
+      path: "{id}"
+      httpMethod: PUT
+    comment: "更新{entityName}"
+    name: update
+    args:
+#      - isPathVar: true
+#        className: "Long"
+#        refName: "id"
+      - className: "{clsPrefix}Update{argModelSuffix}"
+        comment: 更新参数
+  - type: SVC
+    name: update
+    args:
+      - className: "{clsPrefix}{entityModelSuffix}"
+    result:
+      className: Boolean
+      refName: t
+  - type: DAO
+    name: update
+    args:
+      - className: "{clsPrefix}{entityModelSuffix}"
+    result:
+      className: Boolean
+      refName: t
+    sqlDataFieldIncludes: ".*"
+    sqlDataFieldExcludes: "id,create_.*"
+    sqlConditionFieldIncludes: "id"
+  - type: CTRL
+    request:
+      path: "{id}"
+      httpMethod: GET
+    comment: "获取{entityName}详情"
+    name: get
+    args: []
+#      - isPathVar: true
+#        className: "Long"
+#        refName: "id"
+    result:
+      className: "{clsPrefix}{entityModelSuffix}"
+  - type: SVC
+    name: get
+    args:
+      - className: "Long"
+        refName: "id"
+    result:
+      className: "{clsPrefix}{entityModelSuffix}"
+  - type: DAO
+    name: get
+    args:
+      - className: "Long"
+        refName: "id"
+    result:
+      className: "{clsPrefix}{entityModelSuffix}"
+    sqlDataFieldIncludes: ".*"
+    sqlConditionFieldIncludes: "id"
+  - type: CTRL
+    request:
+      path: ""
+      httpMethod: GET
+    comment: "检索{entityName}"
+    name: search
+    args:
+      - className: "{clsPrefix}Search{argModelSuffix}"
+        comment: 检索参数
+    result:
+      className: "{clsPrefix}{entityModelSuffix}"
+      listTypeFlag: true
+      outputPaged: true
+  - type: SVC
+    name: search
+    args:
+      - className: "{clsPrefix}Search{argModelSuffix}"
+    result:
+      className: "{clsPrefix}{entityModelSuffix}"
+      listTypeFlag: true
+  - type: DAO
+    name: search
+    args:
+      - className: "{clsPrefix}Search{argModelSuffix}"
+    result:
+      className: "{clsPrefix}{entityModelSuffix}"
+      listTypeFlag: true
+    sqlDataFieldIncludes: ".*"
+    sqlConditionFieldIncludes: ".*"
+    sqlConditionFieldExcludes: ".*time,.*_uid,id"
+
+  - type: CTRL
+    request:
+      path: "{subResourceName}"
+      httpMethod: POST
+    comment: "添加{entityName}{subEntityName}"
+    name: add
+    args:
+      - className: "{clsPrefix}Add{relClsPrefix}{argModelSuffix}"
+        comment: "添加{entityName}{subEntityName}"
+  - type: SVC
+    name: add
+    args:
+      - className: "{clsPrefix}Add{relClsPrefix}{argModelSuffix}"
+    result:
+      className: Boolean
+      refName: t
+  - type: DAO
+    name: add
+    args:
+      - className: "{clsPrefix}Add{relClsPrefix}{argModelSuffix}"
+    result:
+      className: Boolean
+      refName: t
+    sqlDataFieldIncludes: ".*"
+    sqlDataFieldExcludes: "id"
+    sqlConditionFieldIncludes: "-"
