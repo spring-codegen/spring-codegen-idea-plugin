@@ -6,22 +6,12 @@ import com.springcodegen.idea.plugin.db.model.DBTableField;
 import com.springcodegen.idea.plugin.ctx.MvcClassCtx;
 import com.springcodegen.idea.plugin.gen.model.ClassModel;
 import com.springcodegen.idea.plugin.ctx.DomainModelCtx;
-import com.springcodegen.idea.plugin.notify.NotificationCenter;
-import com.springcodegen.idea.plugin.constants.DomainType;
-import com.springcodegen.idea.plugin.db.model.DBTableField;
-import com.springcodegen.idea.plugin.gen.model.ClassModel;
-import org.apache.commons.collections.ListUtils;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.springcodegen.idea.plugin.notify.NotificationType.MODEL_ADDED;
-import static com.springcodegen.idea.plugin.notify.NotificationType.MODEL_UPDATED;
 
 
 /**
@@ -55,7 +45,7 @@ public abstract class MethodSettingPane {
     public void updateReturnParam(){
         String clsName = getReturnComboBox().getSelectedItem().toString();
 //        System.out.println( "updateReturnParam:name:"+getMethod().getName()+"  classType:" + getClassType().toString() + ","+  getMethod().getName() + ", inputArg:"+clsName);
-        ClassModel cls = DomainModelCtx.INSTANCE.INSTANCE.getClassModelByName(clsName);
+        ClassModel cls = DomainModelCtx.INSTANCE.getClassModelByName(clsName);
         if (cls == null){
             getMethod().setResult(null);
             return;
@@ -71,7 +61,7 @@ public abstract class MethodSettingPane {
     }
     public void updateInputArgParam(){
         String clsName = getArgComboBox().getSelectedItem().toString();
-        ClassModel cls = DomainModelCtx.INSTANCE.INSTANCE.getClassModelByName(clsName);
+        ClassModel cls = DomainModelCtx.INSTANCE.getClassModelByName(clsName);
 //        System.out.println( "updateInputArgParam:name:"+getMethod().getName()+" classType:" + getClassType().toString() + ","+  getMethod().getName() + ", inputArg:"+clsName+",cls:"+(cls==null?"":cls.getClassName()));
 
         List<ClassModel.MethodArg> args = getMethod().getArgs();
@@ -123,12 +113,16 @@ public abstract class MethodSettingPane {
         }
 //        dataChanged();
     }
-    public void onClassUpdated(){
+    public void onDomainModelUpdated(ClassModel classModel){
+       resetArgComboBox();
+       resetReturnComboBox();
+    }
+    public void onMvcClassUpdated(){
         ClassModel cls = MvcClassCtx.INSTANCE.getClassByType(getClassType());
         getClassLabel().setText(cls.getClassName());
     }
     public void setMethod(ClassModel.Method method){
-        onClassUpdated();
+        onMvcClassUpdated();
     }
     public void setMethodCfgPaneActionListener(MethodCfgPaneActionListener methodCfgPaneActionListener) {
         this.methodCfgPaneActionListener = methodCfgPaneActionListener;

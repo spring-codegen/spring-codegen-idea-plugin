@@ -15,6 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Objects;
 
 /**
  * @author zhangyinghui
@@ -79,6 +80,7 @@ public class SvcMethodSettingPane extends MethodSettingPane {
         super.setMethod(method);
         this.method = method;
         methodTextField.setText(method.getName());
+        outputListTypeCheckBox.setSelected(method.getResult() != null && method.getResult().getListTypeFlag());
         resetArgComboBox();
         resetReturnComboBox();
     }

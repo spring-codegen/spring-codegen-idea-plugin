@@ -64,8 +64,8 @@ public class DomainClassPane {
                             classModel.setClassName(dialog.getClassName());
                             classNameLabel.setText(dialog.getClassName());
                             classUpdated();
-                            NotificationCenter.sendMessage(NotificationType.MODEL_UPDATED, classModel);
                         }
+                        NotificationCenter.sendMessage(NotificationType.MODEL_UPDATED, classModel);
                     }
                 });
                 dialog.setVisible(true);
@@ -87,7 +87,7 @@ public class DomainClassPane {
     }
 
     private void classUpdated(){
-        Boolean exist = DomainModelGenerator.fileExists(classModel);
+        boolean exist = DomainModelGenerator.fileExists(classModel);
         existLabel.setText(exist ? "!" : "");
         classNameLabel.setToolTipText(exist ? "已存在" : "");
     }

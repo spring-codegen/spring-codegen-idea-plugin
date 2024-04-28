@@ -40,11 +40,11 @@ object DocGenerator {
         var pomContent = TempRender.render(TempRender.TEMP_DOC_POM, data)
         FileUtils.writeStringToFile(File(pomFile()), pomContent, Charset.forName("UTF-8"))
     }
-    @JvmStatic fun gen( docTypes:List<String>, outputHandler: InvocationOutputHandler, errorHandler: InvocationOutputHandler){
+    @JvmStatic fun gen( docTypes:List<String>, outputHandler: InvocationOutputHandler, errorHandler: InvocationOutputHandler):Boolean{
         prepare()
 
-        var projectManager: ProjectRootManager? = AppCtx.project?.let { ProjectRootManager.getInstance(it) } ?: return
-        var sdk = projectManager?.projectSdk?: return;
+        var projectManager: ProjectRootManager? = AppCtx.project?.let { ProjectRootManager.getInstance(it) } ?: return false
+        var sdk = projectManager?.projectSdk?: return false;
         var invocationRequest:InvocationRequest = DefaultInvocationRequest()
         invocationRequest.baseDirectory = File( DocSettingCtx.moduleDir )
         // 设置java home
@@ -68,6 +68,8 @@ object DocGenerator {
         } catch (  e: MavenInvocationException) {
             e.printStackTrace();
             errorHandler.consumeLine(e.localizedMessage)
+            return false
         }
+        return true;
     }
 }

@@ -5,6 +5,7 @@ import com.springcodegen.idea.plugin.ctx.AppCtx;
 import com.springcodegen.idea.plugin.swing.util.SwingUtils;
 import com.springcodegen.idea.plugin.swing.util.TextFieldUtils;
 import com.springcodegen.idea.plugin.ui.tookit.MessageBoxUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -13,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author zhangyinghui
@@ -43,6 +45,7 @@ public class CodeSettingPane {
     private JTextField entityModelSuffix;
     private JTextArea innerTextArea;
     private JScrollPane scrollPane;
+    private JPanel mainPane;
     private CodeSettingCtx model;
 
     public CodeSettingPane(){
@@ -176,5 +179,14 @@ public class CodeSettingPane {
         resultModelSuffix.setText(model.getResultModelSuffix());
         entityModelSuffix.setText(model.getEntityModelSuffix());
         innerTextArea.setText(model.getInnerModels());
+    }
+    public void requestFocus(){
+        List<Component> a = SwingUtils.searchComponentsByName(mainPane, "required");
+        for(Component c : a) {
+            if (c instanceof JTextField && StringUtils.isEmpty( ((JTextField) c).getText()) ){
+                ((JTextField) c).requestFocus();
+                return;
+            }
+        }
     }
 }

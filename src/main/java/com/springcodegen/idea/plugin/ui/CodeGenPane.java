@@ -62,7 +62,7 @@ public class CodeGenPane {
     private JLabel ctrlExistLabel;
     private JLabel svcExistLabel;
     private JLabel daoExistLabel;
-    private JPanel settingPane;
+    private JPanel docPane;
     private DocSettingPane docSettingPane;
 
     private DBTable dbTable;
@@ -353,12 +353,13 @@ public class CodeGenPane {
     public void generate(){
         if ( !CodeSettingCtx.hasReady() ){
             MessageBoxUtils.showMessageAndFadeout("请先设置选项卡中配置相关参数...");
-            tabbedPane.setSelectedIndex(2);
+            tabbedPane.setSelectedComponent(settingsPane);
+            codeSettingPane.requestFocus();
             return;
         }
-        if (dbTables == null || dbTables.size() == 0){
+        if (dbTables == null || dbTables.isEmpty()){
             MessageBoxUtils.showMessageAndFadeout("当前没有查询到数据库表，请检查数据库配置...");
-            tabbedPane.setSelectedIndex(1);
+            tabbedPane.setSelectedComponent(dataSourcePane);
             return;
         }
         if ( AppCtx.getCurrentTable() == null ){

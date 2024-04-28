@@ -423,42 +423,53 @@ class CtrlClassGenerator (): ClassGenerator() {
             return File(getFilePath()).exists();
         }
         @JvmStatic fun createClass(): CompilationUnit {
-            var classModel = MvcClassCtx.getCtrlClass()
-            processImports(classModel)
-            var data = HashMap<String, Any?>();
-            data["project"] = CodeSettingCtx
-            data["ctrlClass"] = classModel
 
-            var c = TempRender.render(TempRender.TEMP_CTRL_CLASS, data)
-            System.out.println(c)
-            System.out.println("====================")
-            var cu = StaticJavaParser.parse(c)
-            var cls = cu.getClassByName(classModel.className).get()
-            classModel.methods.forEach {
-                var method = createMethod(it as CtrlClass.Method)
+            val classModel = MvcClassCtx.getCtrlClass()
+            var cu = parseExistClassFile()
+            var cls:ClassOrInterfaceDeclaration? = null
+            if (cu != null){
+                val op = cu.getClassByName(classModel.className)
+                if (op.isPresent) {
+                    cls = op.get ()
+                }
+            }
+            if ( cu == null || cls == null){
+                processImports(classModel)
+                val data = HashMap<String, Any?>();
+                data["project"] = CodeSettingCtx
+                data["ctrlClass"] = classModel
+
+                var c = TempRender.render(TempRender.TEMP_CTRL_CLASS, data)
+                System.out.println(c)
+                System.out.println("====================")
+                cu = StaticJavaParser.parse(c)
+                cls = cu.getClassByName(classModel.className).get()
+            }
+            for (x in classModel.methods){
+                if (parseExistMethod(x as CtrlClass.Method) != null){
+                    continue
+                }
+                val method = createMethod(x as CtrlClass.Method)
                 cls.addMember(method)
             }
-            return cu;
+            return cu!!;
         }
-        @JvmStatic fun parseExistClass():ClassOrInterfaceDeclaration?{
+        @JvmStatic fun parseExistClassFile():CompilationUnit?{
             var clsFile = File(getFilePath())
             if(!clsFile.exists()){
                 return null
             }
+            val cu = StaticJavaParser.parse(clsFile)
+            return cu
+        }
+        @JvmStatic fun parseExistMethod(m:CtrlClass.Method):MethodDeclaration?{
+            var cu = parseExistClassFile() ?: return null
             var classModel = MvcClassCtx.getCtrlClass()
-            var cu = StaticJavaParser.parse(clsFile)
             var op= cu.getClassByName(classModel.className)
             if ( !op.isPresent ){
                 return null
             }
             var cls = op.get()
-            return cls
-        }
-        @JvmStatic fun parseExistMethod(m:CtrlClass.Method):MethodDeclaration?{
-            var cls = parseExistClass()
-            if (cls == null){
-                return null
-            }
             var a = cls.getMethodsByName(m.name)
             if ( a == null || a.size == 0 ){
                 return null

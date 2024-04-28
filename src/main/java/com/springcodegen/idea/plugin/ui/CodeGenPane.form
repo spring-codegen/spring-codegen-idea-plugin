@@ -23,6 +23,7 @@
             </constraints>
             <properties>
               <minimumSize width="200" height="100"/>
+              <name value="codePane"/>
               <preferredSize width="200" height="100"/>
             </properties>
             <border type="none"/>
@@ -729,7 +730,7 @@
               </hspacer>
             </children>
           </grid>
-          <grid id="1000f" binding="settingPane" layout-manager="GridBagLayout">
+          <grid id="1000f" binding="docPane" layout-manager="GridBagLayout">
             <constraints>
               <tabbedpane title="文档"/>
             </constraints>

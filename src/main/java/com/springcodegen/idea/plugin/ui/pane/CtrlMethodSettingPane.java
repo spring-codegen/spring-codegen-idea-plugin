@@ -39,8 +39,8 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
     //    protected MethodSettingModel model;
     private Color PATH_TEXT_FIELD_COLOR = Color.decode("#BBBBBB");
     private Color PATH_TEXT_FIELD_COLOR_HL = Color.decode("#BB9E1B");
-    private Color BG_COLOR = Color.decode("#383C3E");
-    private Color BG_COLOR_GRAY = Color.decode("#464B4E");
+    private Color BG_COLOR = Color.decode("#323438");
+    private Color BG_COLOR_GRAY = Color.decode("#383C3E");
     protected CtrlClass.Method method = new CtrlClass.Method("", new ArrayList<ClassModel.MethodArg>(), null);
 
 
@@ -59,6 +59,7 @@ public class CtrlMethodSettingPane extends MethodSettingPane {
                     }
                     if (textField == methodTextField) {
                         method.setName(methodTextField.getText());
+                        dataChanged();
                     }
                 });
             }

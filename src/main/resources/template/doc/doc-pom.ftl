@@ -10,6 +10,13 @@
     <properties>
         <java.version>17</java.version>
     </properties>
+    <dependencies>
+        <dependency>
+            <groupId>net.takela</groupId>
+            <artifactId>common-web</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -20,6 +27,7 @@
                 <configuration>
                     <configFile>./doc-config.json</configFile>
                     <includes>
+                        <include>net.takela:common-web</include>
                     </includes>
                 </configuration>
             </plugin>

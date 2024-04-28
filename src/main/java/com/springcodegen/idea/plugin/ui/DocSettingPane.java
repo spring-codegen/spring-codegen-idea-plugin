@@ -1,5 +1,6 @@
 package com.springcodegen.idea.plugin.ui;
 
+import com.intellij.ide.actions.OpenFileAction;
 import com.springcodegen.idea.plugin.ctx.AppCtx;
 import com.springcodegen.idea.plugin.ctx.DocSettingCtx;
 import com.springcodegen.idea.plugin.gen.DocGenerator;
@@ -8,14 +9,17 @@ import com.springcodegen.idea.plugin.util.StringUtils;
 import com.springcodegen.idea.plugin.swing.util.SwingUtils;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.io.File;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -39,6 +43,8 @@ public class DocSettingPane {
     private JPanel docTypePane;
     private JTextPane logTextPane;
     private JScrollPane logScrollPane;
+    private JEditorPane noteEditPane;
+    private JCheckBox openDocCheckBox;
     private SimpleAttributeSet logAttrSet = new SimpleAttributeSet();
     private SimpleAttributeSet errorAttrSet = new SimpleAttributeSet();
 
@@ -107,18 +113,35 @@ public class DocSettingPane {
         StyleConstants.setForeground(errorAttrSet, Color.RED);//设置文本颜色
 //        StyleConstants.setFontSize(errorAttrSet, 14);//设置文本大小
 //        StyleConstants.setAlignment(errorAttrSet, StyleConstants.ALIGN_LEFT);//设置文本对齐方式
+        noteEditPane.addHyperlinkListener( e ->{
+            if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                try {
+                    URL url = e.getURL();
+                    if (url != null) {
+                        if (url.getHost().equals("codegen")) {
+                            String docCfgFile = Objects.requireNonNull(AppCtx.getProject()).getBasePath() + url.getPath();
+                            OpenFileAction.openFile(docCfgFile, Objects.requireNonNull(AppCtx.getProject()));
+                            return;
+                        }
+                        Desktop.getDesktop().browse(url.toURI());
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
 
     }
     private List<String> getSelectedDocTypes(){
         List<String> docTypes = Arrays.stream(new JCheckBox[] {htmlCheckBox, wordCheckBox, markDownCheckBox,openApiCheckBox,postmanCheckBox})
-                .filter(btn -> btn.isSelected())
-                .map(btn -> btn.getName()).toList();
+                .filter(AbstractButton::isSelected)
+                .map(Component::getName).toList();
         return docTypes;
     }
     private void genDoc(){
         StyledDocument doc = logTextPane.getStyledDocument();
         List<String> docTypes = getSelectedDocTypes();
-        if (docTypes.size() == 0){
+        if (docTypes.isEmpty()){
             MessageBoxUtils.showMessageAndFadeout("请选择要输出的文档类型");
         }
         logScrollPane.setBorder(BorderFactory.createLineBorder(Color.GRAY));
@@ -131,14 +154,15 @@ public class DocSettingPane {
                     publish(new LogMessage(LogStatus.NORMAL, s));
                 }, s ->{
                     publish(new LogMessage(LogStatus.ERROR, s));
-                    success.set(false);
+                    if (s.startsWith("Error")) {
+                        success.set(false);
+                    }
                 });
                 return success.get();
             }
             @Override
             protected void process(List<LogMessage> chunks){
-
-                chunks.stream().forEach( chunk -> {
+                chunks.forEach(chunk -> {
                     try {
                         doc.insertString(doc.getLength(), chunk.msg+"\n", chunk.status == LogStatus.ERROR ? errorAttrSet : logAttrSet);
                     } catch (BadLocationException e) {
@@ -151,6 +175,18 @@ public class DocSettingPane {
                 try {
                     Boolean success = get();
                     MessageBoxUtils.showMessageAndFadeout( success? "文档输出完成！" : "文档输出出错！");
+                    if (success){
+                        File docFile = new File(outputDirTextField.getText()+"/index.html");
+                        if (htmlCheckBox.isSelected() && docFile.exists()) {
+                            Desktop.getDesktop().open(docFile);
+                            return;
+                        }
+
+                        File dir = new File(outputDirTextField.getText());
+                        if (dir.exists()){
+                            Desktop.getDesktop().open(dir);
+                        }
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

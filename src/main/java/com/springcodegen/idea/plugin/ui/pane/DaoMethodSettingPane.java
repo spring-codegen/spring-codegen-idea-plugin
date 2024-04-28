@@ -8,6 +8,7 @@ import com.springcodegen.idea.plugin.swing.util.TextFieldUtils;
 import com.springcodegen.idea.plugin.ui.BeanFieldSelectionDialog;
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 /**
  * @author zhangyinghui
@@ -72,6 +73,17 @@ public class DaoMethodSettingPane extends MethodSettingPane {
         setCloseBtnAction(closeBtn);
     }
 
+    @Override
+    public void onDomainModelUpdated(ClassModel classModel){
+        super.onDomainModelUpdated(classModel);
+        if ( method.getArgs() != null && method.getArgs().size() > 0 ){
+            ClassModel cls = method.getArgs().get(0).getClassModel();
+
+            if ( Arrays.asList("get", "search").contains(method.getType()) && classModel == cls){
+                method.setSqlCondFields(classModel.getFields());
+            }
+        }
+    }
     @Override
     public JPanel getContent() {
         return content;

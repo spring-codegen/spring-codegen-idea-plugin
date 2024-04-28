@@ -6,18 +6,6 @@ import com.springcodegen.idea.plugin.ctx.MethodFactory;
 import com.springcodegen.idea.plugin.ctx.MvcClassCtx;
 import com.springcodegen.idea.plugin.gen.model.ClassModel;
 import com.springcodegen.idea.plugin.notify.NotificationCenter;
-import com.springcodegen.idea.plugin.notify.NotificationType;
-import com.springcodegen.idea.plugin.ui.pane.CtrlMethodSettingPane;
-import com.springcodegen.idea.plugin.ui.pane.DaoMethodSettingPane;
-import com.springcodegen.idea.plugin.ui.pane.MethodSettingPane;
-import com.springcodegen.idea.plugin.ui.pane.SvcMethodSettingPane;
-import com.springcodegen.idea.plugin.config.CodeCfg;
-import com.springcodegen.idea.plugin.constants.MvcClassType;
-import com.springcodegen.idea.plugin.ctx.MethodFactory;
-import com.springcodegen.idea.plugin.ctx.MvcClassCtx;
-import com.springcodegen.idea.plugin.gen.model.ClassModel;
-import com.springcodegen.idea.plugin.notify.NotificationCenter;
-import com.springcodegen.idea.plugin.notify.NotificationType;
 import com.springcodegen.idea.plugin.ui.pane.CtrlMethodSettingPane;
 import com.springcodegen.idea.plugin.ui.pane.DaoMethodSettingPane;
 import com.springcodegen.idea.plugin.ui.pane.MethodSettingPane;
@@ -29,7 +17,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.*;
 import java.util.List;
-import java.util.function.BiFunction;
 
 import static com.springcodegen.idea.plugin.notify.NotificationType.*;
 
@@ -41,11 +28,11 @@ public class MethodContainerPane {
     private JScrollPane scrollPane;
     private MethodContainerBackgroundPane container;
     private Map<MvcClassType, Map<String, MethodItemHolder>> allMethods = new LinkedHashMap<>();
-    private static int COLUMN_NUM = 3;
-    private static int ITEM_MARGIN_H = 50;
-    private static int ITEM_MARGIN_V = 20;
-    private static int CONTAINER_PADDING_RIGHT = 30;
-    private static int ITEM_HEIGHT = 240;
+    private final static int COLUMN_NUM = 3;
+    private final static int ITEM_MARGIN_H = 50;
+    private final static int ITEM_MARGIN_V = 20;
+    private final static int CONTAINER_PADDING_RIGHT = 30;
+    private final static int ITEM_HEIGHT = 240;
 
 
     public MethodContainerPane(){
@@ -62,30 +49,23 @@ public class MethodContainerPane {
             }
         });
         NotificationCenter.Handler h = msg ->{
-            allMethods.entrySet().forEach(e->{
-                e.getValue().entrySet().forEach(e2 ->{
-                    e2.getValue().pane.resetArgComboBox();
-                    e2.getValue().pane.resetReturnComboBox();
-                });
-            });
+            allMethods.forEach((k, v) -> v.forEach((k2, v2) -> {
+                v2.pane.onDomainModelUpdated( (ClassModel) msg.getData() );
+            }));
         };
         NotificationCenter.register(MODEL_ADDED, h);
         NotificationCenter.register(MODEL_UPDATED, h);
         NotificationCenter.register(MODEL_REMOVED, h);
         NotificationCenter.register(CODE_SETTING_UPDATED, h);
         NotificationCenter.register(MVC_CLASS_UPDATED, msg -> {
-            allMethods.entrySet().forEach(e->{
-                e.getValue().entrySet().forEach(e2 ->{
-                    e2.getValue().pane.onClassUpdated();
-                });
-            });
+            allMethods.forEach((k, v) -> v.forEach((k2, v2) -> v2.pane.onMvcClassUpdated()));
         });
     }
     public CodeCfg.MethodCfg getMethodCfg(MvcClassType classType, String methodName){
-        for(CodeCfg.MethodCfg m : CodeCfg.getInstance().getMethods()){
+        for(CodeCfg.MethodCfg m : Objects.requireNonNull(Objects.requireNonNull(CodeCfg.getInstance()).getMethods())){
             if (
                     MvcClassType.valueOf(m.getType()) == classType
-                    && methodName.indexOf(m.getName()) >= 0
+                            && methodName.contains(Objects.requireNonNull(m.getName()))
             ){
                 return m;
             }
@@ -97,11 +77,7 @@ public class MethodContainerPane {
         if ( !allMethods.containsKey(k) ){
             allMethods.put(k, new LinkedHashMap<>());
         }
-        MethodItemHolder holder = allMethods.get(k).get(method.getName());
-        if (holder == null){
-            holder = new MethodItemHolder();
-            allMethods.get(k).put(method.getName(), holder);
-        }
+        MethodItemHolder holder = allMethods.get(k).computeIfAbsent(method.getName(), k1 -> new MethodItemHolder());
 
         //数据缓存
 
@@ -123,9 +99,7 @@ public class MethodContainerPane {
 
         holder.pane.setMethod(method);
         this.container.add(holder.pane.getContent());
-        holder.pane.setMethodCfgPaneActionListener(methodSettingPane -> {
-                removePane(methodSettingPane);
-        });
+        holder.pane.setMethodCfgPaneActionListener(this::removePane);
         return holder;
     }
     public void removePane(MethodSettingPane methodSettingPane){
@@ -184,7 +158,7 @@ public class MethodContainerPane {
         this.resize();
     }
     public void resize(){
-        if (allMethods == null || allMethods.size() == 0 ){
+        if (allMethods == null || allMethods.isEmpty()){
             return;
         }
         int w = (scrollPane.getWidth() - (COLUMN_NUM - 1) * ITEM_MARGIN_H - CONTAINER_PADDING_RIGHT)/COLUMN_NUM;
